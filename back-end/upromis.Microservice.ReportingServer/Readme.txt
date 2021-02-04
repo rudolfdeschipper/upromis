@@ -12,3 +12,5 @@ to stop this container from running, use
 
 docker stop rabbitmq
 
+
+

@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <UserSecretsId>18cb4dde-4d22-4046-8507-904c733e2834</UserSecretsId>
+    <StartupObject>uPromis.Microservice.ContractAPI.Program</StartupObject>
+    <RootNamespace>uPromis.Microservice.ContractAPI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\ApplicationDbContext.cs" />
+    <Compile Remove="Migrations\20200511190455_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200511190455_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200511191356_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200511191356_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200511194217_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200511194217_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200511194828_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200511194828_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200511200708_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200511200708_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200512194046_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200512194046_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200512194936_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200512194936_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20201213204431_Add Proposal to Contract.cs" />
+    <Compile Remove="Migrations\20201213204431_Add Proposal to Contract.Designer.cs" />
+    <Compile Remove="Migrations\20201216210011_Add Proposal reference to Contract.cs" />
+    <Compile Remove="Migrations\20201216210011_Add Proposal reference to Contract.Designer.cs" />
+    <Compile Remove="Migrations\ApplicationDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.7" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\uPromis.APIUtils\uPromis.APIUtils.csproj" />
+    <ProjectReference Include="..\upromis.Services\uPromis.Services.csproj" />
+  </ItemGroup>
+
+</Project>

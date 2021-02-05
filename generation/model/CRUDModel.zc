@@ -1,7 +1,7 @@
 #Parameters
 appName : "uProMIS App"
 nameSpace : "upromisfrontend"
-beNameSpace : "uPromis"
+backendNameSpace : "uPromis"
 msNameSpace : "uPromis.Microservice."
 debug : "on"
 APIDebug : true

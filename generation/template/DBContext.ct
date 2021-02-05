@@ -1,4 +1,4 @@
-%FileOverwrite:Data\generated\=<$>DBContext.cs
+%FileOverwrite:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Data\generated\=<$>DBContext.cs
 %Log:Microservice DB Context =<$>
 /*
 **             ------ IMPORTANT ------

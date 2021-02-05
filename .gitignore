@@ -286,3 +286,4 @@ __pycache__/
 
 #zerocode generated files
 **/generated/*
+generation/zerocode/logfile.txt

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace uPromis.Microservice.ContractAPI.Models
+namespace uPromis.Microservice.DTO.Models
 {
     public class DTOBase
     {

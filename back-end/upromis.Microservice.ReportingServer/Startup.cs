@@ -1,20 +1,14 @@
+using GreenPipes;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Serilog;
 using Serilog.Events;
-using MassTransit;
-using GreenPipes;
+using System;
 
 namespace upromis.Microservice.ReportingServer
 {
@@ -47,8 +41,7 @@ namespace upromis.Microservice.ReportingServer
 
             _ = services.AddMassTransit(x =>
               {
-                  x.AddConsumer<Controllers.ContractCreateConsumer>();
-                  x.AddConsumer<Controllers.ContractUpdateConsumer>();
+                  x.AddConsumer<Controllers.ContractSaveConsumer>();
                   x.AddConsumer<Controllers.ContractDeleteConsumer>();
                   x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
                   {
@@ -58,23 +51,14 @@ namespace upromis.Microservice.ReportingServer
                           h.Username("guest");
                           h.Password("guest");
                       });
-                      cfg.ReceiveEndpoint("ReportServerContractCreateQueue", ep =>
+                      cfg.ReceiveEndpoint("ReportServerContractSaveQueue", ep =>
                       {
                           ep.PrefetchCount = 16;
                           ep.UseMessageRetry(r =>
                           {
                               r.Interval(2, 100);
                           });
-                          ep.ConfigureConsumer<Controllers.ContractCreateConsumer>(provider);
-                      });
-                      cfg.ReceiveEndpoint("ReportServerContractUpdateQueue", ep =>
-                      {
-                          ep.PrefetchCount = 16;
-                          ep.UseMessageRetry(r =>
-                          {
-                              r.Interval(2, 100);
-                          });
-                          ep.ConfigureConsumer<Controllers.ContractUpdateConsumer>(provider);
+                          ep.ConfigureConsumer<Controllers.ContractSaveConsumer>(provider);
                       });
                       cfg.ReceiveEndpoint("ReportServerContractDeleteQueue", ep =>
                       {

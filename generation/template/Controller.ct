@@ -152,7 +152,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                     return NotFound(new APIResult<=<$>DTO>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
 
-                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>SaveQueue");
+                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>DeleteQueue");
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<=<$>DTO>(rec.DataSubject);
 

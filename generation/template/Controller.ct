@@ -20,6 +20,7 @@ using =<#Parameters.backendNameSpace>.APIUtils.APIMessaging;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MassTransit;
 
 namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 {
@@ -31,13 +32,15 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
         private readonly I=<$>Repository Repository;
         private readonly ILogger Logger;
         private readonly Business.I=<$>BusinessRules BusinessRules;
+        private readonly IBus ReportServerBus;
 
         public =<$>Controller(I=<$>Repository repo, ILoggerProvider loggerProvider,
-            Business.I=<$>BusinessRules businessRules)
+            Business.I=<$>BusinessRules businessRules, IBus reportServerBus)
         {
             Repository = repo;
             Logger = loggerProvider.CreateLogger("=<$>Controller");
             BusinessRules = businessRules;
+            ReportServerBus = reportServerBus;
         }
 
         [HttpGet("{id}")]
@@ -74,6 +77,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                 }
                 record = await Repository.Post(record);
                 res = Transformers.Transform(record, new =<$>DTO());
+
+                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>SaveQueue");
+                var endPoint = await ReportServerBus.GetSendEndpoint(uri);
+                await endPoint.Send<=<$>DTO>(res);
+
             }
             catch (Exception ex)
             {
@@ -113,6 +121,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 res = Transformers.Transform(record, new =<$>DTO());
 
+                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>SaveQueue");
+                var endPoint = await ReportServerBus.GetSendEndpoint(uri);
+                await endPoint.Send<=<$>DTO>(res);
             }
             catch (Exception ex)
             {
@@ -140,6 +151,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                 {
                     return NotFound(new APIResult<=<$>DTO>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
+
+                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>SaveQueue");
+                var endPoint = await ReportServerBus.GetSendEndpoint(uri);
+                await endPoint.Send<=<$>DTO>(rec.DataSubject);
+
             }
             catch (Exception ex)
             {

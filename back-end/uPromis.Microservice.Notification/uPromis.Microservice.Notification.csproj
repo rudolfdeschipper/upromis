@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\upromis.Services\uPromis.Services.csproj" />
+    <ProjectReference Include="..\uPromis.Services\uPromis.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

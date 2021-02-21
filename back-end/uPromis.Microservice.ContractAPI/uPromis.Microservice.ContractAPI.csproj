@@ -51,7 +51,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\uPromis.APIUtils\uPromis.APIUtils.csproj" />
-    <ProjectReference Include="..\upromis.Services\uPromis.Services.csproj" />
+    <ProjectReference Include="..\uPromis.Services\uPromis.Services.csproj" />
   </ItemGroup>
 
 </Project>

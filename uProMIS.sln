@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.APIUtils", "back-en
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.AttachmentAPI", "back-end\uPromis.Microservice.AttachmentAPI\uPromis.Microservice.AttachmentAPI.csproj", "{FA75455A-55BF-428F-B54F-DDDE6397E8CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "upromis.Microservice.BusinessLogging", "back-end\upromis.Microservice.BusinessLogging\upromis.Microservice.BusinessLogging.csproj", "{6702F53C-FCF8-42BE-A14F-38EF4F2D398A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.BusinessLogging", "back-end\upromis.Microservice.BusinessLogging\uPromis.Microservice.BusinessLogging.csproj", "{6702F53C-FCF8-42BE-A14F-38EF4F2D398A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.ContractAPI", "back-end\uPromis.Microservice.ContractAPI\uPromis.Microservice.ContractAPI.csproj", "{9B81DDD2-2354-4774-B65E-8F0E17B17F82}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.Identityserver", "back-end\uPromis.Microservice.Identityserver\uPromis.Microservice.Identityserver.csproj", "{84EA1872-F673-4601-9C1A-F198CCF5268D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "upromis.Microservice.ReportingServer", "back-end\upromis.Microservice.ReportingServer\upromis.Microservice.ReportingServer.csproj", "{D742BDDD-FEFB-4A23-B7C8-C30693872D0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.ReportingServer", "back-end\upromis.Microservice.ReportingServer\uPromis.Microservice.ReportingServer.csproj", "{D742BDDD-FEFB-4A23-B7C8-C30693872D0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Services", "back-end\upromis.Services\uPromis.Services.csproj", "{B892952F-B2CA-4781-8895-FFC7F110F08C}"
 EndProject

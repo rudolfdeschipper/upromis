@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\upromis.Services\upromis.Services.csproj" />
+    <ProjectReference Include="..\uPromis.Services\uPromis.Services.csproj" />
   </ItemGroup>
 
 </Project>

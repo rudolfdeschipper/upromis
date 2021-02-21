@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <StartupObject>upromis.Microservice.ReportingServer.Program</StartupObject>
+    <StartupObject>uPromis.Microservice.ReportingServer.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\upromis.Services\upromis.Services.csproj" />
+    <ProjectReference Include="..\uPromis.Services\uPromis.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace upromis.Microservice.BusinessLogging
+namespace uPromis.Microservice.BusinessLogging
 {
     public class Program
     {

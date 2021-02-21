@@ -1,4 +1,4 @@
-﻿namespace upromis.Services
+﻿namespace uPromis.Services
 {
     public interface IBusinessLoggingService
     {

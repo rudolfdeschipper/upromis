@@ -8,7 +8,7 @@ using Serilog;
 using Serilog.Events;
 using System;
 
-namespace upromis.Microservice.BusinessLogging
+namespace uPromis.Microservice.BusinessLogging
 {
     public class Startup
     {

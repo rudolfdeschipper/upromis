@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using upromis.Service.BusinessLogging.DTO;
+using uPromis.Services.BusinessLogging.DTO;
 
-namespace upromis.Microservice.BusinessLogging.Controllers
+namespace uPromis.Microservice.BusinessLogging.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

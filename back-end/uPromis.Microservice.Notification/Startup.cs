@@ -85,7 +85,7 @@ namespace uPromis.Microservice.Notification
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "upromis.Microservice.Notification", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "uPromis.Microservice.Notification", Version = "v1" });
             });
             services.AddLogging(loggingBuilder =>
             {
@@ -101,7 +101,7 @@ namespace uPromis.Microservice.Notification
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "upromis.Microservice.Notification v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "uPromis.Microservice.Notification v1"));
             }
 
             app.UseHttpsRedirection();

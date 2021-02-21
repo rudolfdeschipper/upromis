@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace upromis.Microservice.ReportingServer
+namespace uPromis.Microservice.ReportingServer
 {
     public class Program
     {

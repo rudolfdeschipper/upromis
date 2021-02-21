@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 
-namespace upromis.Microservice.ReportingServer.Controllers
+namespace uPromis.Microservice.ReportingServer.Controllers
 {
     public class ContractDeleteConsumer : IConsumer<uPromis.Microservice.ContractAPI.Models.ContractDTO>
     {

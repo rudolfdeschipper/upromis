@@ -3,15 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace upromis.Services
+namespace uPromis.Services
 {
     public interface IBusinessLogging
     {
         [Get("/api/BusinessLogging/{project}")]
-        Task<IEnumerable<Service.BusinessLogging.DTO.LogEntry>> Get(int project);
+        Task<IEnumerable<BusinessLogging.DTO.LogEntry>> Get(int project);
 
         [Post("/api/BusinessLogging")]
-        Task Post(Service.BusinessLogging.DTO.LogEntry log);
+        Task Post(BusinessLogging.DTO.LogEntry log);
     }
 
     public class BusinessLoggingService : IBusinessLoggingService

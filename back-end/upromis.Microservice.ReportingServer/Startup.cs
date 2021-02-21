@@ -10,7 +10,7 @@ using Serilog;
 using Serilog.Events;
 using System;
 
-namespace upromis.Microservice.ReportingServer
+namespace uPromis.Microservice.ReportingServer
 {
     public class Startup
     {
@@ -75,7 +75,7 @@ namespace upromis.Microservice.ReportingServer
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "upromis.Microservice.ReportingServer", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "uPromis.Microservice.ReportingServer", Version = "v1" });
             });
             services.AddLogging(loggingBuilder =>
             {
@@ -91,7 +91,7 @@ namespace upromis.Microservice.ReportingServer
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "upromis.Microservice.ReportingServer v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "uPromis.Microservice.ReportingServer v1"));
             }
 
             app.UseHttpsRedirection();

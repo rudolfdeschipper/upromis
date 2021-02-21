@@ -18,7 +18,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "upromis.Microservice.Notification": {
+    "uPromis.Microservice.Notification": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "environmentVariables": {

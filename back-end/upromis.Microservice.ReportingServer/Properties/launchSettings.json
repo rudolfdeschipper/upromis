@@ -18,7 +18,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "upromis.Microservice.ReportingServer": {
+    "uPromis.Microservice.ReportingServer": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "environmentVariables": {

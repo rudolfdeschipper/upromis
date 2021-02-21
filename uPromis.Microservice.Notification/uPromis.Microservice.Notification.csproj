@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -9,15 +9,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.1" />
     <PackageReference Include="MassTransit" Version="7.1.5" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.1.5" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.3" />
+    <PackageReference Include="Quartz" Version="3.2.4" />
+    <PackageReference Include="Quartz.AspNetCore" Version="3.2.4" />
+    <PackageReference Include="Quartz.Jobs" Version="3.2.4" />
+    <PackageReference Include="Quartz.Serialization.Json" Version="3.2.4" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
   </ItemGroup>

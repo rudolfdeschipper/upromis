@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace uPromis.Services.Notification
 {
-    class NotificationSchedule
+    public class NotificationSchedule
     {
         public static NotificationSchedule CreateDefaultSchedule(string notificationType) => new NotificationSchedule() { NotificationType = notificationType };
 

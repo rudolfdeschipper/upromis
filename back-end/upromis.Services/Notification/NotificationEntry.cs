@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace uPromis.Services.Notification
 {
-    class NotificationEntry
+    public class NotificationEntry
     {
         /// <summary>
         /// ID of the time for which we want notifications

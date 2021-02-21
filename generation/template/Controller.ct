@@ -78,7 +78,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                 record = await Repository.Post(record);
                 res = Transformers.Transform(record, new =<$>DTO());
 
-                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>SaveQueue");
+                Uri uri = new Uri("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<=<$>DTO>(res);
 
@@ -121,7 +121,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 res = Transformers.Transform(record, new =<$>DTO());
 
-                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>SaveQueue");
+                Uri uri = new Uri("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<=<$>DTO>(res);
             }
@@ -152,7 +152,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                     return NotFound(new APIResult<=<$>DTO>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
 
-                Uri uri = new Uri("rabbitmq://localhost/ReportServer=<$>DeleteQueue");
+                Uri uri = new Uri("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERDELETE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<=<$>DTO>(rec.DataSubject);
 

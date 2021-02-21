@@ -51,7 +51,7 @@ namespace upromis.Microservice.ReportingServer
                           h.Username("guest");
                           h.Password("guest");
                       });
-                      cfg.ReceiveEndpoint("ReportServerContractSaveQueue", ep =>
+                      cfg.ReceiveEndpoint(uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVECONTRACT, ep =>
                       {
                           ep.PrefetchCount = 16;
                           ep.UseMessageRetry(r =>
@@ -60,7 +60,7 @@ namespace upromis.Microservice.ReportingServer
                           });
                           ep.ConfigureConsumer<Controllers.ContractSaveConsumer>(provider);
                       });
-                      cfg.ReceiveEndpoint("ReportServerContractDeleteQueue", ep =>
+                      cfg.ReceiveEndpoint(uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERDELETECONTRACT, ep =>
                       {
                           ep.PrefetchCount = 16;
                           ep.UseMessageRetry(r =>

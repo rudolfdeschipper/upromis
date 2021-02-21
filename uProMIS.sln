@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "upromis.Microservice.Report
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Services", "back-end\upromis.Services\uPromis.Services.csproj", "{B892952F-B2CA-4781-8895-FFC7F110F08C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uPromis.Microservice.Notification", "uPromis.Microservice.Notification\uPromis.Microservice.Notification.csproj", "{21E71B47-48CE-4F67-8C13-94F6445EE33A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.Notification", "back-end\uPromis.Microservice.Notification\uPromis.Microservice.Notification.csproj", "{B741D9D4-D872-4597-A974-6E5F56CE1FBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{B892952F-B2CA-4781-8895-FFC7F110F08C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B892952F-B2CA-4781-8895-FFC7F110F08C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B892952F-B2CA-4781-8895-FFC7F110F08C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{21E71B47-48CE-4F67-8C13-94F6445EE33A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21E71B47-48CE-4F67-8C13-94F6445EE33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21E71B47-48CE-4F67-8C13-94F6445EE33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21E71B47-48CE-4F67-8C13-94F6445EE33A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B741D9D4-D872-4597-A974-6E5F56CE1FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B741D9D4-D872-4597-A974-6E5F56CE1FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B741D9D4-D872-4597-A974-6E5F56CE1FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B741D9D4-D872-4597-A974-6E5F56CE1FBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

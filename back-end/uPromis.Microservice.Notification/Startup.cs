@@ -172,8 +172,10 @@ namespace uPromis.Microservice.Notification
 
         private static void AddJob(IScheduler scheduler, string jobName)
         {
+            Log.Information($"Adding job {jobName}");
             if (scheduler.CheckExists(new JobKey(jobName)).Result == true)
             {
+                Log.Information($"Job {jobName} does not yet exist - adding.");
                 var job = JobBuilder.Create<ContractJob>()
                     .WithIdentity(jobName)
                     .StoreDurably()

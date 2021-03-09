@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,10 @@ using MassTransit;
 using Microsoft.OpenApi.Models;
 using uPromis.Services.Queues;
 using GreenPipes;
+using Quartz.Impl;
+using uPromis.Microservice.Notification.Data;
+using uPromis.Microservice.Notification.Model;
+using uPromis.Microservice.Notification.Job;
 
 namespace uPromis.Microservice.Notification
 {
@@ -29,6 +35,7 @@ namespace uPromis.Microservice.Notification
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -47,9 +54,20 @@ namespace uPromis.Microservice.Notification
                     flushToDiskInterval: TimeSpan.FromSeconds(1))
                 .CreateLogger();
 
+            services.AddDbContext<NotificationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<INotificationRepository, NotificationRepository>();
+
+            // add jobs to the DI pipeline to allow them to receive DBContext
+            services.AddTransient<ContractJob>();
+            services.AddTransient<ProjectJob>();
+            services.AddTransient<ReminderJob>();
+
             _ = services.AddMassTransit(x =>
             {
                 x.AddConsumer<Controllers.AddNotificationItemConsumer>();
+                x.AddConsumer<Controllers.RemoveNotificationItemConsumer>();
                 x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     cfg.UseHealthCheck(provider);
@@ -58,7 +76,7 @@ namespace uPromis.Microservice.Notification
                         h.Username("guest");
                         h.Password("guest");
                     });
-                    cfg.ReceiveEndpoint(MessageBusQueueNames.NOTIFICATIONADDITEM, ep =>
+                    cfg.ReceiveEndpoint(MessageBusQueueNames.ADDNOTIFYITEM, ep =>
                     {
                         ep.PrefetchCount = 16;
                         ep.UseMessageRetry(r =>
@@ -67,12 +85,25 @@ namespace uPromis.Microservice.Notification
                         });
                         ep.ConfigureConsumer<Controllers.AddNotificationItemConsumer>(provider);
                     });
+                    cfg.ReceiveEndpoint(MessageBusQueueNames.REMOVENOTIFYITEM, ep =>
+                    {
+                        ep.PrefetchCount = 16;
+                        ep.UseMessageRetry(r =>
+                        {
+                            r.Interval(2, 100);
+                        });
+                        ep.ConfigureConsumer<Controllers.RemoveNotificationItemConsumer>(provider);
+                    });
                 }));
             });
             services.AddMassTransitHostedService();
+
             services.AddQuartz(q =>
             {
                 // base quartz scheduler, job and trigger configuration
+                q.UseMicrosoftDependencyInjectionJobFactory(
+                    p => p.AllowDefaultConstructor = true
+                );
             });
 
             // ASP.NET Core hosting
@@ -82,16 +113,73 @@ namespace uPromis.Microservice.Notification
                 options.WaitForJobsToComplete = true;
             });
 
+            // First we must get a reference to a scheduler
+            ISchedulerFactory sf = new StdSchedulerFactory();
+            IScheduler scheduler = sf.GetScheduler().Result;
+
+            // add the jobs if needed
+            AddJob(scheduler, uPromis.Services.Notification.NotificationType.CONTRACTNOTIFICATION);
+            AddJob(scheduler, uPromis.Services.Notification.NotificationType.PROJECTNOTIFICATION);
+            AddJob(scheduler, uPromis.Services.Notification.NotificationType.REMINDERNOTIFICATION);
+
+            services.AddSingleton<IScheduler>(scheduler);
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "uPromis.Microservice.Notification", Version = "v1" });
             });
+
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddSerilog(dispose: true);
             }
             );
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "http://localhost:5000";
+                    options.RequireHttpsMetadata = false;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiScope", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "api3");
+                });
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    //    builder.WithOrigins("https://localhost:3001")
+                    //        .AllowAnyMethod()
+                    //        .AllowAnyHeader();
+                });
+            });
+
+        }
+
+        private static void AddJob(IScheduler scheduler, string jobName)
+        {
+            if (scheduler.CheckExists(new JobKey(jobName)).Result == true)
+            {
+                var job = JobBuilder.Create<ContractJob>()
+                    .WithIdentity(jobName)
+                    .StoreDurably()
+                    .Build();
+                scheduler.AddJob(job, true);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,13 +194,15 @@ namespace uPromis.Microservice.Notification
 
             app.UseHttpsRedirection();
 
+            app.UseCors(MyAllowSpecificOrigins);
+
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers()
+                    .RequireAuthorization("ApiScope");
             });
         }
     }

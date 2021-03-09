@@ -21,7 +21,8 @@ namespace uPromis.Microservice.Identityserver
             new ApiScope[]
             {
                 new ApiScope("api1", "My API"), // {  UserClaims = { "lastproject"} },
-                new ApiScope("api2", "Attachment API") {}
+                new ApiScope("api2", "Attachment API") {},
+                new ApiScope("api3", "Notification API") {}
             };
 
         public static IEnumerable<Client> Clients =>
@@ -112,7 +113,8 @@ namespace uPromis.Microservice.Identityserver
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "api2",
-                        "api1"
+                        "api1",
+                        "api3"
                     }
                 }
 

@@ -10,7 +10,29 @@ namespace uPromis.Services.Notification
 {
     public class NotificationSchedule
     {
-        public static NotificationSchedule CreateDefaultSchedule(string notificationType) => new NotificationSchedule() { NotificationType = notificationType };
+        public static NotificationSchedule CreateDefaultSchedule(string subscriberID, string notificationType) => new NotificationSchedule() { SubscriberID = subscriberID, NotificationType = notificationType };
+
+        public NotificationSchedule()
+        {
+
+        }
+
+        public NotificationSchedule(string subscriber, string notificationType, string[] scheduleElements, bool enabled)
+        {
+            SubscriberID = subscriber;
+            NotificationType = notificationType;
+            RunOnSunday = scheduleElements[5].Contains("1");
+            RunOnMonday = scheduleElements[5].Contains("2");
+            RunOnTuesday = scheduleElements[5].Contains("3");
+            RunOnWednesday = scheduleElements[5].Contains("4");
+            RunOnThursday = scheduleElements[5].Contains("5");
+            RunOnFriday = scheduleElements[5].Contains("6");
+            RunOnSaturday = scheduleElements[5].Contains("7");
+
+            RunOnHour = int.Parse(scheduleElements[2]);
+            RunOnMinute = int.Parse(scheduleElements[1]);
+            Enable = enabled;
+        }
 
         public string SubscriberID { get; set; }
         public string NotificationType { get; set; }
@@ -21,7 +43,6 @@ namespace uPromis.Services.Notification
 
         [Range(minimum: 0, maximum: 59, ErrorMessage = "Minute to run should be between 0 and 59")]
         public int RunOnMinute { get; set; } = 0;
-
         public bool RunOnMonday { get; set; } = true;
         public bool RunOnTuesday { get; set; } = true;
         public bool RunOnWednesday { get; set; } = true;

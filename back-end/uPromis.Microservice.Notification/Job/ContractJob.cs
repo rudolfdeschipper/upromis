@@ -27,7 +27,9 @@ namespace uPromis.Microservice.Notification.Job
             Logger.LogInformation($"Execute {nameof(ContractJob)} job's task");
             var Subscriber = context.Trigger.Key.Name;
 
-            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, NotificationType, Resources.ContractReminderMailItem);
+            IMessageTransmitter transmitter = new EmailTransmitter(LoggerProvider);
+
+            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, transmitter, NotificationType, Resources.ProjectReminderMailItem);
 
             jobMailSender.SendmailForJob(Subscriber, "Contract reminder", "Contract items");
 

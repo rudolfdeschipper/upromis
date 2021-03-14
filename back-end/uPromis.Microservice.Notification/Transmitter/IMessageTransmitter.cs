@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace uPromis.Microservice.Notification.Transmitter
 {
-    interface IMessageTransmitter
+    public interface IMessageTransmitter
     {
         public string Recipient { get; set; }
         public string Sender { get; set; }

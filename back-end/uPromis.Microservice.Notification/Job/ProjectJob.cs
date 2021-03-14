@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using uPromis.Microservice.Notification.Properties;
+using uPromis.Microservice.Notification.Transmitter;
 
 namespace uPromis.Microservice.Notification.Job
 {
@@ -25,7 +26,9 @@ namespace uPromis.Microservice.Notification.Job
             Logger.LogInformation($"Execute {nameof(ProjectJob)} job's task");
             var Subscriber = context.Trigger.Key.Name;
 
-            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, NotificationType, Resources.ProjectReminderMailItem);
+            IMessageTransmitter transmitter = new EmailTransmitter(LoggerProvider);
+
+            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, transmitter, NotificationType, Resources.ProjectReminderMailItem);
 
             jobMailSender.SendmailForJob(Subscriber, "Project reminder", "Project items");
 

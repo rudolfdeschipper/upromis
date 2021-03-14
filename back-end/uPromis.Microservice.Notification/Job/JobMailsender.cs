@@ -16,13 +16,15 @@ namespace uPromis.Microservice.Notification.Job
         private readonly Data.NotificationDbContext DBContext;
         private readonly string NotificationType;
         private readonly string MailTemplate;
-        public JobMailsender(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext, string notificationType, string mailTemplate)
+        private readonly IMessageTransmitter Transmitter;
+        public JobMailsender(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext, IMessageTransmitter transmitter, string notificationType, string mailTemplate)
         {
             DBContext = dbContext;
             Logger = loggerProvider.CreateLogger(nameof(ContractJob));
             LoggerProvider = loggerProvider;
             NotificationType = notificationType;
             MailTemplate = mailTemplate;
+            Transmitter = transmitter;
         }
         public void SendmailForJob(string subscriber, string subject, string title)
         {
@@ -46,11 +48,8 @@ namespace uPromis.Microservice.Notification.Job
 
                 var message = formatter.FormatMessage(items.ToList());
 
-                IMessageTransmitter transmitter = new EmailTransmitter(LoggerProvider)
-                {
-                    Recipient = items.First().SubscriptionID
-                };
-                transmitter.Transmit(subject, message);
+                Transmitter.Recipient = items.First().SubscriptionID;
+                Transmitter.Transmit(subject, message);
             }
             else
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Security;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using uPromis.Microservice.Notification.Properties;
@@ -11,9 +12,18 @@ namespace uPromis.Microservice.Notification.Transmitter
     public class EmailTransmitter : IMessageTransmitter
     {
         private readonly ILogger Logger;
-        public EmailTransmitter(ILoggerProvider loggerProvider)
+        private readonly string Server;
+        private readonly string Port;
+        private readonly string Username;
+        private readonly string Password;
+
+        public EmailTransmitter(ILoggerProvider loggerProvider,string server, string port, string username, string password)
         {
             Logger = loggerProvider.CreateLogger(nameof(EmailTransmitter));
+            Server = server;
+            Port = port;
+            Username = username;
+            Password = password;
         }
 
         public List<string> CC { get; set; }
@@ -57,16 +67,12 @@ namespace uPromis.Microservice.Notification.Transmitter
             message.Body = htmlMaster.Replace("{body}", messageBody);
             message.IsBodyHtml = true;
 
-            string server = Resources.mailServer;
-            string port = Resources.mailServerPort;
-            SmtpClient client = new SmtpClient(server, Convert.ToInt32(port));
+            SmtpClient client = new SmtpClient(Server, Convert.ToInt32(Port));
 
             if (Resources.mailAuthenticationNeeded == "true")
             {
                 Logger.LogInformation($"Providing Mail Credentials");
-                string username = Resources.mailUsername;
-                string password = Resources.mailPassword;
-                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(username, password);
+                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(Username, Password);
                 client.Credentials = credentials;
             }
             try

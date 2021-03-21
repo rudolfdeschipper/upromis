@@ -13,22 +13,22 @@ namespace uPromis.Microservice.Notification.Job
     {
         private readonly ILogger Logger;
         private readonly ILoggerProvider LoggerProvider;
+        public IMessageTransmitter Transmitter { get; }
         private readonly Data.NotificationDbContext DBContext;
         private readonly string NotificationType = Services.Notification.NotificationType.PROJECTNOTIFICATION;
-        public ProjectJob(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext)
+        public ProjectJob(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext, IMessageTransmitter transmitter)
         {
             DBContext = dbContext;
             Logger = loggerProvider.CreateLogger(nameof(ProjectJob));
             LoggerProvider = loggerProvider;
+            Transmitter = transmitter;
         }
         public Task Execute(IJobExecutionContext context)
         {
             Logger.LogInformation($"Execute {nameof(ProjectJob)} job's task");
             var Subscriber = context.Trigger.Key.Name;
 
-            IMessageTransmitter transmitter = new EmailTransmitter(LoggerProvider);
-
-            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, transmitter, NotificationType, Resources.ProjectReminderMailItem);
+            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, Transmitter, NotificationType, Resources.ProjectReminderMailItem);
 
             jobMailSender.SendmailForJob(Subscriber, "Project reminder", "Project items");
 

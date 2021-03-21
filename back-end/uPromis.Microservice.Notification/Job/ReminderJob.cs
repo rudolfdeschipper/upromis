@@ -13,22 +13,23 @@ namespace uPromis.Microservice.Notification.Job
     {
         private readonly ILogger Logger;
         private readonly ILoggerProvider LoggerProvider;
+        public IMessageTransmitter Transmitter { get; }
         private readonly Data.NotificationDbContext DBContext;
         private readonly string NotificationType = Services.Notification.NotificationType.REMINDERNOTIFICATION;
-        public ReminderJob(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext)
+
+        public ReminderJob(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext, IMessageTransmitter transmitter)
         {
             DBContext = dbContext;
             Logger = loggerProvider.CreateLogger(nameof(ReminderJob));
             LoggerProvider = loggerProvider;
+            Transmitter = transmitter;
         }
         public Task Execute(IJobExecutionContext context)
         {
             Logger.LogInformation($"Execute {nameof(ReminderJob)} job's task");
             var Subscriber = context.Trigger.Key.Name;
 
-            IMessageTransmitter transmitter = new EmailTransmitter(LoggerProvider);
-
-            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, transmitter, NotificationType, Resources.ProjectReminderMailItem);
+            var jobMailSender = new JobMailsender(LoggerProvider, DBContext, Transmitter, NotificationType, Resources.ProjectReminderMailItem);
 
             jobMailSender.SendmailForJob(Subscriber, "Reminders", "Items you need to look at");
 

@@ -23,6 +23,8 @@ using Quartz.Impl;
 using uPromis.Microservice.Notification.Data;
 using uPromis.Microservice.Notification.Model;
 using uPromis.Microservice.Notification.Job;
+using uPromis.Microservice.Notification.Transmitter;
+using System.Security;
 
 namespace uPromis.Microservice.Notification
 {
@@ -112,6 +114,15 @@ namespace uPromis.Microservice.Notification
                 // when shutting down we want jobs to complete gracefully
                 options.WaitForJobsToComplete = true;
             });
+
+            var section = Configuration.GetSection("Mail");
+            IMessageTransmitter transmitter = new EmailTransmitter(null,
+                section.GetValue<string>("Server"),
+                section.GetValue<string>("Port"),
+                section.GetValue<string>("Username"),
+                section.GetValue<string>("Password")
+            );
+            services.AddSingleton<IMessageTransmitter>(transmitter);
 
             // First we must get a reference to a scheduler
             ISchedulerFactory sf = new StdSchedulerFactory();

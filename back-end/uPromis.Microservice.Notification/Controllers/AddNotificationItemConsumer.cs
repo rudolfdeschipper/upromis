@@ -20,7 +20,7 @@ namespace uPromis.Microservice.Notification.Controllers
         }
         public async Task Consume(ConsumeContext<Services.Notification.NotificationEntry> context)
         {
-            Logger.LogInformation("Adding Notification entry: {0} - {1}", context.Message.ID, context.Message.Code);
+            Logger.LogDebug("AddNotification entry: {0} - {1}", context.Message.ID, context.Message.Code);
 
             // save the entry - check if it exists, if not create it
             var exists = Repo.Get(context.Message.SubscriptionID, 
@@ -35,6 +35,7 @@ namespace uPromis.Microservice.Notification.Controllers
                 Enddate = from.Enddate,
                 ID = from.ID,
                 NotificationType = from.NotificationType,
+                Salutation = from.Salutation,
                 Startdate = from.Startdate,
                 SubscriptionID = from.SubscriptionID,
                 URL = from.URL
@@ -42,10 +43,12 @@ namespace uPromis.Microservice.Notification.Controllers
 
             if (exists != null)
             {
+                Logger.LogInformation("Adding Notification entry: {0} - {1}", context.Message.ID, context.Message.Code);
                 await Repo.Post(rec);
             }
             else
             {
+                Logger.LogInformation("Updating Notification entry: {0} - {1}", context.Message.ID, context.Message.Code);
                 await Repo.Put(rec);
             }
 

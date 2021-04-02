@@ -80,6 +80,17 @@ namespace uPromis.Microservice.ContractAPI
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", "api1");
                 });
+                options.AddPolicy("CanSeeContracts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser();
+                    });
+                options.AddPolicy("CanManageContracts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireClaim("PMO");
+                    });
             });
             services.AddCors(options =>
             {

@@ -20,29 +20,16 @@ namespace uPromis.Microservice.Notification.Controllers
         }
         public async Task Consume(ConsumeContext<Services.Notification.NotificationEntry> context)
         {
-            Logger.LogInformation("Removing Notification entry: {0} - {1}", context.Message.ID, context.Message.Code);
+            Logger.LogDebug("RemoveNotificationItem entry: {0} - {1}", context.Message.ID, context.Message.Code);
 
-            // save the entry - check if it exists, if not create it
-            var exists = Repo.Get(context.Message.SubscriptionID, 
+            // get the entry - check if it exists, if not don't try to delete it
+            var exists = await Repo.Get(context.Message.SubscriptionID, 
                 context.Message.NotificationType, context.Message.URL);
-
-            var from = context.Message;
-            var rec = new Notification.Model.NotificationEntry()
-            {
-                Code = from.Code,
-                Description = from.Description,
-                Duedate = from.Duedate,
-                Enddate = from.Enddate,
-                ID = from.ID,
-                NotificationType = from.NotificationType,
-                Startdate = from.Startdate,
-                SubscriptionID = from.SubscriptionID,
-                URL = from.URL
-            };
 
             if (exists != null)
             {
-                await Repo.Delete(rec);
+                Logger.LogInformation("Removing Notification entry: {0} - {1}", context.Message.ID, context.Message.Code);
+                await Repo.Delete(exists);
             }
             return;
         }

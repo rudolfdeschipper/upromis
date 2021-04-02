@@ -64,7 +64,7 @@ namespace uPromis.Microservice.Notification.Model
             var trigger = TriggerBuilder.Create()
                 .WithIdentity(value.SubscriberID, value.NotificationType)
                 .WithSchedule(CronScheduleBuilder
-                .AtHourAndMinuteOnGivenDaysOfWeek(value.RunOnHour, value.RunOnMinute, weekDays))
+                .AtHourAndMinuteOnGivenDaysOfWeek(value.RunOnHour, value.RunOnMinute, weekDays.Take(i).ToArray()))
                 .ForJob(new JobKey(value.NotificationType))
                 .Build();
 

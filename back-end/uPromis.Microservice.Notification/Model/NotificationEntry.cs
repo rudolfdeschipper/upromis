@@ -39,6 +39,8 @@ namespace uPromis.Microservice.Notification.Model
         /// </summary>
         [Required, EmailAddress]
         public string SubscriptionID { get; set; }
+        [Required, MaxLength(20)]
+        public string Salutation { get; set; }
         /// <summary>
         /// Item's start date
         /// </summary>

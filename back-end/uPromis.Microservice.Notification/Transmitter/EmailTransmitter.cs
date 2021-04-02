@@ -16,14 +16,15 @@ namespace uPromis.Microservice.Notification.Transmitter
         private readonly string Port;
         private readonly string Username;
         private readonly string Password;
-
-        public EmailTransmitter(ILoggerProvider loggerProvider,string server, string port, string username, string password)
+        public SmtpClient Client { get; set; }
+        public EmailTransmitter(ILogger logger, string server, string port, string username, string password)
         {
-            Logger = loggerProvider.CreateLogger(nameof(EmailTransmitter));
+            Logger = logger;
             Server = server;
             Port = port;
             Username = username;
             Password = password;
+            Client = new SmtpClient();
         }
 
         public List<string> CC { get; set; }
@@ -45,14 +46,22 @@ namespace uPromis.Microservice.Notification.Transmitter
                 message.From = new MailAddress(Resources.mailSender);
             }
 
-            Recipient = Recipient.TrimEnd(';');
-            foreach (string _to in Recipient.Split(';'))
+            if (Recipient != null)
             {
-                message.To.Add(new MailAddress(_to.Trim()));
+                Recipient = Recipient?.TrimEnd(';');
+                foreach (string _to in Recipient?.Split(';'))
+                {
+                    message.To.Add(new MailAddress(_to.Trim()));
+                }
+                Logger.LogInformation($"Recipient(s): {Recipient}");
             }
-            Logger.LogInformation($"Recipient(s): {Recipient}");
+            else
+            {
+                Logger.LogError($"Recipient(s) not specified.");
+                return;
+            }
 
-            if (CC.Any())
+            if (CC != null && CC.Any())
             {
                 Logger.LogInformation($"Adding {CC.Count} CCs");
                 foreach (string _cc in CC)
@@ -60,25 +69,24 @@ namespace uPromis.Microservice.Notification.Transmitter
                     message.CC.Add(new MailAddress(_cc.Trim()));
                 }
             }
-
+            Client.Host = Server;
+            Client.Port = Convert.ToInt32(Port);
             message.Subject = subject;
 
             string htmlMaster = Resources.EmailMasterTemplate;
             message.Body = htmlMaster.Replace("{body}", messageBody);
             message.IsBodyHtml = true;
 
-            SmtpClient client = new SmtpClient(Server, Convert.ToInt32(Port));
-
             if (Resources.mailAuthenticationNeeded == "true")
             {
                 Logger.LogInformation($"Providing Mail Credentials");
                 System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(Username, Password);
-                client.Credentials = credentials;
+                Client.Credentials = credentials;
             }
             try
             {
                 Logger.LogInformation($"Sending message with subject {message.Subject} to {message.To}");
-                client.Send(message);
+                Client.Send(message);
             }
             catch (Exception ex)
             {

@@ -7,6 +7,7 @@ using uPromis.Services;
 using Quartz;
 using Microsoft.Extensions.Logging;
 using uPromis.Microservice.Notification.Model;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,11 +19,21 @@ namespace uPromis.Microservice.Notification.Controllers
     {
         public IScheduler Scheduler { get; set; }
         public ILogger Logger { get; set; }
-        public TriggerController(IScheduler scheduler, ILogger logger)
+        public TriggerController(IScheduler scheduler, ILoggerProvider loggerProvider )
         {
             Scheduler = scheduler;
-            Logger = logger;
+            Logger = loggerProvider.CreateLogger(nameof(TriggerController));
         }
+
+        // GET: api/<TriggerController>
+        [HttpGet("heartbeat")]
+        [AllowAnonymous]
+        public ActionResult<string> Heartbeat()
+        {
+            Logger.LogInformation($"Heartbeat");
+            return Ok("Heartbeat");
+        }
+
 
         // GET: api/<TriggerController>
         [HttpGet]

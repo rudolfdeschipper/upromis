@@ -43,7 +43,7 @@ namespace uPromis.Microservice.Notification.Job
                 {
                     Template = MailTemplate,
                     TableTitle = title,
-                    Salutation = items.First().SubscriptionID
+                    Salutation = items.First().Salutation
                 };
 
                 var message = formatter.FormatMessage(items.ToList());

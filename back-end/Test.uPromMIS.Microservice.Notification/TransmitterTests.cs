@@ -18,9 +18,11 @@ namespace Test.uPromMIS.Microservice.Notification
 
             var logger = loggerMoq.Object;
 
-            var transmitter = new EmailTransmitter(logger, "server", "100", "user", "password");
-            transmitter.Client = smtpMoq.Object;
-            transmitter.Recipient = "to@mail.com";
+            var transmitter = new EmailTransmitter(logger, "server", "100", "user", "password")
+            {
+                Client = smtpMoq.Object,
+                Recipient = "to@mail.com"
+            };
             transmitter.Transmit("", "");
 
             Assert.AreEqual("server", transmitter.Client.Host);
@@ -36,8 +38,10 @@ namespace Test.uPromMIS.Microservice.Notification
 
             var logger = loggerMoq.Object;
 
-            var transmitter = new EmailTransmitter(logger, "server", "100", "user", "password");
-            transmitter.Client = smtpMoq.Object;
+            var transmitter = new EmailTransmitter(logger, "server", "100", "user", "password")
+            {
+                Client = smtpMoq.Object
+            };
             transmitter.Transmit("", "");
 
             Assert.AreNotEqual("server", transmitter.Client.Host);
@@ -49,8 +53,10 @@ namespace Test.uPromMIS.Microservice.Notification
         {
             var loggerMoq = new Mock<ILogger>();
             var logger = loggerMoq.Object;
-            var transmitter = new DummyTransmitter(logger, "server", "100", "user", "password");
-            transmitter.Recipient = "to@mail.com";
+            var transmitter = new DummyTransmitter(logger, "server", "100", "user", "password")
+            {
+                Recipient = "to@mail.com"
+            };
             transmitter.Transmit("", "");
 
             Assert.AreEqual("to@mail.com", transmitter.Recipient);

@@ -34,8 +34,10 @@ namespace uPromis.Microservice.Notification.MessageFormatter
                 );
             var message = Template;
 
-            message = message.Replace("{Items}", table);
-            message = message.Replace("{Salutation}", Salutation);
+            message = message
+                .Replace("{TableTitle}", TableTitle)
+                .Replace("{Items}", table)
+                .Replace("{Salutation}", Salutation);
 
             return message;
         }

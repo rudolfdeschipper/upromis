@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using uPromis.Microservice.Notification.MessageFormatter;
 using uPromis.Services.Notification;
 
-namespace Test.uPromMIS.Microservice.Notification
+namespace uPromis.Microservice.Notification.Tests
 {
     [TestClass]
     public class NotificationMailFormatterTests
@@ -22,7 +22,7 @@ namespace Test.uPromMIS.Microservice.Notification
 
             var items = new System.Collections.Generic.List<uPromis.Microservice.Notification.Model.NotificationEntry>
             {
-                new uPromis.Microservice.Notification.Model.NotificationEntry()
+                new Notification.Model.NotificationEntry()
                 {
                     Code = "Code 1",
                     Description = "Description 1",

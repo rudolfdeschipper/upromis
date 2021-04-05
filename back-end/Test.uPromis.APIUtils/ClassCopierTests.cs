@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using uPromis.APIUtils.Copier;
 
 
-namespace Test.uPromis.APIUtils
+namespace uPromis.APIUtils.Tests
 {
 
     public class TestPerson

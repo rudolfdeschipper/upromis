@@ -6,7 +6,7 @@ using Quartz;
 using uPromis.Microservice.Notification.Model;
 using uPromis.Services.Notification;
 
-namespace Test.uPromMIS.Microservice.Notification
+namespace uPromis.Microservice.Notification.Tests
 {
     [TestClass]
     public class TriggerCreatorTests

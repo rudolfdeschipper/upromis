@@ -4,7 +4,7 @@ using Moq;
 using Microsoft.Extensions.Logging;
 using System.Net.Mail;
 
-namespace Test.uPromMIS.Microservice.Notification
+namespace uPromis.Microservice.Notification.Tests
 {
     [TestClass]
     public class TransmitterTests

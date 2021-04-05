@@ -9,13 +9,18 @@ namespace uPromis.APIUtils.Copier
     public class ClassCopier<TParent, TChild> where TParent : class
                                               where TChild : class
     {
+        /// <summary>
+        /// Copies all properties that are decorated with the ClassCopierAttribute attribute that specified from which parent class/property
+        /// the copy shall be performed. Note that NO deep copy is done (yet)
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
         public static void CopyClassProperties(TParent parent, TChild child)
         {
             var childProperties = child.GetType().GetProperties();
             foreach (var childProperty in childProperties)
             {
-                var attributesForProperty = childProperty.GetCustomAttributes(typeof(ClassCopierAttribute), true)
-                    .Where(ca => (ca as ClassCopierAttribute)?.ParentClass is TParent);
+                var attributesForProperty = childProperty.GetCustomAttributes(typeof(ClassCopierAttribute), true);
 
                 var isOfTypeMatchParentAttribute = false;
 
@@ -23,7 +28,7 @@ namespace uPromis.APIUtils.Copier
 
                 foreach (var attribute in attributesForProperty)
                 {
-                    if (attribute.GetType() == typeof(ClassCopierAttribute) && (attribute as ClassCopierAttribute).ParentClass is TParent)
+                    if (attribute.GetType() == typeof(ClassCopierAttribute) && (attribute as ClassCopierAttribute).ParentClass.FullName == parent.GetType().FullName)
                     {
                         isOfTypeMatchParentAttribute = true;
                         currentAttribute = (ClassCopierAttribute)attribute;
@@ -42,6 +47,7 @@ namespace uPromis.APIUtils.Copier
                             if (parentProperty.PropertyType == childProperty.PropertyType)
                             {
                                 parentPropertyValue = parentProperty.GetValue(parent);
+                                break;
                             }
                         }
                     }

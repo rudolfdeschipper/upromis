@@ -39,7 +39,7 @@ namespace uPromis.APIUtils.Copier
                 if (isOfTypeMatchParentAttribute)
                 {
                     var parentProperties = parent.GetType().GetProperties();
-                    object parentPropertyValue = null;
+                    object parentPropertyValue;
                     foreach (var parentProperty in parentProperties)
                     {
                         if (parentProperty.Name == currentAttribute.ParentPropertyName)
@@ -47,13 +47,10 @@ namespace uPromis.APIUtils.Copier
                             if (parentProperty.PropertyType == childProperty.PropertyType)
                             {
                                 parentPropertyValue = parentProperty.GetValue(parent);
+                                childProperty.SetValue(child, parentPropertyValue);
                                 break;
                             }
                         }
-                    }
-                    if (parentPropertyValue != null)
-                    {
-                        childProperty.SetValue(child, parentPropertyValue);
                     }
                 }
             }

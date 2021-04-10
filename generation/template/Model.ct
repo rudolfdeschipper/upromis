@@ -282,7 +282,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
     {
 %Loop:Properties
 %If:Values?
-        public static ListValue[] =<$>Values =
+        public static readonly ListValue[] =<$>Values =
         {
 %Loop:Values
             new ListValue() { Value = "=<$>", Label = "=<[$]>" } %If:HasMore , %EndIf

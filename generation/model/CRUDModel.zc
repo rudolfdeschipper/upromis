@@ -75,6 +75,20 @@ Request :
 	APIUrl: "request"
 }
 
+Client : 
+{
+	List <- Microservice.Contract.DTO.Client,
+	Edit <- Microservice.Contract.DTO.Client,
+	Tabs : {
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: false,
+	APIUrl: "client"
+}
+
 @Microservice
 
 Contract : {
@@ -92,7 +106,7 @@ Contract : {
 			Namespace: "Contract",
 			Export <- Microservice.Contract.DTO.Contract,
 			DTO <- Microservice.Contract.DTO.Contract,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "ContractMemberType" },
+			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Contract,
 			ReportQueue: "CONTRACT"
 		},
@@ -100,7 +114,7 @@ Contract : {
 			Namespace: "Request",
 			Export <- Microservice.Contract.DTO.Request,
 			DTO <- Microservice.Contract.DTO.Request,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "RequestMemberType" },
+			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Request,
 			ReportQueue: "REQUEST"
 		},
@@ -108,9 +122,17 @@ Contract : {
 			Namespace: "Proposal",
 			Export <- Microservice.Contract.DTO.Proposal,
 			DTO <- Microservice.Contract.DTO.Proposal,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "ProposalMemberType" },
+			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Proposal,
 			ReportQueue: "PROPOSAL"
+		},
+		Client: {
+			Namespace: "Client",
+			Export <- Microservice.Contract.DTO.Client,
+			DTO <- Microservice.Contract.DTO.Client,
+			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
+			Model <- Microservice.Contract.Models.Client,
+			ReportQueue: "CLIENT"
 		}
 	},
 	Models: {
@@ -141,6 +163,11 @@ Contract : {
 				Request : { 
 					Properties <- Entities.Request, 
 					SetName: "Requests", 
+					Lazy: true 
+				},
+				Client : { 
+					Properties <- Entities.Client, 
+					SetName: "Clients", 
 					Lazy: true 
 				}
 			}
@@ -186,6 +213,13 @@ Contract : {
 					SetName: "Teammembers", 
 					Lazy: false 
 				}
+			}
+		},
+		Client : {
+			SetName : "Clients",
+			Properties <- Entities.Client,
+			Children : {
+				
 			}
 		}
 	},
@@ -233,6 +267,11 @@ Contract : {
 					}
 				}
 			}
+		},
+		Client <- Microservice.Contract.Models.Client : {
+			Properties : {
+				-ExternalID
+			}
 		}
 	}
 }
@@ -255,7 +294,9 @@ AccountTeamComposition <- Definitions.DefaultObject : {
 }
 
 Contract <- Definitions.DefaultTimeboundObject : {
+	+Value <- DataDictionary.AmountField : { Name : "Value", Title : "Value", JSONName : "value" },
 	+Budget <- DataDictionary.AmountField : { Name : "Budget", Title : "Budget", JSONName : "budget" },
+	+ExpenseBudget <- DataDictionary.AmountField : { Name : "ExpenseBudget", Title : "Expense Budget", JSONName : "expenseBudget" },
 	+ContractStatus <- DataDictionary.StatusField : {
 		+Values : {
 			Planned : "1 - Planned",
@@ -269,10 +310,13 @@ Contract <- Definitions.DefaultTimeboundObject : {
 	},
 	+ContractType <- DataDictionary.StatusField : {
 		+Values : {
+			FrameContract: "0 - Frame Contract",
 			FixedPrice : "1 - Fixed Price",
 			TandM : "2 - Time & Means",
-			QTM : "3 - Quoted Time & Means",
-			FrameContract: "4 - Frame Contract"
+			TandMExt : "3 - Time & Means Extension",
+			QTM : "4 - Quoted Time & Means",
+			QTMExt : "5 - Quoted Time & Means Extension",
+			TaskOrder: "6 - Predefined task order"
 		}, 
 		JSONName : "contractType",
 		Title: "Contract type",
@@ -287,8 +331,31 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		Type : "int?",
 		JSONName : "proposal",
 		Nullable: true
-	}
-	/ ID, Code, Title, Description, ContractType, ContractStatus, Startdate, Enddate, Budget 
+	},
+	+ParentContractId <- DataDictionary.ReferenceField : {
+		ReferenceType : "Contract",
+		ReferenceSet : "Contracts",
+		ReferenceObjectName: "ParentContract",
+		-ReferenceDBContext,
+		Title : "Parent contract",
+		Type : "int?",
+		JSONName : "parentContract",
+		Nullable: true
+	},
+	+ClientId <- DataDictionary.ReferenceField : {
+		ReferenceType : "Client",
+		ReferenceSet : "Clients",
+		ReferenceObjectName: "Client",
+		-ReferenceDBContext,
+		Title : "Client",
+		Type : "int?",
+		JSONName : "client",
+		Nullable: true
+	},
+	+MainContact <- DataDictionary.DescriptionField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
+	+Phone <- DataDictionary.DescriptionField : { Name: "Phone", Title: "Phone", JSONName: "phone",Nullable: false, Length: 15, Show: true },
+	+ContactMail <- DataDictionary.DescriptionField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail",Nullable: false, Length: 100, Show: false }
+	/ ID, Code, Title, Description, ContractType, ContractStatus, Startdate, Enddate, Value, Budget, ExpenseBudget 
 }
 
 ContractPaymentInfo <- Definitions.DefaultObject: {
@@ -369,6 +436,13 @@ Request <- Definitions.DefaultTimeboundObject : {
 RequestTeamComposition <- Definitions.DefaultObject : {
 	+TeamMember <- DataDictionary.GuidField : { Name: "TeammemberID", Title: "Team member", JSONName: "teammemberID", Nullable: false },
 	+RequestMemberType <- DataDictionary.TeamMemberTypeField
+}
+
+Client <- Definitions.DefaultMainObject : {
+	+Address <- DataDictionary.DescriptionField : { Name: "Address", Title: "Address", JSONName: "address",Nullable: true, Show: false },
+	+MainContact <- DataDictionary.DescriptionField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
+	+Phone <- DataDictionary.DescriptionField : { Name: "Phone", Title: "Phone", JSONName: "phone",Nullable: false, Length: 15, Show: true },
+	+ContactMail <- DataDictionary.DescriptionField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail",Nullable: false, Length: 100, Show: false }
 }
 
 @Definitions

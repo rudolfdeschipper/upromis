@@ -78,10 +78,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                 record = await Repository.Post(record);
                 res = Transformers.Transform(record, new =<$>DTO());
 
-                Uri uri = new Uri("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
+%If:ReportQueue?
+                Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<=<$>DTO>(res);
-
+%EndIf
             }
             catch (Exception ex)
             {
@@ -121,9 +122,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 res = Transformers.Transform(record, new =<$>DTO());
 
-                Uri uri = new Uri("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
+%If:ReportQueue?
+                Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<=<$>DTO>(res);
+%EndIf
             }
             catch (Exception ex)
             {
@@ -152,10 +155,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                     return NotFound(new APIResult<=<$>DTO>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
 
-                Uri uri = new Uri("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERDELETE=<ReportQueue>);
+%If:ReportQueue?
+                Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERDELETE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<=<$>DTO>(rec.DataSubject);
-
+%EndIf
             }
             catch (Exception ex)
             {
@@ -181,7 +185,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
         [HttpPost("getforexport")]
         public async Task<IActionResult> GetForExport([FromBody] SortAndFilterInformation sentModel)
         {
-            using ExcelPackage package = new ExcelPackage();
+            using ExcelPackage package = new();
             ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("=<$> List");
             //Add the headers
             int col = 0;
@@ -207,7 +211,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 %/Loop:Export.Properties
             }
 
-            System.IO.MemoryStream fs = new System.IO.MemoryStream();
+            System.IO.MemoryStream fs = new();
             await package.SaveAsAsync(fs);
 
             return File(fs.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -219,7 +223,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
         public async Task<ActionResult> GetSelectValues([FromBody] ListValueInfo info)
         {
             //var EnumProducer = new SelectValueFromEnumProducer();
-            List<ListValue> list = new List<ListValue>();
+            List<ListValue> list = new();
 
             switch (info.ValueType)
             {
@@ -242,6 +246,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 %EndIf
 %EndIf
 %/Loop:Model.Properties
+%If:Model.Children?
 %Loop:Model.Children
 %Loop:Properties
 %If:Lookup?=true
@@ -263,12 +268,13 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 %EndIf
 %/Loop:Properties
 %/Loop:Model.Children
+%EndIf
                 default:
                     break;
             }
             return Ok(new ListValues() { ValueType = info.ValueType, data = list });
         }
-
+/*
         [HttpGet("getclaims/{UserID}")]
         [Authorize()]
         public async Task<IActionResult> GetClaims(string UserID)
@@ -282,7 +288,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                 });
             return new JsonResult(await claims.ToArrayAsync());
         }
-
+*/
     }
 }
 %/File

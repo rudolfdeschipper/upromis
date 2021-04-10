@@ -20,6 +20,9 @@ namespace uPromis.Services.Queues
         public const string REPORTSERVERSAVEPROPOSAL = "ReportServer.Proposal.Save.Queue";
         public const string REPORTSERVERDELETEPROPOSAL = "ReportServer.Proposal.Delete.Queue";
 
+        public const string REPORTSERVERSAVECLIENT = "ReportServer.Client.Save.Queue";
+        public const string REPORTSERVERDELETECLIENT = "ReportServer.Client.Delete.Queue";
+
         public const string ADDNOTIFYITEM = "Notification.AddNotifyItem.Queue";
         public const string REMOVENOTIFYITEM = "Notification.RemoveNotifyItem.Queue";
     }

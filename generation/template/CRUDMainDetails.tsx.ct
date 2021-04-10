@@ -17,10 +17,12 @@ import { UserContext } from '../../../context/UserContext';
 
 import =<App.$>Form from './=<App.$>Form';
 
+%If:Tabs?
 %Loop:Tabs
 import =<App.$>=<Tabs.$> from './=<App.$>=<Tabs.$>';
 import { I=<Model.SetName> } from './=<App.$>Types';
 %/Loop:Tabs
+%EndIf
 
 import { I=<App.$>Data } from './=<App.$>Types';
 import { =<App.$>API } from './=<App.$>API';
@@ -66,10 +68,11 @@ class =<App.$>Details extends React.Component<RouteComponentProps<{ id?: string 
                     =<JSONName>Label: '',
 %EndIf
 %/Loop:App.Edit.Properties
+%If:Tabs?
 %Loop:Tabs
                     =<Model.SetName>: [],
 %/Loop:Tabs
-
+%EndIf
                     modifier: "Unchanged"
                 },
 %Loop:Edit.Properties
@@ -98,10 +101,11 @@ class =<App.$>Details extends React.Component<RouteComponentProps<{ id?: string 
                     =<JSONName>Label: '',
 %EndIf
 %/Loop:App.Edit.Properties
+%If:Tabs?
 %Loop:Tabs
                     =<Model.SetName>: [],
 %/Loop:Tabs
-
+%EndIf
                     modifier: "Added"
                     
                 },

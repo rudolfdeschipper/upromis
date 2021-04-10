@@ -67,26 +67,42 @@ namespace IdentityServerAspNetIdentity.Models
             // get user id - this is in the "sub" claim
             // avoids doing a round trip to the database
             var userID = context.Subject.Claims.FirstOrDefault(c => c.Type == "sub").Value;
-            var response = await apiClient.GetAsync("http://localhost:5001/api/contract/getclaims/" + userID, HttpCompletionOption.ResponseContentRead); ;
-            if (!response.IsSuccessStatusCode)
+
+            try
             {
-                Console.WriteLine(response.StatusCode);
+                var response = await apiClient.GetAsync("http://localhost:5001/api/contract/getclaims/" + userID, HttpCompletionOption.ResponseContentRead); ;
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(response.StatusCode);
+                }
+                else
+                {
+                    // read the results
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    // convert (in this case we only expect one claim back
+                    var result = JsonConvert.DeserializeObject<ClaimValues>(content);
+
+                    // add it to the claims collection
+                    var c = new System.Security.Claims.Claim(result.Key, result.Value);
+                    context.IssuedClaims.Add(c);
+
+                    Console.WriteLine(content);
+                }
+                await Task.CompletedTask;
             }
-            else
+            catch (HttpRequestException httpEx)
             {
-                // read the results
-                var content = await response.Content.ReadAsStringAsync();
-
-                // convert (in this case we only expect one claim back
-                var result = JsonConvert.DeserializeObject<ClaimValues>(content);
-
-                // add it to the claims collection
-                var c = new System.Security.Claims.Claim(result.Key, result.Value);
-                context.IssuedClaims.Add(c);
-
-                Console.WriteLine(content);
+                Console.WriteLine(httpEx.Message);
             }
-            await Task.CompletedTask;
+            catch (InvalidOperationException invalidEx)
+            {
+                Console.WriteLine(invalidEx.Message);
+            }
+            catch (TaskCanceledException taskEx)
+            {
+                Console.WriteLine(taskEx.Message);
+            }
             return;
         }
 

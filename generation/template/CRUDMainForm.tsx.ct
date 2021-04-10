@@ -49,6 +49,8 @@ class =<App.$>Form extends React.Component<IProps, IState> {
 %EndIf
 %If:Nullable?=false
                         .required('Required')
+%Else
+                        .nullable()
 %EndIf
 %If:Values?
                         .oneOf([

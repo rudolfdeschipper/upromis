@@ -295,8 +295,8 @@ AccountTeamComposition <- Definitions.DefaultObject : {
 
 Contract <- Definitions.DefaultTimeboundObject : {
 	+Value <- DataDictionary.AmountField : { Name : "Value", Title : "Value", JSONName : "value" },
-	+Budget <- DataDictionary.AmountField : { Name : "Budget", Title : "Budget", JSONName : "budget" },
-	+ExpenseBudget <- DataDictionary.AmountField : { Name : "ExpenseBudget", Title : "Expense Budget", JSONName : "expenseBudget" },
+	+Budget <- DataDictionary.AmountField : { Name : "Budget", Title : "Budget", JSONName : "budget", Show: false },
+	+ExpenseBudget <- DataDictionary.AmountField : { Name : "ExpenseBudget", Title : "Expense Budget", JSONName : "expenseBudget", Show: false },
 	+ContractStatus <- DataDictionary.StatusField : {
 		+Values : {
 			Planned : "1 - Planned",
@@ -330,7 +330,8 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		Title : "Proposal",
 		Type : "int?",
 		JSONName : "proposal",
-		Nullable: true
+		Nullable: true,
+		Show: false
 	},
 	+ParentContractId <- DataDictionary.ReferenceField : {
 		ReferenceType : "Contract",
@@ -340,7 +341,8 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		Title : "Parent contract",
 		Type : "int?",
 		JSONName : "parentContract",
-		Nullable: true
+		Nullable: true,
+		Show: false
 	},
 	+ClientId <- DataDictionary.ReferenceField : {
 		ReferenceType : "Client",
@@ -350,7 +352,8 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		Title : "Client",
 		Type : "int?",
 		JSONName : "client",
-		Nullable: true
+		Nullable: true,
+		Show: false
 	},
 	+MainContact <- DataDictionary.DescriptionField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
 	+Phone <- DataDictionary.DescriptionField : { Name: "Phone", Title: "Phone", JSONName: "phone",Nullable: false, Length: 15, Show: true },

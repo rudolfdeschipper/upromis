@@ -30,10 +30,12 @@ namespace uPromis.Microservice.ContractAPI
             services.AddTransient<IRequestRepository, RequestRepository>();
             services.AddTransient<IProposalRepository, ProposalRepository>();
             services.AddTransient<IContractRepository, ContractRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
 
             services.AddTransient<Business.IRequestBusinessRules, Business.RequestBusinessRules>();
             services.AddTransient<Business.IProposalBusinessRules, Business.ProposalBusinessRules>();
             services.AddTransient<Business.IContractBusinessRules, Business.ContractBusinessRules>();
+            services.AddTransient<Business.IClientBusinessRules, Business.ClientBusinessRules>();
 
             services.AddDbContext<ContractDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -80,17 +82,17 @@ namespace uPromis.Microservice.ContractAPI
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", "api1");
                 });
-                options.AddPolicy("CanSeeContracts",
-                    p =>
-                    {
-                        p.RequireAuthenticatedUser();
-                    });
-                options.AddPolicy("CanManageContracts",
-                    p =>
-                    {
-                        p.RequireAuthenticatedUser()
-                        .RequireClaim("PMO");
-                    });
+                //options.AddPolicy("CanSeeContracts",
+                //    p =>
+                //    {
+                //        p.RequireAuthenticatedUser();
+                //    });
+                //options.AddPolicy("CanManageContracts",
+                //    p =>
+                //    {
+                //        p.RequireAuthenticatedUser()
+                //        .RequireClaim("PMO");
+                //    });
             });
             services.AddCors(options =>
             {
@@ -105,7 +107,7 @@ namespace uPromis.Microservice.ContractAPI
                 //        .AllowAnyHeader();
                 });
             });
-            
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,10 +122,10 @@ namespace uPromis.Microservice.ContractAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
 
-            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

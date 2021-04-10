@@ -30,6 +30,10 @@ export class NavMenu extends React.Component<{ User: any }> {
                                 <NavDropdown.Item className="text-dark" href='/proposal' >
                                     Proposals
                                 </NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item className="text-dark" href='/client' >
+                                    Clients
+                                </NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Project" id="collapsable-contract-dropdown"  disabled={!this.props.User}>
                                 <NavDropdown.Item className="text-dark" href='/project' >
@@ -47,6 +51,9 @@ export class NavMenu extends React.Component<{ User: any }> {
                                 <NavDropdown.Item className="text-dark" href='/mission' >
                                     Missions
                                 </NavDropdown.Item>
+                                <NavDropdown.Divider />
+                            </NavDropdown>
+                            <NavDropdown title="Config" id="collapsable-contract-dropdown"  disabled={!this.props.User}>
                                 <NavDropdown.Divider />
                             </NavDropdown>
                         </Nav>

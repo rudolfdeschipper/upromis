@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.Report
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Services", "back-end\upromis.Services\uPromis.Services.csproj", "{B892952F-B2CA-4781-8895-FFC7F110F08C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.APIUtils.Tests", "back-end\Test.uPromis.APIUtils\uPromis.APIUtils.Tests.csproj", "{38D5A485-FDE5-4B79-A799-D5D2D4289405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.APIUtils.Tests", "back-end\uPromis.APIUtils.Tests\uPromis.APIUtils.Tests.csproj", "{38D5A485-FDE5-4B79-A799-D5D2D4289405}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.Notification", "back-end\uPromis.Microservice.Notification\uPromis.Microservice.Notification.csproj", "{B741D9D4-D872-4597-A974-6E5F56CE1FBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.Notification.Tests", "back-end\Test.uPromMIS.Microservice.Notification\uPromis.Microservice.Notification.Tests.csproj", "{46B819D2-7A52-4AB6-8369-AE2B4FFF0689}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "uPromis.Microservice.Notification.Tests", "back-end\uPromis.Microservice.Notification.Tests\uPromis.Microservice.Notification.Tests.csproj", "{46B819D2-7A52-4AB6-8369-AE2B4FFF0689}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -356,8 +356,8 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		Show: false
 	},
 	+MainContact <- DataDictionary.DescriptionField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
-	+Phone <- DataDictionary.DescriptionField : { Name: "Phone", Title: "Phone", JSONName: "phone",Nullable: false, Length: 15, Show: true },
-	+ContactMail <- DataDictionary.DescriptionField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail",Nullable: false, Length: 100, Show: false }
+	+Phone <- DataDictionary.PhoneField : { Nullable: false, Show: true },
+	+ContactMail <- DataDictionary.EmailField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail", Nullable: false, Show: false }
 	/ ID, Code, Title, Description, ContractType, ContractStatus, Startdate, Enddate, Value, Budget, ExpenseBudget 
 }
 
@@ -498,6 +498,20 @@ CodeField : {
 	Nullable:false,
 	Show:true,
 	Lookup: false
+}
+
+EmailField <- DataDictionary.CodeField : {
+	Name : "Email",
+	JSONName : "email",
+	Title : "Email",
+	+Validation : "EmailAddress"
+}
+
+PhoneField <- DataDictionary.CodeField : {
+	Name : "Phone",
+	JSONName : "phone",
+	Title : "Phone number",
+	+Validation : "Phone"
 }
 
 DescriptionField : {

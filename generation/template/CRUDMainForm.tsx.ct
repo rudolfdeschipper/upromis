@@ -52,6 +52,12 @@ class =<App.$>Form extends React.Component<IProps, IState> {
 %Else
                         .nullable()
 %EndIf
+%If:Validation?=EmailAddress
+                        .email()
+%EndIf
+%If:Validation?=Phone
+                        .matches(/^(\+\s?)?((?<!\+.*)\(\+?\d+([\s\-\.]?\d+)?\)|\d+)([\s\-\.]?(\(\d+([\s\-\.]?\d+)?\)|\d+))*(\s?(x|ext\.?)\s?\d+)?$/, 'Must be a valid phone number')
+%EndIf
 %If:Values?
                         .oneOf([
 %Loop:Values

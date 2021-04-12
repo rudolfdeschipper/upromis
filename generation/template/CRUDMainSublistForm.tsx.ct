@@ -56,6 +56,14 @@ class =<App.$>=<Tabs.$>Form extends React.Component<IProps, IState> {
 %EndIf
 %If:Nullable?=false
                         .required('Required')
+%Else
+                        .nullable()
+%EndIf
+%If:Validation?=EmailAddress
+                        .email()
+%EndIf
+%If:Validation?=Phone
+                        .matches(/^(\+\s?)?((?<!\+.*)\(\+?\d+([\s\-\.]?\d+)?\)|\d+)([\s\-\.]?(\(\d+([\s\-\.]?\d+)?\)|\d+))*(\s?(x|ext\.?)\s?\d+)?$/, 'Must be a valid phone number')
 %EndIf
 %If:Values?
                         .oneOf([

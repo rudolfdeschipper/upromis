@@ -306,6 +306,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %If:Format?
         [DisplayFormat(DataFormatString = "{0:=<Format>}")]
 %EndIf
+%If:Validation?
+        [=<Validation>]
+%EndIf
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
 
 %If:Reference?=true
@@ -384,6 +387,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %If:Format?
         [DisplayFormat(DataFormatString = "{0:=<Format>}")]
 %EndIf
+%If:Validation?
+        [=<Validation>]
+%EndIf
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
 
 %If:Reference?=true
@@ -448,6 +454,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %EndIf
 %If:Format?
         [DisplayFormat(DataFormatString = "{0:=<Format>}")]
+%EndIf
+%If:Validation?
+        [=<Validation>]
 %EndIf
         [JsonProperty(PropertyName = "=<JSONName>")]
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
@@ -517,6 +526,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %EndIf
 %If:Format?
         [DisplayFormat(DataFormatString = "{0:=<Format>}")]
+%EndIf
+%If:Validation?
+        [=<Validation>]
 %EndIf
         [JsonProperty(PropertyName = "=<JSONName>")]
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf

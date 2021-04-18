@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { Form, SubmitBtn, Input, Datepicker } from 'react-formik-ui'
+import { Form, SubmitBtn, Input, DatePicker } from 'react-formik-ui'
 
 import { IAttachmentData } from './AttachmentTypes';
 
@@ -36,7 +36,7 @@ class AttachmentDeleteForm extends React.Component<IProps, IState> {
                     <Input name="id" label="ID" disabled />
                     <Input name="fileName" label="File Name" disabled/>
                     <Input name="size" label="Size" disabled/>
-                    <Datepicker name="uploadedOn" label="Uploaded On" disabled />
+                    <DatePicker name="uploadedOn" label="Uploaded On" disabled />
                     <Input name='uploadedBy' label='Uploaded By' disabled />
                     <hr />
                     <SubmitBtn className="w3-button w3-light-grey w3-round" title={this.props.buttonText + "s this record"} disabled={this.state.isSubmitting}>

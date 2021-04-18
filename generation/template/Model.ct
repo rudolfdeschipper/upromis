@@ -592,6 +592,8 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
                 // check if actually filled
                 if(from.=<$> != 0) {
                         to.=<$> = from.=<$>;
+                } else {
+                        to.=<$> = null;
                 }
 %Else
                 to.=<$> = from.=<$>;
@@ -650,6 +652,8 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
                 // check if actually filled
                 if(from.=<$> != 0) {
                         to.=<$> = from.=<$>;
+                } else {
+                        to.=<$> = null;
                 }
 %Else
                 to.=<$> = from.=<$>;

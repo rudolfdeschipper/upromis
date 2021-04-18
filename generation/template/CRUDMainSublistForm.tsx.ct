@@ -10,7 +10,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Form, Datepicker, Input, Textarea, SubmitBtn, Select } from 'react-formik-ui'
+import { Form, DatePicker, Input, Textarea, SubmitBtn, Select } from 'react-formik-ui'
 
 import { I=<Tabs.Model.SetName> } from './=<App.$>Types';
 import { ISelectValue } from '../../GeneralTypes';
@@ -76,7 +76,7 @@ class =<App.$>=<Tabs.$>Form extends React.Component<IProps, IState> {
                 })}
 
             >
-                <Form className="w3-container" mode="themed">
+                <Form className="w3-container" styling="theme">
 %Loop:Model.Properties
                     <=<UIControl>
                      />

@@ -7,9 +7,9 @@
 */
 
 import React from 'react';
-import ReactTable from 'react-table';
+import ReactTable from 'react-table-6';
 import { withRouter } from 'react-router';
-import "react-table/react-table.css";
+import "react-table-6/react-table.css";
 import { Utils } from '../../Utils';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';

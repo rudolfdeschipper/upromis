@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactTable from 'react-table';
-import "react-table/react-table.css";
+import ReactTable from 'react-table-6';
+import "react-table-6/react-table.css";
 import "./Attachment.css";
 import { Utils } from '../Utils';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';

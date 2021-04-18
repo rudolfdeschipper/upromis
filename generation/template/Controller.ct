@@ -239,7 +239,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 %Else
                 case "=<$>" :
                     // provide empty value in the dropdown:
-                    list.Add(new ListValue() { Value = "", Label = "" });
+                    list.Add(new ListValue() { Value = string.Empty, Label = "" });
 
                      list.AddRange( Models.=<Controllers.$>.=<$>Values);
                     break;
@@ -260,7 +260,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 %Else
                 case "=<$>" :
                     // provide empty value in the dropdown:
-                    list.Add(new ListValue() { Value = "", Label = "" });
+                    list.Add(new ListValue() { Value = string.Empty, Label = "" });
 
                      list.AddRange( Models.=<Model.Children.$>.=<$>Values);
                     break;

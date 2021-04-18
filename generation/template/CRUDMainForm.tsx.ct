@@ -9,7 +9,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Form, Datepicker, SubmitBtn, Input, Textarea, Select } from 'react-formik-ui'
+import { Form, DatePicker, SubmitBtn, Input, Textarea, Select } from 'react-formik-ui'
 import { ISelectValue } from '../../GeneralTypes';
 
 import { I=<App.$>Data } from './=<App.$>Types';
@@ -75,7 +75,7 @@ class =<App.$>Form extends React.Component<IProps, IState> {
                     setSubmitting(false);
                 }}
             >
-                <Form mode="themed">
+                <Form styling="theme">
 %Loop:App.Edit.Properties
                 <=<UIControl> />
 %/Loop:App.Edit.Properties

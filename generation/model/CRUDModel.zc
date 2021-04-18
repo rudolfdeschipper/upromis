@@ -387,10 +387,13 @@ Proposal <- Definitions.DefaultTimeboundObject : {
 	},
 	+ProposalType <- DataDictionary.StatusField : {
 		+Values : {
+			FrameContract: "0 - Frame Contract",
 			FixedPrice : "1 - Fixed Price",
 			TandM : "2 - Time & Means",
-			QTM : "3 - Quoted Time & Means",
-			FrameContract: "4 - Frame Contract"
+			TandMExt : "3 - Time & Means Extension",
+			QTM : "4 - Quoted Time & Means",
+			QTMExt : "5 - Quoted Time & Means Extension",
+			TaskOrder: "6 - Predefined task order"
 		}, 
 		JSONName : "proposalType",
 		Title: "Proposal type",
@@ -411,6 +414,25 @@ ProposalTeamComposition <- Definitions.DefaultObject : {
 }
 
 Request <- Definitions.DefaultTimeboundObject : {
+	Startdate <- DataDictionary.DateField :  { Name : "ReceivedDate", Title : "Date received", JSONName : "receivedDate" }, 
+	+RequestorId <- DataDictionary.ReferenceField : {
+		ReferenceType : "Client",
+		ReferenceSet : "Clients",
+		ReferenceObjectName: "Requestor",
+		-ReferenceDBContext,
+		Title : "Requestor",
+		Type : "int?",
+		JSONName : "requestor",
+		Nullable: true,
+		Show: false
+	},
+	-Enddate, 
+	+AckPlandate <- DataDictionary.DateField :  { Name : "AcknowledgePlandate", Title : "Planned Acknowledge date", Nullable: true, JSONName : "acknowledgePlanDate" }, 
+	+AckActualdate <- DataDictionary.DateField :  { Name : "AcknowledgeActualdate", Title : "Actual Acknowledge date", Nullable: true, JSONName : "acknowledgeActualDate" }, 
+	+YNPlandate <- DataDictionary.DateField :  { Name : "YesNoPlandate", Title : "Planned Yes/No date", Nullable: true, JSONName : "ynPlanDate" }, 
+	+YNActualdate <- DataDictionary.DateField :  { Name : "YesNoActualdate", Title : "Actual Yes/No date", Nullable: true, JSONName : "ynActualDate" }, 
+	+OfferPlandate <- DataDictionary.DateField :  { Name : "OfferPlandate", Title : "Planned Proposal date", Nullable: true, JSONName : "offerPlanDate" }, 
+	+OfferActualdate <- DataDictionary.DateField :  { Name : "OfferActualdate", Title : "Actual Proposal date", Nullable: true, JSONName : "offerActualDate" }, 
 	+RequestStatus <- DataDictionary.StatusField : {
 		+Values : {
 			Planned : "1 - Planned",
@@ -424,16 +446,18 @@ Request <- Definitions.DefaultTimeboundObject : {
 	},
 	+RequestType <- DataDictionary.StatusField : {
 		+Values : {
+			FrameContract: "0 - Frame Contract",
 			FixedPrice : "1 - Fixed Price",
 			TandM : "2 - Time & Means",
-			QTM : "3 - Quoted Time & Means",
-			FrameContract: "4 - Frame Contract"
+			TandMExt : "3 - Time & Means Extension",
+			QTM : "4 - Quoted Time & Means",
+			QTMExt : "5 - Quoted Time & Means Extension",
+			TaskOrder: "6 - Predefined task order"
 		}, 
 		JSONName : "requestType",
 		Title: "Request type",
 		Nullable: false
 	}
-	
 }
 
 RequestTeamComposition <- Definitions.DefaultObject : {
@@ -538,8 +562,8 @@ DateField : {
 	Name:"Date", 
 	JSONName: "date", 
 	Title:"Date", 
-	UIControl: "Datepicker name='[JSONName]' label='[Title]' ",
-	UIROControl: "Datepicker name='[JSONName]' label='[Title]' disabled ",
+	UIControl: "DatePicker name='[JSONName]' label='[Title]' ",
+	UIROControl: "DatePicker name='[JSONName]' label='[Title]' disabled ",
 	Format : "MM/DD/YYYY",
 	Nullable:true,
 	Show:true
@@ -554,8 +578,8 @@ DateTimeField : {
 	Name:"DateTime", 
 	JSONName: "datetime", 
 	Title:"Date/Time", 
-	UIControl: "Datepicker name='[JSONName]' label='[Title]' ",
-	UIROControl: "Datepicker name='[JSONName]' label='[Title]' disabled ",
+	UIControl: "DatePicker name='[JSONName]' label='[Title]' ",
+	UIROControl: "DatePicker name='[JSONName]' label='[Title]' disabled ",
 	Format : "MM/DD/YYYY hh:mm",
 	Nullable:true,
 	Show:true
@@ -570,8 +594,8 @@ DateRange : {
 	Name:"DateRange", 
 	JSONName: "datetime", 
 	Title:"Date/Time", 
-	UIControl: "div className='w3-cell-row'> <div className='w3-cell'> <Datepicker name='[Fromdate]' label='[Title]'  /> </div> <div className='w3-cell'><Datepicker name='[Todate]'  /></div></div>",
-	UIROControl: "div className='w3-cell-row'> <div className='w3-cell'> <Datepicker name='[Fromdate]' label='[Title]' disabled /> </div> <div className='w3-cell'><Datepicker name='[Todate]' disabled /></div></div>",
+	UIControl: "div className='w3-cell-row'> <div className='w3-cell'> <DatePicker name='[Fromdate]' label='[Title]'  /> </div> <div className='w3-cell'><DatePicker name='[Todate]'  /></div></div>",
+	UIROControl: "div className='w3-cell-row'> <div className='w3-cell'> <DatePicker name='[Fromdate]' label='[Title]' disabled /> </div> <div className='w3-cell'><DatePicker name='[Todate]' disabled /></div></div>",
 	Format : "MM/DD/YYYY",
 	Nullable:true,
 	Show:true

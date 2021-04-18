@@ -3,7 +3,7 @@
 export class Utils {
 
     static formatDate(d: any) {
-        if (d == null || d === 'undefined') {
+        if (d == null || d === undefined) {
             return ""
         }
         let date = new Date(d)
@@ -18,8 +18,9 @@ export class Utils {
         return dateAsString
     }
 
-    static formatAmount(a: number) {
+    static formatAmount(a?: number) {
         const dp = 2
+        if(a === undefined) return "";
         var w = a.toFixed(dp), k = (w as any) | 0, b = a < 0 ? 1 : 0,
             u = Math.abs((w as any) - k), d = ('' + u.toFixed(dp)).substr(2, dp),
             s = '' + k, i = s.length, r = '';

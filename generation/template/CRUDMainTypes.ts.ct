@@ -9,7 +9,11 @@
 export interface I=<App.$>Data {
 
 %Loop:App.Edit.Properties
+%If:Nullable?=false
     =<JSONName>: =<JSONType>,
+%Else
+    =<JSONName>?: =<JSONType>,
+%EndIf
 %If:Lookup?=true
     =<JSONName>Label: string,
 %EndIf
@@ -24,7 +28,11 @@ export interface I=<App.$>Data {
 %Loop:App.Edit.Children
 export interface I=<SetName> {
 %Loop:Properties
-    =<JSONName> : =<JSONType>,
+%If:Nullable?=false
+    =<JSONName>: =<JSONType>,
+%Else
+    =<JSONName>?: =<JSONType>,
+%EndIf
 %If:Lookup?=true
     =<JSONName>Label: string,
 %EndIf

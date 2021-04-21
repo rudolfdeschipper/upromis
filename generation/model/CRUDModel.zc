@@ -328,7 +328,7 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		ReferenceObjectName: "Proposal",
 		-ReferenceDBContext,
 		Title : "Proposal",
-		Type : "int?",
+		Type : "int",
 		JSONName : "proposal",
 		Nullable: true,
 		Show: false
@@ -339,7 +339,7 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		ReferenceObjectName: "ParentContract",
 		-ReferenceDBContext,
 		Title : "Parent contract",
-		Type : "int?",
+		Type : "int",
 		JSONName : "parentContract",
 		Nullable: true,
 		Show: false
@@ -350,7 +350,7 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		ReferenceObjectName: "Client",
 		-ReferenceDBContext,
 		Title : "Client",
-		Type : "int?",
+		Type : "int",
 		JSONName : "client",
 		Nullable: true,
 		Show: false
@@ -414,21 +414,21 @@ ProposalTeamComposition <- Definitions.DefaultObject : {
 }
 
 Request <- Definitions.DefaultTimeboundObject : {
-	Startdate <- DataDictionary.DateField :  { Name : "ReceivedDate", Title : "Date received", JSONName : "receivedDate" }, 
+	Startdate <- DataDictionary.DateField :  { Name : "ReceivedDate", Title : "Date received", JSONName : "receivedDate", Nullable: false }, 
 	+RequestorId <- DataDictionary.ReferenceField : {
 		ReferenceType : "Client",
 		ReferenceSet : "Clients",
 		ReferenceObjectName: "Requestor",
 		-ReferenceDBContext,
 		Title : "Requestor",
-		Type : "int?",
+		Type : "int",
 		JSONName : "requestor",
-		Nullable: true,
+		Nullable: false,
 		Show: false
 	},
 	-Enddate, 
 	+AckPlandate <- DataDictionary.DateField :  { Name : "AcknowledgePlandate", Title : "Planned Acknowledge date", Nullable: true, JSONName : "acknowledgePlanDate" }, 
-	+AckActualdate <- DataDictionary.DateField :  { Name : "AcknowledgeActualdate", Title : "Actual Acknowledge date", Nullable: true, JSONName : "acknowledgeActualDate" }, 
+	+AckActualdate <- DataDictionary.DateField :  { Name : "AcknowledgeActualdate", Title : "Actual Acknowledge date", Nullable: true, JSONName : "acknowledgeActualDate", JSONDefault: "undefined" }, 
 	+YNPlandate <- DataDictionary.DateField :  { Name : "YesNoPlandate", Title : "Planned Yes/No date", Nullable: true, JSONName : "ynPlanDate" }, 
 	+YNActualdate <- DataDictionary.DateField :  { Name : "YesNoActualdate", Title : "Actual Yes/No date", Nullable: true, JSONName : "ynActualDate" }, 
 	+OfferPlandate <- DataDictionary.DateField :  { Name : "OfferPlandate", Title : "Planned Proposal date", Nullable: true, JSONName : "offerPlanDate" }, 

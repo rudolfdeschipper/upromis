@@ -309,7 +309,15 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %If:Validation?
         [=<Validation>]
 %EndIf
+%If:Type=string
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+%If:Nullable=false
+        public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+        public =<Type>? =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%EndIf
+%EndIf
 
 %If:Reference?=true
         public =<ReferenceType> =<ReferenceObjectName> { get; set; }
@@ -390,7 +398,15 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %If:Validation?
         [=<Validation>]
 %EndIf
+%If:Type=string
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+%If:Nullable=false
+        public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+        public =<Type>? =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%EndIf
+%EndIf
 
 %If:Reference?=true
         public =<ReferenceType> =<ReferenceObjectName> { get; set; }
@@ -459,7 +475,15 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
         [=<Validation>]
 %EndIf
         [JsonProperty(PropertyName = "=<JSONName>")]
+%If:Type=string
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+%If:Nullable=false
+        public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+        public =<Type>? =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%EndIf
+%EndIf
 
 %If:Lookup?=true
         [JsonProperty(PropertyName = "=<JSONName>Label")]
@@ -531,7 +555,15 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
         [=<Validation>]
 %EndIf
         [JsonProperty(PropertyName = "=<JSONName>")]
+%If:Type=string
         public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+%If:Nullable=false
+        public =<Type> =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%Else
+        public =<Type>? =<$> { get; set; } %If:Default? = =<Default>; %EndIf
+%EndIf
+%EndIf
 
 %If:Lookup?=true
         [JsonProperty(PropertyName = "=<JSONName>Label")]

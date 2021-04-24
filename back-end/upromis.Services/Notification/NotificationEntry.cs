@@ -29,8 +29,14 @@ namespace uPromis.Services.Notification
         /// </summary>
         public string NotificationType { get; set; }
         /// <summary>
+        /// What is the user expected to do
+        /// </summary>
+        public string ExpectedAction { get; set; }
+        /// <summary>
         /// What Subscriber receive the notification
         /// </summary>
+
+
         public string SubscriptionID { get; set; }
         /// <summary>
         /// Full name of recipient

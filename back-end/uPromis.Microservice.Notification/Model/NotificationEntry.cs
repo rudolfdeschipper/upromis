@@ -35,6 +35,11 @@ namespace uPromis.Microservice.Notification.Model
         [Required, MaxLength(50)]
         public string NotificationType { get; set; }
         /// <summary>
+        /// What is the user expected to do
+        /// </summary>
+        [Required, MaxLength(255)]
+        public string ExpectedAction { get; set; }
+        /// <summary>
         /// What Subscriber this receive the notification
         /// </summary>
         [Required, EmailAddress]

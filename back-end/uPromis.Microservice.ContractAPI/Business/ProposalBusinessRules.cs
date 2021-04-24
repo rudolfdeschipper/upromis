@@ -12,7 +12,7 @@ namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class ProposalBusinessRules : IProposalBusinessRules
     {
-        partial void OnApplyBusinessRules(Proposal Record, ProposalDTO DTORecord, IRepository<Proposal> Repository)
+        partial void OnApplyBusinessRules(Proposal Record, ProposalDTO DTORecord)
         {
 
         }

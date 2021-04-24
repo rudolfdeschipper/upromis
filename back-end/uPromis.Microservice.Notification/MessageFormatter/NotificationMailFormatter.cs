@@ -21,10 +21,11 @@ namespace uPromis.Microservice.Notification.MessageFormatter
             }
             var tableBuilder = new HTMLTableBuilder<NotificationEntry>();
             var table = tableBuilder.Build(TableTitle,
-                new string[] { "URL", "Code", "Description", "Due date", "Start date", "End date"},
+                new string[] { "URL", "Action", "Code", "Description", "Due date", "Start date", "End date"},
                 items,
                 (item, tb) => {
                     tb.AddCell("", item.URL, item.ID.ToString());
+                    tb.AddCell(item.ExpectedAction);
                     tb.AddCell(item.Code);
                     tb.AddCell(item.Description);
                     tb.AddCell(item.Duedate);

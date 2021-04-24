@@ -7,14 +7,56 @@
 using System;
 using System.Collections.Generic;
 using uPromis.Microservice.ContractAPI.Models;
+using uPromis.Services.Notification;
 
 namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class RequestBusinessRules : IRequestBusinessRules
     {
-        partial void OnApplyBusinessRules(Request Record, RequestDTO DTORecord, IRepository<Request> Repository)
+        partial void OnApplyBusinessRules(Request Record, RequestDTO DTORecord)
         {
+            // Open
+            if (Record.RequestStatus == (string)Request.RequestStatusValues[1].Value)
+            {
+                if (!Record.AckPlandate.HasValue)
+                {
+                    this.Result.Add(new BusinessRuleResult() { Property = "AckPlandate", Message = "Planned date for Acknowledging the request is empty while the request is Open. Consider filling it", Severity = BusinessRuleResultSeverity.Warning });
+                }
+                else
+                {
+                    // set reminder
+                    var notification = new NotificationEntry()
+                    {
+                        Code = Record.Code,
+                        Description = Record.Description,
+                        Duedate = Record.AckPlandate.Value,
+                        Enddate = Record.AckPlandate,
+                        ExpectedAction = "Please acknowledge reception of this Request",
+                        ID = Record.ID,
+                        NotificationType = NotificationType.REMINDERNOTIFICATION,
+                        Salutation = "", // TODO
+                        Startdate = DateTime.Today,
+                        SubscriptionID = "", // TODO
+                        URL = "" // TODO
+                    };
 
+                    // if actual is filled, remove notification
+                    // otherwise add/update it
+                    var busChannel = Record.AckActualdate.HasValue ? 
+                        uPromis.Services.Queues.MessageBusQueueNames.REMOVENOTIFYITEM 
+                        : uPromis.Services.Queues.MessageBusQueueNames.ADDNOTIFYITEM;
+
+                    SendMessageToNotificationServer(notification, busChannel);
+
+                }
+            }
         }
+        private async void SendMessageToNotificationServer(NotificationEntry notification, string busChannel)
+        {
+            Uri uri = new("rabbitmq://localhost/" + busChannel);
+            var endPoint = await NotificationServerBus.GetSendEndpoint(uri);
+            await endPoint.Send(notification);
+        }
+
     }
 }

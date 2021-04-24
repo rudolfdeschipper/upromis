@@ -27,12 +27,13 @@ namespace uPromis.Microservice.Notification.Controllers
                 context.Message.NotificationType, context.Message.URL);
 
             var from = context.Message;
-            var rec = new Notification.Model.NotificationEntry()
+            NotificationEntry rec = new()
             {
                 Code = from.Code,
                 Description = from.Description,
                 Duedate = from.Duedate,
                 Enddate = from.Enddate,
+                ExpectedAction = from.ExpectedAction,
                 ID = from.ID,
                 NotificationType = from.NotificationType,
                 Salutation = from.Salutation,
@@ -53,7 +54,7 @@ namespace uPromis.Microservice.Notification.Controllers
             }
 
             // check if a job / trigger exist for this combination, if not create a default one
-            TriggerKey k = new TriggerKey(context.Message.SubscriptionID, context.Message.NotificationType);
+            TriggerKey k = new(context.Message.SubscriptionID, context.Message.NotificationType);
             if (await Scheduler.GetTrigger(k) == null)
             {
                 // need to create the trigger, use standard settings

@@ -13,7 +13,7 @@ namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class ContractBusinessRules : IContractBusinessRules
     {
-        partial void OnApplyBusinessRules(uPromis.Microservice.ContractAPI.Models.Contract Record, ContractDTO DTORecord, IRepository<uPromis.Microservice.ContractAPI.Models.Contract> Repository)
+        partial void OnApplyBusinessRules(uPromis.Microservice.ContractAPI.Models.Contract Record, ContractDTO DTORecord)
         {
             double paymentTotals = DTORecord.Payments.Sum( p => p.Modifier != "Deleted" ? p.Amount ?? 0.0 : 0.0 );
             if (paymentTotals != DTORecord.Budget)

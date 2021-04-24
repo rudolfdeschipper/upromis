@@ -69,7 +69,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             {
                 =<$> record = Transformers.Transform(rec.DataSubject, new =<$>()) as =<$>;
 
-                BusinessRules.ApplyBusinessRules(record, rec.DataSubject, Repository);
+                BusinessRules.ApplyBusinessRules(record, rec.DataSubject);
 
                 if (BusinessRules.HasErrors())
                 {
@@ -111,7 +111,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 =<$> record = Transformers.Transform(rec.DataSubject, originalRecord) as =<$>;
 
-                BusinessRules.ApplyBusinessRules(record, rec.DataSubject, Repository);
+                BusinessRules.ApplyBusinessRules(record, rec.DataSubject);
 
                 if (BusinessRules.HasErrors())
                 {
@@ -321,6 +321,8 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 ** DO NOT MODIFY IT, as it can be regenerated at any moment.
 ** If you need this file changed, change the underlying model or its template.
 */
+using MassTransit;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models;
@@ -329,16 +331,26 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 {
     public partial class =<$>BusinessRules : I=<$>BusinessRules
     {
-        readonly List<BusinessRuleResult> results = new List<BusinessRuleResult>();
+        private readonly List<BusinessRuleResult> results = new();
+        private readonly I=<$>Repository Repository;
+        private readonly IBus NotificationServerBus;
+        private readonly ILogger Logger;
+
+        public =<$>BusinessRules(I=<$>Repository repo, IBus notificationServerBus, ILoggerProvider loggerProvider)
+        {
+            Repository = repo;
+            NotificationServerBus = notificationServerBus;
+            Logger = loggerProvider.CreateLogger(nameof(RequestBusinessRules));
+        }
 
         public List<BusinessRuleResult> Result { get => results; }
 
-        public void ApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord, IRepository<Models.=<$>> Repository)
+        public void ApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord)
         {
-            OnApplyBusinessRules(Record, DTORecord, Repository);
+            OnApplyBusinessRules(Record, DTORecord);
         }
 
-        partial void OnApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord, IRepository<Models.=<$>> Repository);
+        partial void OnApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord);
 
         public bool HasErrors() => results.Exists(r => r.Severity == BusinessRuleResultSeverity.Error);
 
@@ -364,7 +376,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 {
     partial class =<$>BusinessRules : I=<$>BusinessRules
     {
-        partial void OnApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord, IRepository<Models.=<$>> Repository)
+        partial void OnApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord)
         {
 
         }

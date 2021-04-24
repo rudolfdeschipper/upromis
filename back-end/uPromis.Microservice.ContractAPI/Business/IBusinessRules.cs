@@ -12,7 +12,7 @@ namespace uPromis.Microservice.ContractAPI.Business
     public interface IBusinessRules<T, TDTO>
     {
         List<BusinessRuleResult> Result { get; }
-        void ApplyBusinessRules(T Record, TDTO DTORecord, IRepository<T> Repository);
+        void ApplyBusinessRules(T Record, TDTO DTORecord);
         /// <summary>
         /// Returns if the business rules application resulted in any errors
         /// </summary>

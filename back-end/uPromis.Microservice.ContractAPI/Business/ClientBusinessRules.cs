@@ -12,7 +12,7 @@ namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class ClientBusinessRules : IClientBusinessRules
     {
-        partial void OnApplyBusinessRules(Models.Client Record, Models.ClientDTO DTORecord, IRepository<Models.Client> Repository)
+        partial void OnApplyBusinessRules(Models.Client Record, Models.ClientDTO DTORecord)
         {
 
         }

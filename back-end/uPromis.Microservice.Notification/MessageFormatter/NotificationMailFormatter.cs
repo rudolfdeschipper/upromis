@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using uPromis.Microservice.Notification.Model;
+using uPromis.Microservice.Notification.Models;
 using uPromis.Microservice.Notification.Properties;
 
 namespace uPromis.Microservice.Notification.MessageFormatter

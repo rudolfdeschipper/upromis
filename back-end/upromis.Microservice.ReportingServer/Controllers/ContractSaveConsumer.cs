@@ -1,10 +1,11 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using uPromis.Services.Models;
 
 namespace uPromis.Microservice.ReportingServer.Controllers
 {
-    public class ContractSaveConsumer : IConsumer<uPromis.Microservice.ContractAPI.Models.ContractDTO>
+    public class ContractSaveConsumer : IConsumer<ContractDTO>
     {
         private readonly ILogger Logger;
         public ContractSaveConsumer(ILoggerProvider loggerProvider
@@ -12,7 +13,7 @@ namespace uPromis.Microservice.ReportingServer.Controllers
         {
             Logger = loggerProvider.CreateLogger("ContractSaveConsumer");
         }
-        public Task Consume(ConsumeContext<uPromis.Microservice.ContractAPI.Models.ContractDTO> context)
+        public Task Consume(ConsumeContext<ContractDTO> context)
         {
             Logger.LogInformation("Receive Contract save: {0} - {1}", context.Message.ID, context.Message.Code);
             return Task.CompletedTask;

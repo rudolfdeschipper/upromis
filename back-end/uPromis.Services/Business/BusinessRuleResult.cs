@@ -1,4 +1,4 @@
-﻿namespace uPromis.Microservice.ContractAPI.Business
+﻿namespace uPromis.Service.Business
 {
     public class BusinessRuleResult
     {

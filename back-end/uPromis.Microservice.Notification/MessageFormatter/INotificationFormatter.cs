@@ -10,6 +10,6 @@ namespace uPromis.Microservice.Notification.MessageFormatter
         public string Template { get; set; }
         public string Salutation { get; set; }
         public string TableTitle { get; set; }
-        public string FormatMessage(IList<Notification.Model.NotificationEntry> items);
+        public string FormatMessage(IList<Notification.Models.NotificationEntry> items);
     }
 }

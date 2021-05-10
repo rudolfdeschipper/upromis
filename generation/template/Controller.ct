@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
+using uPromis.Services.Models;
 
 namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 {
@@ -29,16 +30,16 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
     [Authorize]
     public class =<$>Controller : ControllerBase
     {
-        private readonly I=<$>Repository Repository;
+        private readonly I=<Model.Name>Repository Repository;
         private readonly ILogger Logger;
-        private readonly Business.I=<$>BusinessRules BusinessRules;
+        private readonly Business.I=<Model.Name>BusinessRules BusinessRules;
         private readonly IBus ReportServerBus;
 
-        public =<$>Controller(I=<$>Repository repo, ILoggerProvider loggerProvider,
-            Business.I=<$>BusinessRules businessRules, IBus reportServerBus)
+        public =<$>Controller(I=<Model.Name>Repository repo, ILoggerProvider loggerProvider,
+            Business.I=<Model.Name>BusinessRules businessRules, IBus reportServerBus)
         {
             Repository = repo;
-            Logger = loggerProvider.CreateLogger("=<$>Controller");
+            Logger = loggerProvider.CreateLogger(nameof(=<$>Controller));
             BusinessRules = businessRules;
             ReportServerBus = reportServerBus;
         }
@@ -50,95 +51,95 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
             if (res == null)
             {
-                return NotFound(new APIResult<=<$>DTO>() { ID = id, DataSubject = null, Message = "Get failed" });
+                return NotFound(new APIResult<=<Model.Name>DTO>() { ID = id, DataSubject = null, Message = "Get failed" });
             }
 
-            var record = Transformers.Transform(res, new =<$>DTO() { Modifier = "Unchanged" });
+            var record = Transformers.Transform(res, new =<Model.Name>DTO() { Modifier = "Unchanged" });
 
-            return Ok(new APIResult<=<$>DTO>() { ID = id, DataSubject = record, Message = "Get was performed" });
+            return Ok(new APIResult<=<Model.Name>DTO>() { ID = id, DataSubject = record, Message = "Get was performed" });
         }
 
         [HttpPost()]
-        public async Task<ActionResult> Post([FromBody] SaveMessage<=<$>DTO> rec)
+        public async Task<ActionResult> Post([FromBody] SaveMessage<=<Model.Name>DTO> rec)
         {
-            =<$>DTO res;
+            =<Model.Name>DTO res;
 
             Logger.Log(LogLevel.Information, rec.Action + "/" + rec.SubAction);
 
             try
             {
-                =<$> record = Transformers.Transform(rec.DataSubject, new =<$>()) as =<$>;
+                =<Model.Name> record = Transformers.Transform(rec.DataSubject, new =<Model.Name>()) as =<Model.Name>;
 
-                BusinessRules.ApplyBusinessRules(record, rec.DataSubject);
+                BusinessRules.ApplyBusinessRules(record, rec.DataSubject, User);
 
                 if (BusinessRules.HasErrors())
                 {
-                    return UnprocessableEntity(new APIResult<ContractDTO>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
+                    return UnprocessableEntity(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
                 }
                 record = await Repository.Post(record);
-                res = Transformers.Transform(record, new =<$>DTO());
+                res = Transformers.Transform(record, new =<Model.Name>DTO());
 
 %If:ReportQueue?
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
-                await endPoint.Send<=<$>DTO>(res);
+                await endPoint.Send<=<Model.Name>DTO>(res);
 %EndIf
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<=<$>DTO>() { ID = 0, DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = ex.Message });
             }
 
             // return posted values
-            return Ok(new APIResult<=<$>DTO>() { ID = res.ID, DataSubject = res, Message = "New =<$> was created.", AdditionalInfo = BusinessRules.Result.ToArray() });
+            return Ok(new APIResult<=<Model.Name>DTO>() { ID = res.ID, DataSubject = res, Message = "New =<$> was created.", AdditionalInfo = BusinessRules.Result.ToArray() });
         }
 
         [HttpPut()]
-        public async Task<ActionResult> Put([FromBody] SaveMessage<=<$>DTO> rec)
+        public async Task<ActionResult> Put([FromBody] SaveMessage<=<Model.Name>DTO> rec)
         {
-            =<$>DTO res;
+            =<Model.Name>DTO res;
 
             Logger.Log(LogLevel.Information, rec.Action + "/" + rec.SubAction);
 
             try
             {
-                =<$> originalRecord = await Repository.Get(rec.ID);
+                =<Model.Name> originalRecord = await Repository.Get(rec.ID);
 
                 if (originalRecord == null)
                 {
-                    return NotFound(new APIResult<=<$>DTO>() { ID = rec.ID, DataSubject = null, Message = "Put failed - record is not found" });
+                    return NotFound(new APIResult<=<Model.Name>DTO>() { ID = rec.ID, DataSubject = null, Message = "Put failed - record is not found" });
                 }
 
-                =<$> record = Transformers.Transform(rec.DataSubject, originalRecord) as =<$>;
+                =<Model.Name> record = Transformers.Transform(rec.DataSubject, originalRecord) as =<Model.Name>;
 
-                BusinessRules.ApplyBusinessRules(record, rec.DataSubject);
+                BusinessRules.ApplyBusinessRules(record, rec.DataSubject, User);
 
                 if (BusinessRules.HasErrors())
                 {
-                    return UnprocessableEntity(new APIResult<ContractDTO>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
+                    return UnprocessableEntity(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
                 }
 
                 record = await Repository.Put(record);
 
-                res = Transformers.Transform(record, new =<$>DTO());
+                res = Transformers.Transform(record, new =<Model.Name>DTO());
 
 %If:ReportQueue?
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVE=<ReportQueue>);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
-                await endPoint.Send<=<$>DTO>(res);
+                await endPoint.Send<=<Model.Name>DTO>(res);
 %EndIf
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<ContractDTO>() { ID = 0, DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = ex.Message });
             }
 
             // return posted values
-            return Ok(new APIResult<=<$>DTO>() { ID = res.ID, DataSubject = res, Message = "=<$> was saved.", AdditionalInfo = BusinessRules.Result.ToArray() });
+            return Ok(new APIResult<=<Model.Name>DTO>() { ID = res.ID, DataSubject = res, Message = "=<$> was saved.", AdditionalInfo = BusinessRules.Result.ToArray() });
         }
 
         [HttpDelete()]
-        public async Task<ActionResult> Delete([FromBody] SaveMessage<=<$>DTO> rec)
+        public async Task<ActionResult> Delete([FromBody] SaveMessage<=<Model.Name>DTO> rec)
         {
             bool res;
 
@@ -146,13 +147,13 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
             try
             {
-                =<$> record = Transformers.Transform(rec.DataSubject, new =<$>()) as =<$>;
+                =<Model.Name> record = Transformers.Transform(rec.DataSubject, new =<Model.Name>()) as =<Model.Name>;
 
                 res = await Repository.Delete(record);
 
                 if (res == false)
                 {
-                    return NotFound(new APIResult<=<$>DTO>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
+                    return NotFound(new APIResult<=<Model.Name>DTO>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
 
 %If:ReportQueue?
@@ -163,11 +164,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<ContractDTO>() { ID = 0, DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = ex.Message });
             }
 
             // return 
-            return Ok(new APIResult<=<$>DTO>() { ID = rec.ID, DataSubject = null, Message = "=<$> was deleted." });
+            return Ok(new APIResult<=<Model.Name>DTO>() { ID = rec.ID, DataSubject = null, Message = "=<$> was deleted." });
         }
 
         // TODO: transform into a get with a body (this is possible)
@@ -176,9 +177,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
         {
             var records = await Repository.FilteredAndSortedList(sentModel, true);
 
-            var recordsDTO = records.Item1.Select(c => Transformers.Transform(c, new =<$>DTO() { Modifier = "Unchanged" }));
+            var recordsDTO = records.Item1.Select(c => Transformers.Transform(c, new =<Model.Name>DTO() { Modifier = "Unchanged" }));
 
-            return Ok(new LoadResult<=<$>DTO>() { Data = recordsDTO.ToArray(), Pages = records.Item2, Message = "" });
+            return Ok(new LoadResult<=<Model.Name>DTO>() { Data = recordsDTO.ToArray(), Pages = records.Item2, Message = "" });
         }
 
         // TODO: this can be a normal "get", with a filter on the header " 'Content-Type': 'application/excel' or something
@@ -241,7 +242,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
                     // provide empty value in the dropdown:
                     list.Add(new ListValue() { Value = string.Empty, Label = "" });
 
-                     list.AddRange( Models.=<Controllers.$>.=<$>Values);
+                     list.AddRange( Models.=<Controllers.Model.Name>.=<$>Values);
                     break;
 %EndIf
 %EndIf
@@ -274,12 +275,13 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             }
             return Ok(new ListValues() { ValueType = info.ValueType, data = list });
         }
+%If:ClaimInfo?
 /*
         [HttpGet("getclaims/{UserID}")]
         [Authorize()]
         public async Task<IActionResult> GetClaims(string UserID)
         {
-            var claims = Repository.List.Select(c => Transformers.Transform(c, new =<$>DTO() { Modifier = "Unchanged" }))
+            var claims = Repository.List.Select(c => Transformers.Transform(c, new =<Model.Name>DTO() { Modifier = "Unchanged" }))
                 .Where(c => c.=<ClaimInfo.ClaimList>.Any(t => t.TeamMember.ToString().Equals(UserID)))
                 .Select(c => new { 
                     Key = "=<$>|" + c.ID, 
@@ -289,11 +291,12 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             return new JsonResult(await claims.ToArrayAsync());
         }
 */
+%EndIf
     }
 }
 %/File
 
-%FileOverwrite:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Business\generated\I=<$>BusinessRules.cs
+%FileOverwrite:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Business\generated\I=<Model.Name>BusinessRules.cs
 %Log:Business Rule classes for =<$>
 /*
 **             ------ IMPORTANT ------
@@ -303,18 +306,20 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 */
 using System;
 using System.Collections.Generic;
+using uPromis.Service.Business;
 using =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models;
+using uPromis.Services.Models;
 
 namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 {
-    public interface I=<$>BusinessRules : IBusinessRules<Models.=<$>, Models.=<$>DTO>
+    public interface I=<Model.Name>BusinessRules : IBusinessRules<Models.=<Model.Name>, =<Model.Name>DTO>
     {
 
     }
 }
 %/File
 
-%FileOverwrite:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Business\generated\=<$>BusinessRules.cs
+%FileOverwrite:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Business\generated\=<Model.Name>BusinessRules.cs
 /*
 **             ------ IMPORTANT ------
 ** This file was generated by ZeroCode2 on =<DateStamp>
@@ -325,32 +330,35 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using uPromis.Service.Business;
+using uPromis.Services.Models;
 using =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models;
 
 namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 {
-    public partial class =<$>BusinessRules : I=<$>BusinessRules
+    public partial class =<Model.Name>BusinessRules : I=<Model.Name>BusinessRules
     {
         private readonly List<BusinessRuleResult> results = new();
-        private readonly I=<$>Repository Repository;
+        private readonly I=<Model.Name>Repository Repository;
         private readonly IBus NotificationServerBus;
         private readonly ILogger Logger;
 
-        public =<$>BusinessRules(I=<$>Repository repo, IBus notificationServerBus, ILoggerProvider loggerProvider)
+        public =<Model.Name>BusinessRules(I=<Model.Name>Repository repo, IBus notificationServerBus, ILoggerProvider loggerProvider)
         {
             Repository = repo;
             NotificationServerBus = notificationServerBus;
-            Logger = loggerProvider.CreateLogger(nameof(RequestBusinessRules));
+            Logger = loggerProvider.CreateLogger(nameof(=<Model.Name>BusinessRules));
         }
 
         public List<BusinessRuleResult> Result { get => results; }
 
-        public void ApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord)
+        public void ApplyBusinessRules(Models.=<Model.Name> Record, =<Model.Name>DTO DTORecord, ClaimsPrincipal user)
         {
-            OnApplyBusinessRules(Record, DTORecord);
+            OnApplyBusinessRules(Record, DTORecord, user);
         }
 
-        partial void OnApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord);
+        partial void OnApplyBusinessRules(Models.=<Model.Name> Record, =<Model.Name>DTO DTORecord, ClaimsPrincipal user);
 
         public bool HasErrors() => results.Exists(r => r.Severity == BusinessRuleResultSeverity.Error);
 
@@ -361,7 +369,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 }
 %/File
 
-%FileCreate:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Business\=<$>BusinessRules.cs
+%FileCreate:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Business\=<Model.Name>BusinessRules.cs
 /*
 **             ------ IMPORTANT ------
 ** This file was generated by ZeroCode2 on =<DateStamp>
@@ -370,13 +378,16 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 */
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using uPromis.Service.Business;
+using uPromis.Services.Models;
 using =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models;
 
 namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Business
 {
-    partial class =<$>BusinessRules : I=<$>BusinessRules
+    partial class =<Model.Name>BusinessRules : I=<Model.Name>BusinessRules
     {
-        partial void OnApplyBusinessRules(Models.=<$> Record, Models.=<$>DTO DTORecord)
+        partial void OnApplyBusinessRules(Models.=<Model.Name> Record, =<Model.Name>DTO DTORecord, ClaimsPrincipal user)
         {
 
         }

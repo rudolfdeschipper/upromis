@@ -7,13 +7,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using uPromis.Microservice.ContractAPI.Models;
+using uPromis.Service.Business;
+using uPromis.Services.Models;
 
 namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class ContractBusinessRules : IContractBusinessRules
     {
-        partial void OnApplyBusinessRules(uPromis.Microservice.ContractAPI.Models.Contract Record, ContractDTO DTORecord)
+        partial void OnApplyBusinessRules(uPromis.Microservice.ContractAPI.Models.Contract Record, ContractDTO DTORecord, ClaimsPrincipal user)
         {
             double paymentTotals = DTORecord.Payments.Sum( p => p.Modifier != "Deleted" ? p.Amount ?? 0.0 : 0.0 );
             if (paymentTotals != DTORecord.Budget)

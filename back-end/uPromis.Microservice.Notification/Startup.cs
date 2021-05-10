@@ -20,8 +20,7 @@ using Microsoft.OpenApi.Models;
 using uPromis.Services.Queues;
 using GreenPipes;
 using Quartz.Impl;
-using uPromis.Microservice.Notification.Data;
-using uPromis.Microservice.Notification.Model;
+using uPromis.Microservice.Notification.Models;
 using uPromis.Microservice.Notification.Job;
 using uPromis.Microservice.Notification.Transmitter;
 using System.Security;
@@ -59,7 +58,7 @@ namespace uPromis.Microservice.Notification
             services.AddDbContext<NotificationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<INotificationRepository, NotificationRepository>();
+            services.AddTransient<INotificationEntryRepository, NotificationEntryRepository>();
 
             // add jobs to the DI pipeline to allow them to receive DBContext
             services.AddTransient<ContractJob>();
@@ -129,9 +128,9 @@ namespace uPromis.Microservice.Notification
             IScheduler scheduler = sf.GetScheduler().Result;
 
             // add the jobs if needed
-            AddJob(scheduler, uPromis.Services.Notification.NotificationType.CONTRACTNOTIFICATION);
-            AddJob(scheduler, uPromis.Services.Notification.NotificationType.PROJECTNOTIFICATION);
-            AddJob(scheduler, uPromis.Services.Notification.NotificationType.REMINDERNOTIFICATION);
+            AddJob<ContractJob>(scheduler, uPromis.Services.Notification.NotificationType.CONTRACTNOTIFICATION);
+            AddJob<ProjectJob>(scheduler, uPromis.Services.Notification.NotificationType.PROJECTNOTIFICATION);
+            AddJob<ReminderJob>(scheduler, uPromis.Services.Notification.NotificationType.REMINDERNOTIFICATION);
 
             services.AddSingleton<IScheduler>(scheduler);
 
@@ -181,19 +180,26 @@ namespace uPromis.Microservice.Notification
 
         }
 
-        private static void AddJob(IScheduler scheduler, string jobName)
+        private static void AddJob<T>(IScheduler scheduler, string jobName) where T : Quartz.IJob
         {
             Log.Information($"Adding job {jobName}");
-            if (scheduler.CheckExists(new JobKey(jobName)).Result == true)
+            try
             {
-                Log.Information($"Job {jobName} does not yet exist - adding.");
-                var job = JobBuilder.Create<ContractJob>()
-                    .WithIdentity(jobName)
-                    .StoreDurably()
-                    .Build();
-                scheduler.AddJob(job, true);
+                if (scheduler.CheckExists(new JobKey(jobName)).Result == false)
+                {
+                    Log.Information($"Job {jobName} does not yet exist - adding.");
+                    var job = JobBuilder.Create<T>()
+                        .WithIdentity(jobName)
+                        .StoreDurably()
+                        .Build();
+                    scheduler.AddJob(job, true);
+                }
+
             }
-        }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error during adding job: {ex.Message}");
+            }        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

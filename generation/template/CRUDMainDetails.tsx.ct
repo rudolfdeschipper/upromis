@@ -235,7 +235,7 @@ class =<App.$>Details extends React.Component<RouteComponentProps<{ id?: string 
                 <Link id='top' to={"/=<App.$>"} className="w3-button w3-light-grey w3-round" title="Back to list">
                     <i className="fa fa-list" ></i>&nbsp;Back to List
                 </Link>
-                <h5>=<App.$> details for {this.state.currentData.title}</h5>
+                <h5>=<App.$> details for {this.state.currentData.=<EditTitle>}</h5>
                 <hr/>
                 <Popup visible={this.state.popupVisible} message={this.state.popupMessage} style={this.state.popupStyle} onDismiss={() => { this.setState({ popupVisible: false }) }} errorList={this.state.popupErrorList}/>
                 <Tabs defaultActiveKey='details' id='detailstab'>

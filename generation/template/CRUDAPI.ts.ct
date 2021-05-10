@@ -16,14 +16,14 @@ export class =<App.$>API {
 
     static debug : boolean = =<#Parameters.APIDebug>;
 
-    static webAPIUrl : string = 'http://localhost:5001/api';
+    static webAPIUrl : string = '=<App.APIUrl>';
 
     static loadList = async (listInfo: IListInfo, token: string) : Promise<ILoadResult<I=<App.$>Data>> => 
     {
         try {
             const result = await http<IListInfo, ILoadResult<I=<App.$>Data>>( =<App.$>API.webAPIUrl,
                 {
-                    path: '/=<App.APIUrl>/getlist',
+                    path: '/=<App.AppUrl>/getlist',
                     method: 'post',
                     body: listInfo,
                     accessToken: token
@@ -47,7 +47,7 @@ export class =<App.$>API {
         try {
             const result = await http<IListInfo, any>( =<App.$>API.webAPIUrl,
                 {
-                    path: '/=<App.APIUrl>/getforexport',
+                    path: '/=<App.AppUrl>/getforexport',
                     method: 'post',
                     body: { ...listInfo, page: 1},
                     accessToken: token
@@ -73,7 +73,7 @@ export class =<App.$>API {
         return await http<ISaveMessage<I=<App.$>Data>, IAPIResult<I=<App.$>Data>>(
             =<App.$>API.webAPIUrl,
             {
-                path: '/=<App.APIUrl>',
+                path: '/=<App.AppUrl>',
                 method: message.action,
                 body: message,
                 accessToken: token
@@ -122,7 +122,7 @@ export class =<App.$>API {
             const result = await http<ISaveMessage<I=<App.$>Data>, IAPIResult<I=<App.$>Data>>(
                 =<App.$>API.webAPIUrl,
                 {
-                    path: '/=<App.APIUrl>/' + id,
+                    path: '/=<App.AppUrl>/' + id,
                     method: 'get',
                     accessToken: token
                 }
@@ -145,7 +145,7 @@ export class =<App.$>API {
             const result = await http<any, ISelectValueList>(
                 =<App.$>API.webAPIUrl,
                 {
-                    path: '/=<App.APIUrl>/getselectvalues',
+                    path: '/=<App.AppUrl>/getselectvalues',
                     method: 'post',
                     body: {valueType: valueType},
                     accessToken: token

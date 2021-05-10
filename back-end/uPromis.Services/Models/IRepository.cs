@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
-namespace uPromis.Microservice.ContractAPI.Models
+namespace uPromis.Services.Models
 {
     public interface IRepository<T>
     {
@@ -12,6 +13,8 @@ namespace uPromis.Microservice.ContractAPI.Models
         Task<(List<T>, double)> FilteredAndSortedList(SortAndFilterInformation sortAndFilterInfo, bool paging);
 
         Task<T> Get(int id);
+
+        IQueryable<T> GetAllByExternalID(Guid guid);
 
         Task<T> Post(T rec);
         Task<T> Put(T rec);

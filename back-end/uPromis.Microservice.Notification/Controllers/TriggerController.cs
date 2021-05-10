@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using uPromis.Services;
 using Quartz;
 using Microsoft.Extensions.Logging;
-using uPromis.Microservice.Notification.Model;
+using uPromis.Microservice.Notification.Models;
 using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -59,7 +59,7 @@ namespace uPromis.Microservice.Notification.Controllers
             var trigger = await Scheduler.GetTrigger(new TriggerKey(subscriber, notificationType)) as ICronTrigger;
             var scheduleElements = trigger.CronExpressionString.ToUpper().Split(" ");
 
-            Services.Notification.NotificationSchedule retVal = new Services.Notification.NotificationSchedule(
+            Services.Notification.NotificationSchedule retVal = new(
                 subscriber,
                 notificationType,
                 scheduleElements,

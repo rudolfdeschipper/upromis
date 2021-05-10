@@ -7,12 +7,14 @@
 using System;
 using System.Collections.Generic;
 using uPromis.Microservice.ContractAPI.Models;
+using System.Security.Claims;
+using uPromis.Services.Models;
 
 namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class ClientBusinessRules : IClientBusinessRules
     {
-        partial void OnApplyBusinessRules(Models.Client Record, Models.ClientDTO DTORecord)
+        partial void OnApplyBusinessRules(Client Record, ClientDTO DTORecord, ClaimsPrincipal user)
         {
 
         }

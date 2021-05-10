@@ -8,12 +8,15 @@ using System;
 using System.Collections.Generic;
 using uPromis.Microservice.ContractAPI.Models;
 using uPromis.Services.Notification;
+using System.Security.Claims;
+using uPromis.Service.Business;
+using uPromis.Services.Models;
 
 namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class RequestBusinessRules : IRequestBusinessRules
     {
-        partial void OnApplyBusinessRules(Request Record, RequestDTO DTORecord)
+        partial void OnApplyBusinessRules(Request Record, RequestDTO DTORecord, ClaimsPrincipal user)
         {
             // Open
             if (Record.RequestStatus == (string)Request.RequestStatusValues[1].Value)
@@ -24,34 +27,82 @@ namespace uPromis.Microservice.ContractAPI.Business
                 }
                 else
                 {
+                    string actionMessage = "Please acknowledge reception of this Request";
+                    DateTime? reminderDate = Record.AckPlandate;
+                    bool isAchieved = Record.AckActualdate.HasValue;
+                    string notificationType = NotificationType.REMINDERNOTIFICATION;
+
                     // set reminder
-                    var notification = new NotificationEntry()
-                    {
-                        Code = Record.Code,
-                        Description = Record.Description,
-                        Duedate = Record.AckPlandate.Value,
-                        Enddate = Record.AckPlandate,
-                        ExpectedAction = "Please acknowledge reception of this Request",
-                        ID = Record.ID,
-                        NotificationType = NotificationType.REMINDERNOTIFICATION,
-                        Salutation = "", // TODO
-                        Startdate = DateTime.Today,
-                        SubscriptionID = "", // TODO
-                        URL = "" // TODO
-                    };
+                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "AckPlan");
 
-                    // if actual is filled, remove notification
-                    // otherwise add/update it
-                    var busChannel = Record.AckActualdate.HasValue ? 
-                        uPromis.Services.Queues.MessageBusQueueNames.REMOVENOTIFYITEM 
-                        : uPromis.Services.Queues.MessageBusQueueNames.ADDNOTIFYITEM;
+                }
+                if (!Record.YNPlandate.HasValue)
+                {
+                    this.Result.Add(new BusinessRuleResult() { Property = "YNPlandate", Message = "Planned date for expressing willingness to submit offer the request is empty while the request is Open. Consider filling it", Severity = BusinessRuleResultSeverity.Warning });
+                }
+                else
+                {
+                    string actionMessage = "Please send willingness to make offer for this Request";
+                    DateTime? reminderDate = Record.YNPlandate;
+                    bool isAchieved = Record.YNActualdate.HasValue;
+                    string notificationType = NotificationType.REMINDERNOTIFICATION;
 
-                    SendMessageToNotificationServer(notification, busChannel);
+                    // set reminder
+                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "YNPlan");
+
+                }
+                if (!Record.OfferPlandate.HasValue)
+                {
+                    this.Result.Add(new BusinessRuleResult() { Property = "OfferPlandate", Message = "Planned date for Sending Offer for the request is empty while the request is Open. Consider filling it", Severity = BusinessRuleResultSeverity.Warning });
+                }
+                else
+                {
+                    string actionMessage = "Submit offer for this Request";
+                    DateTime? reminderDate = Record.OfferPlandate;
+                    bool isAchieved = Record.OfferActualdate.HasValue;
+                    string notificationType = NotificationType.REMINDERNOTIFICATION;
+
+                    // set reminder
+                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "OfferPlan");
 
                 }
             }
         }
-        private async void SendMessageToNotificationServer(NotificationEntry notification, string busChannel)
+
+        private void SendNotification(Request Record, ClaimsPrincipal user, string actionMessage, DateTime? reminderDate, bool isAchieved, string notificationType, string groupType)
+        {
+            var notification = new NotificationEntryDTO()
+            {
+                Code = Record.Code,
+                // this is important
+                // The external ID of the notification record is the one of the Reqest
+                // so we can easily link the two
+                ExternalID = Record.ExternalID,
+                Description = Record.Description,
+                Duedate = reminderDate.Value,
+                Enddate = reminderDate,
+                ExpectedAction = actionMessage,
+                ID = Record.ID,
+                NotificationType = notificationType,
+                // this particular subscription is for a group of people
+                SubscriptionGroup = groupType,
+                //Salutation = user.FindFirst(c => c.Type.Contains("givenname"))?.Value ?? "team member",
+                Startdate = DateTime.Today,
+                // this is safe - users are identified by their email address
+                //SubscriptionID = user.FindFirst(c => c.Type.Contains("emailaddress")).Value,
+                URL = "" // TODO
+            };
+
+            // if achieved, remove notification
+            // otherwise add/update it
+            var busChannel = isAchieved ?
+                uPromis.Services.Queues.MessageBusQueueNames.REMOVENOTIFYITEM
+                : uPromis.Services.Queues.MessageBusQueueNames.ADDNOTIFYITEM;
+
+            SendMessageToNotificationServer(notification, busChannel);
+        }
+
+        private async void SendMessageToNotificationServer(NotificationEntryDTO notification, string busChannel)
         {
             Uri uri = new("rabbitmq://localhost/" + busChannel);
             var endPoint = await NotificationServerBus.GetSendEndpoint(uri);

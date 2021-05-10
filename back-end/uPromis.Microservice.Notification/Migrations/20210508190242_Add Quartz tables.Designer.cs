@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using uPromis.Microservice.Notification.Data;
+using uPromis.Microservice.Notification;
 
 namespace uPromis.Microservice.Notification.Migrations
 {
     [DbContext(typeof(NotificationDbContext))]
-    [Migration("20210424145606_Add expected action")]
-    partial class Addexpectedaction
+    [Migration("20210508190242_Add Quartz tables")]
+    partial class AddQuartztables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,22 +21,23 @@ namespace uPromis.Microservice.Notification.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("uPromis.Microservice.Notification.Model.NotificationEntry", b =>
+            modelBuilder.Entity("uPromis.Microservice.Notification.Models.NotificationEntry", b =>
                 {
-                    b.Property<string>("NotificationType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("SubscriptionID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("URL")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -52,8 +53,13 @@ namespace uPromis.Microservice.Notification.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("ID")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ExternalID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NotificationType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Salutation")
                         .IsRequired()
@@ -61,10 +67,25 @@ namespace uPromis.Microservice.Notification.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("Startdate")
-                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.HasKey("NotificationType", "SubscriptionID", "URL");
+                    b.Property<string>("SubscriptionID")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("URL")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
 
                     b.ToTable("NotificationEntries");
                 });

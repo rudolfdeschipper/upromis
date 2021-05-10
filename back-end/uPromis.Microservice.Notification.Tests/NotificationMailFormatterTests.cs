@@ -4,6 +4,7 @@ using Moq;
 using Microsoft.Extensions.Logging;
 using uPromis.Microservice.Notification.MessageFormatter;
 using uPromis.Services.Notification;
+using uPromis.Microservice.Notification.Models;
 
 namespace uPromis.Microservice.Notification.Tests
 {
@@ -20,9 +21,9 @@ namespace uPromis.Microservice.Notification.Tests
                 Template = "{TableTitle}|{Salutation}|{Items}"
             };
 
-            var items = new System.Collections.Generic.List<uPromis.Microservice.Notification.Model.NotificationEntry>
+            var items = new System.Collections.Generic.List<NotificationEntry>
             {
-                new Notification.Model.NotificationEntry()
+                new NotificationEntry()
                 {
                     Code = "Code 1",
                     Description = "Description 1",
@@ -36,7 +37,7 @@ namespace uPromis.Microservice.Notification.Tests
                     SubscriptionID = "e@m.com",
                     URL = "http://www.google.com/"
                 },
-                new uPromis.Microservice.Notification.Model.NotificationEntry()
+                new NotificationEntry()
                 {
                     Code = "Code 2",
                     Description = "Description 2",
@@ -70,9 +71,9 @@ namespace uPromis.Microservice.Notification.Tests
                 TableTitle = "Table title"
             };
 
-            var items = new System.Collections.Generic.List<uPromis.Microservice.Notification.Model.NotificationEntry>
+            var items = new System.Collections.Generic.List<NotificationEntry>
             {
-                new uPromis.Microservice.Notification.Model.NotificationEntry()
+                new NotificationEntry()
                 {
                     Code = "Code 1",
                     Description = "Description 1",
@@ -86,7 +87,7 @@ namespace uPromis.Microservice.Notification.Tests
                     SubscriptionID = "e@m.com",
                     URL = "http://www.google.com/"
                 },
-                new uPromis.Microservice.Notification.Model.NotificationEntry()
+                new NotificationEntry()
                 {
                     Code = "Code 2",
                     Description = "Description 2",

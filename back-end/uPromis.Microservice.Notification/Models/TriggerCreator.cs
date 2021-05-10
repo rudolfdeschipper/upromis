@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace uPromis.Microservice.Notification.Model
+namespace uPromis.Microservice.Notification.Models
 {
     public class TriggerCreator
     {
@@ -60,9 +60,9 @@ namespace uPromis.Microservice.Notification.Model
             {
                 await Scheduler.DeleteJob(new JobKey(value.SubscriberID, value.NotificationType));
             }
-
+            var k = new TriggerKey(value.SubscriberID, value.NotificationType);
             var trigger = TriggerBuilder.Create()
-                .WithIdentity(value.SubscriberID, value.NotificationType)
+                .WithIdentity(k)
                 .WithSchedule(CronScheduleBuilder
                 .AtHourAndMinuteOnGivenDaysOfWeek(value.RunOnHour, value.RunOnMinute, weekDays.Take(i).ToArray()))
                 .ForJob(new JobKey(value.NotificationType))

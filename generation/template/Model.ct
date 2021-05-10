@@ -10,6 +10,7 @@
 using =<#Parameters.backendNameSpace>.APIUtils.APIMessaging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using uPromis.Services.Models;
 
 namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 {
@@ -212,6 +213,26 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
                 .FirstOrDefaultAsync();
             return record;
         }
+
+        public IQueryable<=<$>> GetAllByExternalID(Guid guid)
+        {
+%If:Properties.ExternalID?
+            var records = Context.=<SetName>.Where(c => c.ExternalID == guid)
+%Loop:Children
+                .Include( p => p.=<SetName>)
+%/Loop:Children
+%Loop:Properties
+%If:Reference?=true
+                .Include(p => p.=<ReferenceObjectName>)
+%EndIf
+%/Loop:Properties
+                ;
+            return records;
+%Else
+            return null;
+%EndIf
+        }
+
 %Loop:Properties
 %If:Reference?=true
 
@@ -452,7 +473,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using =<#Parameters.msNameSpace>DTO.Models;
 
-namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
+namespace =<#Parameters.backendNameSpace>.Services.Models
 {
 
 
@@ -531,7 +552,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using =<#Parameters.msNameSpace>DTO.Models;
 
-namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
+namespace =<#Parameters.backendNameSpace>.Services.Models
 {
 
 
@@ -608,6 +629,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using =<#Parameters.msNameSpace>DTO.Models;
+using =<#Parameters.backendNameSpace>.Services.Models;
 
 namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 {

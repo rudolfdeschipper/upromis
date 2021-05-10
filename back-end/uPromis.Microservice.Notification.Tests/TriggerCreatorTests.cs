@@ -3,7 +3,7 @@ using uPromis.Microservice.Notification.Transmitter;
 using Moq;
 using Microsoft.Extensions.Logging;
 using Quartz;
-using uPromis.Microservice.Notification.Model;
+using uPromis.Microservice.Notification.Models;
 using uPromis.Services.Notification;
 
 namespace uPromis.Microservice.Notification.Tests

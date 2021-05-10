@@ -12,6 +12,7 @@ Contract :
 {
 	List <- Microservice.Contract.DTO.Contract,
 	Edit <- Microservice.Contract.DTO.Contract,
+	EditTitle: "title",
 	Tabs : {
 		Payment : {
 			Title : "Payments", 
@@ -29,13 +30,15 @@ Contract :
 		Action2 : { Name: "close", Title: "Close"}
 	},
 	Attachments: true,
-	APIUrl: "contract"
+	AppUrl: "contract",
+	APIUrl: "http://localhost:5001/api"
 }
 
 Proposal : 
 {
 	List <- Microservice.Contract.DTO.Proposal,
 	Edit <- Microservice.Contract.DTO.Proposal,
+	EditTitle: "title",
 	Tabs : {
 		Payment : {
 			Title : "Payments", 
@@ -53,13 +56,15 @@ Proposal :
 		Action2 : { Name: "close", Title: "Close"}
 	},
 	Attachments: true,
-	APIUrl: "proposal"
+	AppUrl: "proposal",
+	APIUrl: "http://localhost:5001/api"
 }
 
 Request : 
 {
 	List <- Microservice.Contract.DTO.Request,
 	Edit <- Microservice.Contract.DTO.Request,
+	EditTitle: "title",
 	Tabs : {
 		Team : {
 			Title : "Team members", 
@@ -72,13 +77,15 @@ Request :
 		Action2 : { Name: "close", Title: "Close"}
 	},
 	Attachments: true,
-	APIUrl: "request"
+	AppUrl: "request",
+	APIUrl: "http://localhost:5001/api"
 }
 
 Client : 
 {
 	List <- Microservice.Contract.DTO.Client,
 	Edit <- Microservice.Contract.DTO.Client,
+	EditTitle: "title",
 	Tabs : {
 	},
 	Actions : {
@@ -86,8 +93,26 @@ Client :
 		Action2 : { Name: "close", Title: "Close"}
 	},
 	Attachments: false,
-	APIUrl: "client"
+	AppUrl: "client",
+	APIUrl: "http://localhost:5001/api"
 }
+
+Notification : 
+{
+	List <- Microservice.Notification.DTO.NotificationEntry,
+	Edit <- Microservice.Notification.DTO.NotificationEntry,
+	EditTitle: "code",
+	Tabs : {
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: false,
+	AppUrl: "notification",
+	APIUrl: "http://localhost:15060/api"
+}
+
 
 @Microservice
 
@@ -137,6 +162,7 @@ Contract : {
 	},
 	Models: {
 		AccountInfo : {
+			Name: "AccountInfo",
 			SetName : "Accounts",
 			Properties <- Entities.AccountInfo,
 			Children : {
@@ -173,6 +199,7 @@ Contract : {
 			}
 		},
 		Contract : {
+			Name: "Contract",
 			SetName : "Contracts",
 			Properties <- Entities.Contract,
 			Children : {
@@ -189,6 +216,7 @@ Contract : {
 			}
 		},
 		Request : {
+			Name: "Request",
 			SetName : "Requests",
 			Properties <- Entities.Request,
 			Children : {
@@ -200,6 +228,7 @@ Contract : {
 			}
 		},
 		Proposal : {
+			Name: "Proposal",
 			SetName : "Proposals",
 			Properties <- Entities.Proposal,
 			Children : {
@@ -216,6 +245,7 @@ Contract : {
 			}
 		},
 		Client : {
+			Name: "Client",
 			SetName : "Clients",
 			Properties <- Entities.Client,
 			Children : {
@@ -276,6 +306,49 @@ Contract : {
 	}
 }
 
+Notification : {
+	Namespace: "Notification",
+	Controllers: {
+		Notification : {
+			Namespace: "Notification",
+			Export <- Microservice.Notification.DTO.NotificationEntry,
+			DTO <- Microservice.Notification.DTO.NotificationEntry,
+			Model <- Microservice.Notification.Models.NotificationEntry
+		},
+		NotificationGroup : {
+			Namespace: "NotificationGroup",
+			Export <- Microservice.Notification.DTO.NotificationGroup,
+			DTO <- Microservice.Notification.DTO.NotificationGroup,
+			Model <- Microservice.Notification.Models.NotificationGroup
+		}
+	},
+	Models: {
+		NotificationEntry : {
+			Name: "NotificationEntry",
+			SetName : "NotificationEntries",
+			Properties <- Entities.NotificationEntry,
+			Children : {
+				
+			}
+		},
+		NotificationGroup : {
+			Name: "NotificationGroup",
+			SetName : "NotificationGroups",
+			Properties <- Entities.NotificationGroup,
+			Children : {
+				
+			}
+		}
+	},
+	DTO : {
+		NotificationEntry <- Microservice.Notification.Models.NotificationEntry : {
+			Properties : {
+				-ExternalID
+			}
+		},
+		NotificationGroup <- Microservice.Notification.Models.NotificationGroup
+	}
+}
 
 @Entities // non-structured flat objects
 
@@ -470,6 +543,128 @@ Client <- Definitions.DefaultMainObject : {
 	+MainContact <- DataDictionary.DescriptionField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
 	+Phone <- DataDictionary.DescriptionField : { Name: "Phone", Title: "Phone", JSONName: "phone",Nullable: false, Length: 15, Show: true },
 	+ContactMail <- DataDictionary.DescriptionField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail",Nullable: false, Length: 100, Show: false }
+}
+
+NotificationEntry : {
+	ID <- DataDictionary.IDField,
+	ExternalID <- DataDictionary.GuidField,
+	URL <- DataDictionary.DescriptionField :
+	{
+		Name: "URL",
+		JSONName: "url",
+		Title: "URL",
+		Nullable: false,
+		Length: 255,
+		Show: true
+	},
+	Code <- DataDictionary.CodeField,
+	Description <- DataDictionary.DescriptionField,
+	NotificationType <- DataDictionary.StatusField : { 
+		Name: "NotificationType",
+		JSONName: "notificationType",
+		Title: "Notification Type",
+		Nullable: false,
+		+Values: {
+			ContractNotification: "Contract",
+			ProjectNotification: "Project",
+			ReminderNotification: "Reminder"
+		}
+	},
+	ExpectedAction <- DataDictionary.DescriptionField : 
+	{ 
+			Name: "ExpectedAction", 
+			Title: "Expected action", 
+			JSONName: "expectedAction", 
+			Length: 255, 
+			Nullable: false, 
+			Show: true 
+	},
+	SubscriptionGroup <- DataDictionary.CodeField : {
+		Length: 50,
+		Nullable: true,
+		Name: "SubscriptionGroup",
+		Title: "Subscription Group",
+		JSONName: "subscriptionGroup",
+		Show: true
+	}, 
+	SubscriptionID <- DataDictionary.DescriptionField : 
+	{ 
+		Name: "SubscriptionID", 
+		Title: "Subscription ID", 
+		JSONName: "subscriptionID", 
+		Nullable: true,
+		Length: 100, 
+		Show: true
+	},
+	Salutation <- DataDictionary.CodeField : {
+		Length: 20,
+		Nullable: true,
+		Name: "Salutation",
+		Title: "Salutation",
+		JSONName: "salutation",
+		Show: true
+	},
+	Startdate <- DataDictionary.DateField : {
+		Nullable: true,
+		Name: "Startdate",
+		JSONName: "startdate",
+		Show: false,
+		Title: "Start date"
+	},
+	Enddate <- DataDictionary.DateField : {
+		Nullable: true,
+		Name: "Enddate",
+		JSONName: "enddate",
+		Show: false,
+		Title: "End date"
+	},
+	Duedate <- DataDictionary.DateField : {
+		Nullable: false,
+		Name: "Duedate",
+		JSONName: "Duedate",
+		Show: true,
+		Title: "Due date"
+	}
+}
+
+NotificationGroup : {
+	ID <- DataDictionary.IDField,
+	SubscriptionGroup <- DataDictionary.CodeField : {
+		Length: 50,
+		Nullable: true,
+		Name: "SubscriptionGroup",
+		Title: "Subscription Group",
+		JSONName: "subscriptionGroup",
+		Show: true
+	}, 
+	NotificationType <- DataDictionary.StatusField : { 
+		Name: "NotificationType",
+		JSONName: "notificationType",
+		Title: "Notification Type",
+		Nullable: false,
+		+Values: {
+			ContractNotification: "Contract",
+			ProjectNotification: "Project",
+			ReminderNotification: "Reminder"
+		}
+	},
+	SubscriptionID <- DataDictionary.DescriptionField : 
+	{ 
+		Name: "SubscriptionID", 
+		Title: "Subscription ID", 
+		JSONName: "subscriptionID", 
+		Nullable: false, 
+		Length: 100, 
+		Show: true
+	},
+	Salutation <- DataDictionary.CodeField : {
+		Length: 20,
+		Nullable: false,
+		Name: "Salutation",
+		Title: "Salutation",
+		JSONName: "salutation",
+		Show: true
+	}
 }
 
 @Definitions

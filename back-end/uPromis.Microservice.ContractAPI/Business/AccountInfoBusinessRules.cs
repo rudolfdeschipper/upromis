@@ -6,13 +6,15 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using uPromis.Microservice.ContractAPI.Models;
+using uPromis.Services.Models;
 
 namespace uPromis.Microservice.ContractAPI.Business
 {
     partial class AccountInfoBusinessRules : IAccountInfoBusinessRules
     {
-        partial void OnApplyBusinessRules(AccountInfo Record, AccountInfoDTO DTORecord)
+        partial void OnApplyBusinessRules(AccountInfo Record, AccountInfoDTO DTORecord, ClaimsPrincipal user)
         {
 
         }

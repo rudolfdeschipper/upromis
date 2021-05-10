@@ -14,10 +14,10 @@ namespace uPromis.Microservice.Notification.Job
     {
         private readonly ILogger Logger;
         private readonly ILoggerProvider LoggerProvider;
-        private readonly Data.NotificationDbContext DBContext;
+        private readonly NotificationDbContext DBContext;
         private readonly string NotificationType = Services.Notification.NotificationType.CONTRACTNOTIFICATION;
         private readonly IMessageTransmitter Transmitter;
-        public ContractJob(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext, IMessageTransmitter transmitter)
+        public ContractJob(ILoggerProvider loggerProvider, NotificationDbContext dbContext, IMessageTransmitter transmitter)
         {
             DBContext = dbContext;
             Logger = loggerProvider.CreateLogger(nameof(ContractJob));

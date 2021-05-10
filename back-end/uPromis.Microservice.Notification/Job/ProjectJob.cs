@@ -14,9 +14,9 @@ namespace uPromis.Microservice.Notification.Job
         private readonly ILogger Logger;
         private readonly ILoggerProvider LoggerProvider;
         public IMessageTransmitter Transmitter { get; }
-        private readonly Data.NotificationDbContext DBContext;
+        private readonly NotificationDbContext DBContext;
         private readonly string NotificationType = Services.Notification.NotificationType.PROJECTNOTIFICATION;
-        public ProjectJob(ILoggerProvider loggerProvider, Data.NotificationDbContext dbContext, IMessageTransmitter transmitter)
+        public ProjectJob(ILoggerProvider loggerProvider, NotificationDbContext dbContext, IMessageTransmitter transmitter)
         {
             DBContext = dbContext;
             Logger = loggerProvider.CreateLogger(nameof(ProjectJob));

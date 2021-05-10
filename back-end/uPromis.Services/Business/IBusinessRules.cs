@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using uPromis.Microservice.ContractAPI.Models;
+using System.Security.Claims;
 
-namespace uPromis.Microservice.ContractAPI.Business
+namespace uPromis.Service.Business
 {
     public enum BusinessRuleResultSeverity
     {
@@ -12,7 +12,7 @@ namespace uPromis.Microservice.ContractAPI.Business
     public interface IBusinessRules<T, TDTO>
     {
         List<BusinessRuleResult> Result { get; }
-        void ApplyBusinessRules(T Record, TDTO DTORecord);
+        void ApplyBusinessRules(T Record, TDTO DTORecord, ClaimsPrincipal user);
         /// <summary>
         /// Returns if the business rules application resulted in any errors
         /// </summary>

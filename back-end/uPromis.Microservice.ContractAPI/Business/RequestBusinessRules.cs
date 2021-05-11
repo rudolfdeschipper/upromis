@@ -33,7 +33,7 @@ namespace uPromis.Microservice.ContractAPI.Business
                     string notificationType = NotificationType.REMINDERNOTIFICATION;
 
                     // set reminder
-                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "AckPlan");
+                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "AckPlan", "RequestSendAck");
 
                 }
                 if (!Record.YNPlandate.HasValue)
@@ -48,7 +48,7 @@ namespace uPromis.Microservice.ContractAPI.Business
                     string notificationType = NotificationType.REMINDERNOTIFICATION;
 
                     // set reminder
-                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "YNPlan");
+                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "YNPlan", "RequestSendYesNo");
 
                 }
                 if (!Record.OfferPlandate.HasValue)
@@ -63,13 +63,13 @@ namespace uPromis.Microservice.ContractAPI.Business
                     string notificationType = NotificationType.REMINDERNOTIFICATION;
 
                     // set reminder
-                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "OfferPlan");
+                    SendNotification(Record, user, actionMessage, reminderDate, isAchieved, notificationType, "OfferPlan", "RequestSubmitOffer");
 
                 }
             }
         }
 
-        private void SendNotification(Request Record, ClaimsPrincipal user, string actionMessage, DateTime? reminderDate, bool isAchieved, string notificationType, string groupType)
+        private void SendNotification(Request Record, ClaimsPrincipal user, string actionMessage, DateTime? reminderDate, bool isAchieved, string notificationType, string groupType, string notificationSubtype)
         {
             var notification = new NotificationEntryDTO()
             {
@@ -84,6 +84,7 @@ namespace uPromis.Microservice.ContractAPI.Business
                 ExpectedAction = actionMessage,
                 ID = Record.ID,
                 NotificationType = notificationType,
+                NotificationSubtype = notificationSubtype,
                 // this particular subscription is for a group of people
                 SubscriptionGroup = groupType,
                 //Salutation = user.FindFirst(c => c.Type.Contains("givenname"))?.Value ?? "team member",

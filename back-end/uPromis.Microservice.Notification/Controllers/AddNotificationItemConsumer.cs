@@ -66,7 +66,7 @@ namespace uPromis.Microservice.Notification.Controllers
             var exists = Repo.GetAllByExternalID(context.Message.ExternalID).Where(
                 r => r.NotificationType == context.Message.NotificationType
                 && r.SubscriptionID == context.Message.SubscriptionID
-                && r.URL == context.Message.URL).FirstOrDefault();
+                && r.NotificationSubtype == context.Message.NotificationSubtype).FirstOrDefault();
 
             var from = context.Message;
 
@@ -83,9 +83,12 @@ namespace uPromis.Microservice.Notification.Controllers
                     ExpectedAction = from.ExpectedAction,
 
                     NotificationType = from.NotificationType,
+                    NotificationSubtype = from.NotificationSubtype,
                     Salutation = from.Salutation,
                     Startdate = from.Startdate,
                     SubscriptionID = from.SubscriptionID,
+                    SubscriptionGroup = from.SubscriptionGroup,
+                   
                     URL = from.URL
                 };
 
@@ -102,6 +105,8 @@ namespace uPromis.Microservice.Notification.Controllers
                 exists.ExpectedAction = from.ExpectedAction;
                 exists.Salutation = from.Salutation;
                 exists.Startdate = from.Startdate;
+                exists.SubscriptionGroup = from.SubscriptionGroup;
+                exists.URL = from.URL;
 
                 return Repo.Put(exists);
             }

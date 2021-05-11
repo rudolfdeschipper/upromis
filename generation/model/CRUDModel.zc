@@ -570,6 +570,14 @@ NotificationEntry : {
 			ReminderNotification: "Reminder"
 		}
 	},
+	NotificationSubtype <- DataDictionary.CodeField : {
+		Length: 50,
+		Nullable: true,
+		Name: "NotificationSubtype",
+		Title: "Notification Subtype",
+		JSONName: "notificationSubtype",
+		Show: true
+	}, 
 	ExpectedAction <- DataDictionary.DescriptionField : 
 	{ 
 			Name: "ExpectedAction", 

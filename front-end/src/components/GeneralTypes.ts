@@ -24,16 +24,16 @@ export interface ILoadResult<T>
     message: string;
 }
 
-export interface ISaveMessage<T> {
-    id: number,
+export interface ISaveMessage<T, Tid = number> {
+    id: Tid,
     dataSubject: T,
     action: string,
     subaction: string,
     additionalData: object[]
 }
 
-export interface IAPIResult<T> {
-    id: number;
+export interface IAPIResult<T, Tid = number> {
+    id: Tid;
     dataSubject: T | undefined;
     success: boolean;
     message: string;

@@ -54,6 +54,9 @@ export class NavMenu extends React.Component<{ User: any }> {
                                 <NavDropdown.Divider />
                             </NavDropdown>
                             <NavDropdown title="Config" id="collapsable-contract-dropdown"  disabled={!this.props.User}>
+                                <NavDropdown.Item className="text-dark" href='/usermanager' >
+                                    User manager
+                                </NavDropdown.Item>
                                 <NavDropdown.Divider />
                             </NavDropdown>
                         </Nav>

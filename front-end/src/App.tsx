@@ -46,6 +46,8 @@ class App extends React.Component<IProps, IState> {
         const proposaldetails = React.lazy(() => import("./components/Proposal/generated/ProposalDetails"));
         const client = React.lazy(() => import("./components/Client/generated/Client"));
         const clientdetails = React.lazy(() => import("./components/Client/generated/ClientDetails"));
+        const userManager = React.lazy(() => import("./components/UserManager/generated/UserManager"));
+        const userManagerdetails = React.lazy(() => import("./components/UserManager/generated/UserManagerDetails"));
 
         return (
             <Layout User={this.state._user}>
@@ -67,6 +69,9 @@ class App extends React.Component<IProps, IState> {
                             <Route path='/client' component={!!this.state._user ? client : nfp} />
                             <Route path='/clientdetails/:id' component={!!this.state._user ? clientdetails : nfp} />
                             <Route path='/clientdetails/add' component={!!this.state._user ? clientdetails : nfp} />
+                            <Route path='/usermanager' component={!!this.state._user ? userManager : nfp} />
+                            <Route path='/usermanagerdetails/:id' component={!!this.state._user ? userManagerdetails : nfp} />
+                            <Route path='/usermanagerdetails/add' component={!!this.state._user ? userManagerdetails : nfp} />
                             <Route path="*" component={nfp} />
                         </Switch>
                     </Suspense>

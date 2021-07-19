@@ -8,18 +8,19 @@ APIDebug : true
 
 @App
 
-Contract : 
+Contract <- Definitions.AppBase : 
 {
 	List <- Microservice.Contract.DTO.Contract,
 	Edit <- Microservice.Contract.DTO.Contract,
+	EditScreen <- App.Contract.Edit.Properties,
 	EditTitle: "title",
 	Tabs : {
-		Payment : {
+		Payment <- Definitions.AppBase : {
 			Title : "Payments", 
 			JSONName : "payment", 
 			Model <- Microservice.Contract.DTO.Contract.Children.ContractPaymentInfo 
 		},
-		Team : {
+		Team <- Definitions.AppBase : {
 			Title : "Team members", 
 			JSONName : "team", 
 			Model <- Microservice.Contract.DTO.Contract.Children.ContractTeamComposition 
@@ -34,18 +35,19 @@ Contract :
 	APIUrl: "http://localhost:5001/api"
 }
 
-Proposal : 
+Proposal <- Definitions.AppBase : 
 {
 	List <- Microservice.Contract.DTO.Proposal,
 	Edit <- Microservice.Contract.DTO.Proposal,
+	EditScreen <- App.Proposal.Edit.Properties,
 	EditTitle: "title",
 	Tabs : {
-		Payment : {
+		Payment <- Definitions.AppBase : {
 			Title : "Payments", 
 			JSONName : "payment", 
 			Model <- Microservice.Contract.DTO.Proposal.Children.ProposalPaymentInfo 
 		},
-		Team : {
+		Team <- Definitions.AppBase : {
 			Title : "Team members", 
 			JSONName : "team", 
 			Model <- Microservice.Contract.DTO.Proposal.Children.ProposalTeamComposition 
@@ -60,13 +62,43 @@ Proposal :
 	APIUrl: "http://localhost:5001/api"
 }
 
-Request : 
+Request <- Definitions.AppBase : 
 {
 	List <- Microservice.Contract.DTO.Request,
 	Edit <- Microservice.Contract.DTO.Request,
+	EditScreen <- App.Request.Edit.Properties : {
+		-AckPlandate,
+		-AckActualdate,
+		-YNPlandate,
+		-YNActualdate,
+		-OfferPlandate,
+		-OfferActualdate,
+		+AckGroup : {
+			Type : "Row",
+			Columnns : {
+				+AckPlandate <- DataDictionary.DateField :  { ColumnnWidth : "s6", Name : "AcknowledgePlandate", Title : "Planned Acknowledge date", Nullable: true, JSONName : "acknowledgePlanDate" }, 
+				+AckActualdate <- DataDictionary.DateField :  { ColumnnWidth : "s6", Name : "AcknowledgeActualdate", Title : "Actual Acknowledge date", Nullable: true, JSONName : "acknowledgeActualDate", JSONDefault: "undefined" }
+			}
+		},
+		+YnGroup : {
+			Type: "Row",
+			Columnns : {
+				+YNPlandate <- DataDictionary.DateField :  { ColumnnWidth : "s6", Name : "YesNoPlandate", Title : "Planned Yes/No date", Nullable: true, JSONName : "ynPlanDate" }, 
+				+YNActualdate <- DataDictionary.DateField :  { ColumnnWidth : "s6", Name : "YesNoActualdate", Title : "Actual Yes/No date", Nullable: true, JSONName : "ynActualDate" }
+			}
+		},
+		OfferGroup : {
+			Type : "Row",
+			Columnns : {
+				+OfferPlandate <- DataDictionary.DateField :  { ColumnnWidth : "s6", Name : "OfferPlandate", Title : "Planned Proposal date", Nullable: true, JSONName : "offerPlanDate" }, 
+				+OfferActualdate <- DataDictionary.DateField :  { ColumnnWidth : "s6", Name : "OfferActualdate", Title : "Actual Proposal date", Nullable: true, JSONName : "offerActualDate" }
+			}
+		}
+		/ ID, Code, Title, Description, Startdate, RequestorId, AckGroup, YnGroup, OfferGroup, RequestStatus, RequestType
+	},
 	EditTitle: "title",
 	Tabs : {
-		Team : {
+		Team <- Definitions.AppBase : {
 			Title : "Team members", 
 			JSONName : "team", 
 			Model <- Microservice.Contract.DTO.Request.Children.RequestTeamComposition 
@@ -81,10 +113,11 @@ Request :
 	APIUrl: "http://localhost:5001/api"
 }
 
-Client : 
+Client <- Definitions.AppBase : 
 {
 	List <- Microservice.Contract.DTO.Client,
 	Edit <- Microservice.Contract.DTO.Client,
+	EditScreen <- App.Client.Edit.Properties,
 	EditTitle: "title",
 	Tabs : {
 	},
@@ -97,10 +130,11 @@ Client :
 	APIUrl: "http://localhost:5001/api"
 }
 
-Notification : 
+Notification <- Definitions.AppBase : 
 {
 	List <- Microservice.Notification.DTO.NotificationEntry,
 	Edit <- Microservice.Notification.DTO.NotificationEntry,
+	EditScreen <- App.Notification.Edit.Properties,
 	EditTitle: "code",
 	Tabs : {
 	},
@@ -113,6 +147,27 @@ Notification :
 	APIUrl: "http://localhost:15060/api"
 }
 
+UserManager <- Definitions.AppBase : 
+{
+	List <- Microservice.UserManager.DTO.User,
+	Edit <- Microservice.UserManager.DTO.User,
+	EditScreen <- App.UserManager.Edit.Properties,
+	EditTitle: "userName",
+	Key: {
+		Name: "code",
+		Type: "string",
+		DefaultValue: "''"
+	},
+	Tabs : {
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: false,
+	AppUrl: "usermanager",
+	APIUrl: "http://localhost:5000/api"
+}
 
 @Microservice
 
@@ -348,6 +403,25 @@ Notification : {
 		},
 		NotificationGroup <- Microservice.Notification.Models.NotificationGroup
 	}
+}
+
+UserManager : {
+	Namespace: "IdentityServer",
+	Controllers: {
+	},
+	Models: {
+	},
+	DTO : {
+		User : {
+			Name: "User",
+			SetName : "Users",
+			Properties <- Entities.User,
+			Children : {
+				
+			}
+		}
+	}
+
 }
 
 @Entities // non-structured flat objects
@@ -675,7 +749,56 @@ NotificationGroup : {
 	}
 }
 
+User : {
+		ID <- DataDictionary.CodeField : {
+			Name: "ID",
+			Nullable: false,
+			Length: 450,
+			Show: false
+		},
+		UserName <- DataDictionary.CodeField : {
+			Name: "UserName",
+			JSONName: "userName",
+			Length: 255,
+			Nullable: false,
+			Title: "Username",
+			Show: true
+		},
+		Email <- DataDictionary.EmailField : {
+			Name: "Email",
+			JSONName: "email",
+			Length: 255,
+			Nullable: false,
+			Title: "E-Mail",
+			Show: true
+		},
+		FirstName <- DataDictionary.CodeField : {
+			Name: "FirstName",
+			JSONName: "firstName",
+			Length: 255,
+			Nullable: false,
+			Title: "First name",
+			Show: true
+		},
+		LastName <- DataDictionary.CodeField : {
+			Name: "LastName",
+			JSONName: "lastName",
+			Length: 255,
+			Nullable: false,
+			Title: "Last name",
+			Show: true
+		}
+}
+
 @Definitions
+
+AppBase : {
+	Key: {
+		Name: "id",
+		Type: "number",
+		DefaultValue: 0
+	}
+}
 
 DefaultObject :{
 	ID <- DataDictionary.IDField,

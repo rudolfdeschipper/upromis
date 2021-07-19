@@ -86,10 +86,10 @@ class =<App.$> extends React.Component<RouteComponentProps<{}>, IListState<I=<Ap
             .catch(e => alert(e))
     }
 
-    private saveOneRecord = (subaction: string, record: I=<App.$>Data): Promise<IAPIResult<I=<App.$>Data>> => {
+    private saveOneRecord = (subaction: string, record: I=<App.$>Data): Promise<IAPIResult<I=<App.$>Data, =<Key.Type>>> => {
 
         const action = (record.modifier === "Added") ? "POST" : (record.modifier === "Deleted") ? "DELETE" : "PUT";
-        const toSave: ISaveMessage<I=<App.$>Data> = { id: record.id, action: action, dataSubject: { ...record }, subaction: subaction, additionalData: [] };
+        const toSave: ISaveMessage<I=<App.$>Data, =<Key.Type>> = { id: record.=<Key.Name>, action: action, dataSubject: { ...record }, subaction: subaction, additionalData: [] };
 
         // alert("saveOneRecord " + JSON.stringify(toSave));
 

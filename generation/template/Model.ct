@@ -457,6 +457,10 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %EndIf
 %/Loop:Children
 
+%/Loop:Models
+
+%Loop:DTO
+
 %FileOverwrite:=<#Parameters.backendNameSpace>.Services\DTO\=<Microservice.Namespace>\generated\=<$>DTO.cs
 %Log:DTO =<$>
 /*
@@ -595,7 +599,7 @@ namespace =<#Parameters.backendNameSpace>.Services.Models
 %/Loop:Properties
 
         // Parent property
-        public =<Models.$>DTO =<Models.$>DTO {get; set; }
+        public =<DTO.$>DTO =<DTO.$>DTO {get; set; }
 
         // Default model properties
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
@@ -614,7 +618,7 @@ namespace =<#Parameters.backendNameSpace>.Services.Models
 %EndIf
 %/Loop:Children
 
-%/Loop:Models
+%/Loop:DTO
 
 %Log:Transformers
 %FileOverwrite:=<#Parameters.msNameSpace>=<Microservice.Namespace>\Models\generated\Transformers.cs

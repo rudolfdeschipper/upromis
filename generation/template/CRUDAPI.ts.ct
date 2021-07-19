@@ -68,9 +68,9 @@ export class =<App.$>API {
     }
 
 
-    static saveRecord = async (message: ISaveMessage<I=<App.$>Data>, token: string): Promise<IAPIResult<I=<App.$>Data>> => {
+    static saveRecord = async (message: ISaveMessage<I=<App.$>Data, =<Key.Type>>, token: string): Promise<IAPIResult<I=<App.$>Data , =<Key.Type>>> => {
 
-        return await http<ISaveMessage<I=<App.$>Data>, IAPIResult<I=<App.$>Data>>(
+        return await http<ISaveMessage<I=<App.$>Data , =<Key.Type>>, IAPIResult<I=<App.$>Data , =<Key.Type>>>(
             =<App.$>API.webAPIUrl,
             {
                 path: '/=<App.AppUrl>',
@@ -92,7 +92,7 @@ export class =<App.$>API {
                     message: result.statusText
                 };
             }
-        }, (rejectedResult: HttpResponse<IAPIResult<I=<App.$>Data>>) => {
+        }, (rejectedResult: HttpResponse<IAPIResult<I=<App.$>Data, =<Key.Type>>>) => {
             if(=<App.$>API.debug) console.log("API rejected result not ok");
             return { 
                 id: message.id, 
@@ -111,15 +111,15 @@ export class =<App.$>API {
                 dataSubject: undefined, 
                 success: false, 
                 message: ex.statusText, 
-                additionalInfo: (ex as HttpResponse<IAPIResult<I=<App.$>Data>>).parsedBody?.additionalInfo
+                additionalInfo: (ex as HttpResponse<IAPIResult<I=<App.$>Data, =<Key.Type>>>).parsedBody?.additionalInfo
             };
         });
     };
 
-    static loadOneRecord = async (id: number, token: string): Promise<IAPIResult<I=<App.$>Data>> => {
+    static loadOneRecord = async (id: =<Key.Type>, token: string): Promise<IAPIResult<I=<App.$>Data, =<Key.Type>>> => {
 
         try {
-            const result = await http<ISaveMessage<I=<App.$>Data>, IAPIResult<I=<App.$>Data>>(
+            const result = await http<ISaveMessage<I=<App.$>Data, =<Key.Type>>, IAPIResult<I=<App.$>Data, =<Key.Type>>>(
                 =<App.$>API.webAPIUrl,
                 {
                     path: '/=<App.AppUrl>/' + id,

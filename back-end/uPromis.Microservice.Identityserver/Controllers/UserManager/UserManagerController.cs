@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using uPromis.Services.Models;
 using uPromis.Microservice.Identityserver.Data;
-using uPromis.Microservice.IdentityServer.Models;
 using uPromis.Microservice.Identityserver.Models;
 
 namespace uPromis.Microservice.Identityserver.Controllers.UserManager
@@ -33,22 +32,22 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(string id)
+        public ActionResult Get(string id)
         {
             var res = Repository.GetDTO(id);
 
             if (res == null)
             {
-                return NotFound(new APIResult<UserDTO, string>() { ID = id, DataSubject = null, Message = "Get failed" });
+                return NotFound(new APIResult<ApplicationUserDTO, string>() { ID = id, DataSubject = null, Message = "Get failed" });
             }
 
-            return Ok(new APIResult<UserDTO, string>() { ID = id, DataSubject = res, Message = "Get was performed" });
+            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = id, DataSubject = res, Message = "Get was performed" });
         }
 
         [HttpPost()]
-        public async Task<ActionResult> Post([FromBody] SaveMessage<UserDTO, string> rec)
+        public async Task<ActionResult> Post([FromBody] SaveMessage<ApplicationUserDTO, string> rec)
         {
-            UserDTO res;
+            ApplicationUserDTO res;
 
             Logger.Log(LogLevel.Information, rec.Action + "/" + rec.SubAction);
 
@@ -71,21 +70,21 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVECLIENT);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
-                await endPoint.Send<UserDTO>(res);
+                await endPoint.Send<ApplicationUserDTO>(res);
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<UserDTO, string>() { ID = "", DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<ApplicationUserDTO, string>() { ID = "", DataSubject = null, Message = ex.Message });
             }
 
             // return posted values
-            return Ok(new APIResult<UserDTO, string>() { ID = res.ID, DataSubject = res, Message = "New Client was created." });
+            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = res.Id, DataSubject = res, Message = "New Client was created." });
         }
 
         [HttpPut()]
-        public async Task<ActionResult> Put([FromBody] SaveMessage<UserDTO, string> rec)
+        public async Task<ActionResult> Put([FromBody] SaveMessage<ApplicationUserDTO, string> rec)
         {
-            UserDTO res;
+            ApplicationUserDTO res;
 
             Logger.Log(LogLevel.Information, rec.Action + "/" + rec.SubAction);
 
@@ -95,19 +94,19 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVECLIENT);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
-                await endPoint.Send<UserDTO>(res);
+                await endPoint.Send<ApplicationUserDTO>(res);
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<UserDTO, string>() { ID = rec.ID, DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<ApplicationUserDTO, string>() { ID = rec.ID, DataSubject = null, Message = ex.Message });
             }
 
             // return posted values
-            return Ok(new APIResult<UserDTO, string>() { ID = res.ID, DataSubject = res, Message = "Client was saved." });
+            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = res.Id, DataSubject = res, Message = "Client was saved." });
         }
 
         [HttpDelete()]
-        public async Task<ActionResult> Delete([FromBody] SaveMessage<UserDTO, string> rec)
+        public async Task<ActionResult> Delete([FromBody] SaveMessage<ApplicationUserDTO, string> rec)
         {
             bool res;
 
@@ -120,20 +119,20 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 
                 if (res == false)
                 {
-                    return NotFound(new APIResult<UserDTO, string>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
+                    return NotFound(new APIResult<ApplicationUserDTO, string>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
 
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERDELETECLIENT);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
-                await endPoint.Send<UserDTO>(rec.DataSubject);
+                await endPoint.Send<ApplicationUserDTO>(rec.DataSubject);
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<UserDTO, string>() { ID = "", DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<ApplicationUserDTO, string>() { ID = "", DataSubject = null, Message = ex.Message });
             }
 
             // return 
-            return Ok(new APIResult<UserDTO, string>() { ID = rec.ID, DataSubject = null, Message = "Client was deleted." });
+            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = rec.ID, DataSubject = null, Message = "Client was deleted." });
         }
 
         // TODO: transform into a get with a body (this is possible)
@@ -141,7 +140,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
         public async Task<ActionResult> GetList([FromBody] SortAndFilterInformation sentModel)
         {
             var records = await Repository.GetList(sentModel, true);
-            return Ok(new LoadResult<UserDTO>() { Data = records.Item1.ToArray(), Pages = records.Item2, Message = "" });
+            return Ok(new LoadResult<ApplicationUserDTO>() { Data = records.Item1.ToArray(), Pages = records.Item2, Message = "" });
         }
 
         // TODO: this can be a normal "get", with a filter on the header " 'Content-Type': 'application/excel' or something
@@ -171,7 +170,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
             {
                 row++;
                 col = 1;
-                worksheet.Cells[row, col].Value = item.ID;
+                worksheet.Cells[row, col].Value = item.Id;
                 col++;
                 worksheet.Cells[row, col].Value = item.UserName;
                 col++;
@@ -191,7 +190,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
         // TODO: make into a get with a body
         [Route("getselectvalues")]
         [HttpPost]
-        public async Task<ActionResult> GetSelectValues([FromBody] ListValueInfo info)
+        public ActionResult GetSelectValues([FromBody] ListValueInfo info)
         {
             //var EnumProducer = new SelectValueFromEnumProducer();
             List<ListValue> list = new();

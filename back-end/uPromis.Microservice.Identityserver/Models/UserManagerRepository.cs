@@ -20,12 +20,12 @@ namespace uPromis.Microservice.Identityserver.Models
             context = ctx;
         }
 
-        public async Task<(List<UserDTO>, double)> GetList(SortAndFilterInformation sortAndFilterInformation, bool doPaging)
+        public async Task<(List<ApplicationUserDTO>, double)> GetList(SortAndFilterInformation sortAndFilterInformation, bool doPaging)
         {
             return await DoSortFilterAndPaging(sortAndFilterInformation, doPaging);
         }
 
-        private async Task<(List<UserDTO>, double)> DoSortFilterAndPaging(SortAndFilterInformation sentModel, bool doPaging)
+        private async Task<(List<ApplicationUserDTO>, double)> DoSortFilterAndPaging(SortAndFilterInformation sentModel, bool doPaging)
         {
             string whereClause = String.Empty;
             IQueryable<ApplicationUser> records = context.Users as DbSet<ApplicationUser>;
@@ -101,12 +101,12 @@ namespace uPromis.Microservice.Identityserver.Models
             return rec;
         }
 
-        private UserDTO Transform(ApplicationUser rec)
+        private ApplicationUserDTO Transform(ApplicationUser rec)
         {
             var claims = context.UserClaims.Where(r => r.UserId == rec.Id);
-            UserDTO dto = new()
+            ApplicationUserDTO dto = new()
             {
-                ID = rec.Id,
+                Id = rec.Id,
                 Email = rec.Email,
                 UserName = rec.UserName,
                 Modifier = "Unchanged"
@@ -119,7 +119,7 @@ namespace uPromis.Microservice.Identityserver.Models
             return dto;
         }
 
-        public UserDTO GetDTO(string id)
+        public ApplicationUserDTO GetDTO(string id)
         {
             var rec = Get(id);
             if (rec != null)
@@ -132,7 +132,7 @@ namespace uPromis.Microservice.Identityserver.Models
             }
         }
 
-        public UserDTO Post(UserDTO rec)
+        public ApplicationUserDTO Post(ApplicationUserDTO rec)
         {
             ApplicationUser toPost = new()
             {
@@ -156,9 +156,9 @@ namespace uPromis.Microservice.Identityserver.Models
 
         }
 
-        public UserDTO Put(UserDTO rec)
+        public ApplicationUserDTO Put(ApplicationUserDTO rec)
         {
-            ApplicationUser toPut = Get(rec.ID);
+            ApplicationUser toPut = Get(rec.Id);
 
             context.Update(toPut);
 
@@ -167,7 +167,7 @@ namespace uPromis.Microservice.Identityserver.Models
 
             if (context.SaveChanges() > 0)
             {
-                var claims = context.UserClaims.Where(r => r.UserId == rec.ID);
+                var claims = context.UserClaims.Where(r => r.UserId == rec.Id);
 
                 var firstName = claims.SingleOrDefault(t => t.ClaimType == "given_name");
                 var lastName = claims.SingleOrDefault(t => t.ClaimType == "family_name");

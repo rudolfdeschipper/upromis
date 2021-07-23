@@ -149,8 +149,8 @@ Notification <- Definitions.AppBase :
 
 UserManager <- Definitions.AppBase : 
 {
-	List <- Microservice.UserManager.DTO.User,
-	Edit <- Microservice.UserManager.DTO.User,
+	List <- Microservice.UserManager.DTO.ApplicationUser,
+	Edit <- Microservice.UserManager.DTO.ApplicationUser,
 	EditScreen <- App.UserManager.Edit.Properties,
 	EditTitle: "userName",
 	Key: {
@@ -396,25 +396,21 @@ Notification : {
 		}
 	},
 	DTO : {
-		NotificationEntry <- Microservice.Notification.Models.NotificationEntry : {
-			Properties : {
-				-ExternalID
-			}
-		},
+		NotificationEntry <- Microservice.Notification.Models.NotificationEntry,
 		NotificationGroup <- Microservice.Notification.Models.NotificationGroup
 	}
 }
 
 UserManager : {
-	Namespace: "IdentityServer",
+	Namespace: "Identityserver",
 	Controllers: {
 	},
 	Models: {
 	},
 	DTO : {
-		User : {
-			Name: "User",
-			SetName : "Users",
+		ApplicationUser : {
+			Name: "ApplicationUser",
+			SetName : "ApplicationUsers",
 			Properties <- Entities.User,
 			Children : {
 				
@@ -750,8 +746,8 @@ NotificationGroup : {
 }
 
 User : {
-		ID <- DataDictionary.CodeField : {
-			Name: "ID",
+		Id <- DataDictionary.CodeField : {
+			Name: "Id",
 			Nullable: false,
 			Length: 450,
 			Show: false

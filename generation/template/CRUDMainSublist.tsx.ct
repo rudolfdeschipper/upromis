@@ -141,6 +141,12 @@ class =<App.$>=<Tabs.$> extends React.Component<IProps, IState> {
         if (values.modifier !== "Added") {
             values.modifier = "Modified";
         }
+%Loop:Model.Properties
+%If:Lookup?=true
+        values.=<JSONName>Label = this.state.=<JSONName>values.find(r => r.value === values.=<JSONName>)!.label;
+%EndIf
+%/Loop:Model.Properties
+
         this.props.update=<Tabs.$>line(values, false, this.state.currentIndex);
 
         this.setState({
@@ -152,6 +158,11 @@ class =<App.$>=<Tabs.$> extends React.Component<IProps, IState> {
     private add=<Tabs.$>Line = (values: I=<Tabs.Model.SetName>) => {
         // add the record
         values.modifier = "Added";
+%Loop:Model.Properties
+%If:Lookup?=true
+        values.=<JSONName>Label = this.state.=<JSONName>values.find(r => r.value === values.=<JSONName>)!.label;
+%EndIf
+%/Loop:Model.Properties
         this.props.update=<Tabs.$>line(values, true, this.state.currentIndex);
 
         this.setState({

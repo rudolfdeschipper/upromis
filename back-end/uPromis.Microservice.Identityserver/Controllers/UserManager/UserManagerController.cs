@@ -12,23 +12,35 @@ using MassTransit;
 using uPromis.Services.Models;
 using uPromis.Microservice.Identityserver.Data;
 using uPromis.Microservice.Identityserver.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using IdentityServerHost.Quickstart.UI;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(LocalApi.PolicyName)]
+    [SecurityHeaders]
     public class UserManagerController : ControllerBase
     {
         private readonly UserManagerRepository Repository;
         private readonly ILogger Logger;
         private readonly IBus ReportServerBus;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserBootstrapper bootstrapper;
 
         public UserManagerController(UserManagerRepository repo, ILoggerProvider loggerProvider,
-            IBus reportServerBus)
+            IBus reportServerBus, UserManager<ApplicationUser> userManager,
+            UserBootstrapper userBootstrapper)
         {
             Repository = repo;
             Logger = loggerProvider.CreateLogger(nameof(UserManagerController));
             ReportServerBus = reportServerBus;
+            _userManager = userManager;
+
+            bootstrapper = userBootstrapper;
         }
 
         [HttpGet("{id}")]
@@ -68,6 +80,8 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 
                 res = Repository.Post(rec.DataSubject);
 
+                await bootstrapper.EnsureAdminRoleExists(_userManager);
+
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVECLIENT);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<ApplicationUserDTO>(res);
@@ -78,7 +92,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
             }
 
             // return posted values
-            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = res.Id, DataSubject = res, Message = "New Client was created." });
+            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = res.Id, DataSubject = res, Message = "New User was created." });
         }
 
         [HttpPut()]
@@ -92,6 +106,8 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
             {
                 res = Repository.Put(rec.DataSubject);
 
+                await bootstrapper .EnsureAdminRoleExists(_userManager);
+
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERSAVECLIENT);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
                 await endPoint.Send<ApplicationUserDTO>(res);
@@ -102,7 +118,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
             }
 
             // return posted values
-            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = res.Id, DataSubject = res, Message = "Client was saved." });
+            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = res.Id, DataSubject = res, Message = "User was saved." });
         }
 
         [HttpDelete()]
@@ -114,13 +130,18 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 
             try
             {
-
+                if (rec.DataSubject.UserName == UserBootstrapper.DefaultAdminUser)
+                {
+                    return BadRequest(new APIResult<ApplicationUserDTO, string>() { ID = "", DataSubject = null, Message = "This user may not be deleted." });
+                }
                 res = Repository.Delete(rec.ID);
 
                 if (res == false)
                 {
                     return NotFound(new APIResult<ApplicationUserDTO, string>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
+
+                await bootstrapper .EnsureAdminRoleExists(_userManager);
 
                 Uri uri = new("rabbitmq://localhost/" + uPromis.Services.Queues.MessageBusQueueNames.REPORTSERVERDELETECLIENT);
                 var endPoint = await ReportServerBus.GetSendEndpoint(uri);
@@ -132,7 +153,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
             }
 
             // return 
-            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = rec.ID, DataSubject = null, Message = "Client was deleted." });
+            return Ok(new APIResult<ApplicationUserDTO, string>() { ID = rec.ID, DataSubject = null, Message = "User was deleted." });
         }
 
         // TODO: transform into a get with a body (this is possible)
@@ -140,6 +161,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
         public async Task<ActionResult> GetList([FromBody] SortAndFilterInformation sentModel)
         {
             var records = await Repository.GetList(sentModel, true);
+
             return Ok(new LoadResult<ApplicationUserDTO>() { Data = records.Item1.ToArray(), Pages = records.Item2, Message = "" });
         }
 
@@ -197,6 +219,11 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 
             switch (info.ValueType)
             {
+                case "Role":
+                    list.Add(new ListValue() { Value = string.Empty, Label = "" });
+
+                    list.AddRange(UserManagerRepository.RoleValues);
+                    break;
                 default:
                     break;
             }

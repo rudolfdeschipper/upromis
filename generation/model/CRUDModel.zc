@@ -154,11 +154,16 @@ UserManager <- Definitions.AppBase :
 	EditScreen <- App.UserManager.Edit.Properties,
 	EditTitle: "userName",
 	Key: {
-		Name: "code",
+		Name: "id",
 		Type: "string",
 		DefaultValue: "''"
 	},
 	Tabs : {
+		Roles <- Definitions.AppBase : {
+			Title : "Roles", 
+			JSONName : "roles", 
+			Model <- Microservice.UserManager.DTO.ApplicationUser.Children.UserRole 
+		}
 	},
 	Actions : {
 		Action1 : { Name: "copy", Title: "Copy"},
@@ -413,7 +418,11 @@ UserManager : {
 			SetName : "ApplicationUsers",
 			Properties <- Entities.User,
 			Children : {
-				
+				UserRole : { 
+					Properties <- Entities.UserRole, 
+					SetName: "Roles", 
+					Lazy: false 
+				}
 			}
 		}
 	}
@@ -748,7 +757,9 @@ NotificationGroup : {
 User : {
 		Id <- DataDictionary.CodeField : {
 			Name: "Id",
+			JSONName: "id",
 			Nullable: false,
+			Title: "User ID",
 			Length: 450,
 			Show: false
 		},
@@ -784,6 +795,25 @@ User : {
 			Title: "Last name",
 			Show: true
 		}
+}
+
+UserRole : {
+	ID <- DataDictionary.IDField,
+	Role <- DataDictionary.StatusField : {
+		Name: "UserRole",
+		JSONName: "userRole",
+		Title: "Role",
+		Nullable: false,
+		+Values: {
+			IsContractOwner: "Contract Owner",
+			IsContractParticipant: "Contract Participant",
+			IsContractReader: "Contract Reader",
+			IsProjectOwner: "Project Owner",
+			IsProjectParticipant: "Project Participant",
+			IsProjectReader: "Project Reader",
+			IsInAdminRole: "uPromis Administrator"
+		}
+	}
 }
 
 @Definitions

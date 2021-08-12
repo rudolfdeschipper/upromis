@@ -17,12 +17,19 @@ namespace uPromis.Microservice.Identityserver
                 new IdentityResources.Profile(),
                    };
 
+        public static IEnumerable<ApiResource> Apis => new List<ApiResource>
+        {
+            // local API
+            new ApiResource(IdentityServerConstants.LocalApi.ScopeName),
+        };
+
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
                 new ApiScope("api1", "My API"), // {  UserClaims = { "lastproject"} },
                 new ApiScope("api2", "Attachment API") {},
-                new ApiScope("api3", "Notification API") {}
+                new ApiScope("api3", "Notification API") {},
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName) {},
             };
 
         public static IEnumerable<Client> Clients =>
@@ -68,7 +75,8 @@ namespace uPromis.Microservice.Identityserver
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.LocalApi.ScopeName
                     }
                 },
                 // JavaScript Client
@@ -114,7 +122,8 @@ namespace uPromis.Microservice.Identityserver
                         IdentityServerConstants.StandardScopes.Profile,
                         "api2",
                         "api1",
-                        "api3"
+                        "api3",
+                        IdentityServerConstants.LocalApi.ScopeName
                     }
                 }
 

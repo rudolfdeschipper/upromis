@@ -12,16 +12,16 @@ import { IUserManagerData } from './generated/UserManagerTypes';
 import {UserManagerAPI} from './generated/UserManagerAPI';
 
 export class UserManagerActioncopy {
-    static perform = async (id: string, token: string): Promise<ISaveMessage<IUserManagerData, string>> => {
+    static perform = async (code: string, token: string): Promise<ISaveMessage<IUserManagerData, string>> => {
         try {
             // get the record from the backend
-            var recAPIResult = await UserManagerAPI.loadOneRecord(id, token);
+            var recAPIResult = await UserManagerAPI.loadOneRecord(code, token);
             var rec : IUserManagerData = recAPIResult.dataSubject!;
 
             // perform action on the record
             // TODO
             // send the updated record back to the caller for saving
-            var saveMessage : ISaveMessage<IUserManagerData, string> =  { id: id, dataSubject : rec, action: "Save", subaction: "Copy", additionalData: [] };
+            var saveMessage : ISaveMessage<IUserManagerData, string> =  { id: code, dataSubject : rec, action: "Save", subaction: "Copy", additionalData: [] };
 
             return saveMessage;
         } catch (ex) {

@@ -18,5 +18,10 @@ namespace IdentityServerHost.Quickstart.UI
 
         public bool IsExternalLoginOnly => EnableLocalLogin == false && ExternalProviders?.Count() == 1;
         public string ExternalLoginScheme => IsExternalLoginOnly ? ExternalProviders?.SingleOrDefault()?.AuthenticationScheme : null;
+
+        public bool OnlyDefaultUserIsAdmin { get; internal set; } = false;
+        public bool DefaultUserWasCreated { get; internal set; } = false;
+
+        public string Error { get; set; }
     }
 }

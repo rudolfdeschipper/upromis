@@ -140,9 +140,9 @@ class =<App.$> extends React.Component<RouteComponentProps<{}>, IListState<I=<Ap
         const columns = [
             {
                 Header: 'Actions',
-                Cell: (row: { row: { id: any, _index: number; }; }) => (
+                Cell: (row: { row: { =<Key.Name>: any, _index: number; }; }) => (
                     <div className="w3-bar">
-                        <Link to={"/=<App.$>details/" + row.row.id} className="w3-bar-item w3-button" title="Edit">
+                        <Link to={"/=<App.$>details/" + row.row.=<Key.Name>} className="w3-bar-item w3-button" title="Edit">
                             <i className="fa fa-pencil" ></i>
                         </Link>
                         <button onClick={() => { this.openDeleteModal(row); }} className="w3-bar-item w3-button" title="Delete" >
@@ -221,9 +221,9 @@ class =<App.$> extends React.Component<RouteComponentProps<{}>, IListState<I=<Ap
     }
 
 %Loop:App.Actions
-    performAction=<Name> = async (row: { row: { id: any; _index: number; }; }) => {
+    performAction=<Name> = async (row: { row: { =<App.Key.Name>: any; _index: number; }; }) => {
         // alert("perform Action 1: on " + JSON.stringify(this.state.data[row.row._index]));
-        await =<App.$>Action=<Name>.perform(row.row.id,this.context!.access_token)
+        await =<App.$>Action=<Name>.perform(row.row.=<App.Key.Name>,this.context!.access_token)
         .then( value => {
             // if action is not set to Save, don't Save here
             if(value.action === "Save") {
@@ -267,16 +267,16 @@ import { I=<App.$>Data } from './generated/=<App.$>Types';
 import {=<App.$>API} from './generated/=<App.$>API';
 
 export class =<App.$>Action=<Name> {
-    static perform = async (id: number, token: string): Promise<ISaveMessage<I=<App.$>Data>> => {
+    static perform = async (=<App.Key.Name>: =<App.Key.Type>, token: string): Promise<ISaveMessage<I=<App.$>Data>> => {
         try {
             // get the record from the backend
-            var recAPIResult = await =<App.$>API.loadOneRecord(id, token);
+            var recAPIResult = await =<App.$>API.loadOneRecord(=<App.Key.Name>, token);
             var rec : I=<App.$>Data = recAPIResult.dataSubject!;
 
             // perform action on the record
             // TODO
             // send the updated record back to the caller for saving
-            var saveMessage : ISaveMessage<I=<App.$>Data> =  { id: id, dataSubject : rec, action: "Save", subaction: "=<Title>", additionalData: [] };
+            var saveMessage : ISaveMessage<I=<App.$>Data> =  { id: =<App.Key.Name>, dataSubject : rec, action: "Save", subaction: "=<Title>", additionalData: [] };
 
             return saveMessage;
         } catch (ex) {

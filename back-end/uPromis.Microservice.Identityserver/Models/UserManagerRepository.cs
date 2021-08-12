@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using uPromis.APIUtils.APIMessaging;
 using uPromis.Microservice.Identityserver.Data;
@@ -13,7 +14,19 @@ namespace uPromis.Microservice.Identityserver.Models
 {
     public class UserManagerRepository
     {
-        readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
+
+        public static readonly ListValue[] RoleValues =
+            {
+                new ListValue() { Value = "IsContractOwner", Label = "Contract Owner" } ,
+                new ListValue() { Value = "IsContractParticipant", Label = "Contract Participant" } ,
+                new ListValue() { Value = "IsContractReader", Label = "Contract Reader" } ,
+                new ListValue() { Value = "IsProjectOwner", Label = "Project Owner" } ,
+                new ListValue() { Value = "IsProjectParticipant", Label = "Project Participant" } ,
+                new ListValue() { Value = "IsProjectReader", Label = "Project Reader" } ,
+                new ListValue() { Value = "IsInAdminRole", Label = "uPromis Administrator" }
+            };
+
 
         public UserManagerRepository(ApplicationDbContext ctx)
         {
@@ -91,7 +104,9 @@ namespace uPromis.Microservice.Identityserver.Models
                         .Take(sentModel.pageSize);
                 }
             }
-            return (await records.Select( u => Transform(u)).ToListAsync(), sentModel?.pageSize != 0 ? Math.Ceiling((double)(filteredCount / sentModel.pageSize)) : 1.0);
+            var list = await records.ToListAsync();
+            var dtoList = list.Select(u => Transform(context, u));
+            return (dtoList.ToList(), sentModel?.pageSize != 0 ? Math.Ceiling((double)(filteredCount / sentModel.pageSize)) : 1.0);
         }
 
 
@@ -101,7 +116,7 @@ namespace uPromis.Microservice.Identityserver.Models
             return rec;
         }
 
-        private ApplicationUserDTO Transform(ApplicationUser rec)
+        private static ApplicationUserDTO Transform(ApplicationDbContext context, ApplicationUser rec)
         {
             var claims = context.UserClaims.Where(r => r.UserId == rec.Id);
             ApplicationUserDTO dto = new()
@@ -116,7 +131,55 @@ namespace uPromis.Microservice.Identityserver.Models
             dto.FirstName = firstName;
             dto.LastName = lastName;
 
+            // Add the roles
+            var roles = claims
+                .Where(r =>
+                   (r.ClaimType.Contains("Contract")
+                   || r.ClaimType.Contains("Project")
+                   || r.ClaimType == UserBootstrapper.AdminRoleName)
+                   && r.ClaimValue == "true")
+                .Select(r => new UserRoleDTO() { Role = r.ClaimType,
+                    Modifier = "Unchanged" });
+            dto.Roles.AddRange(roles);
+
+            // put in ID
+            int row = 1;
+            foreach (var item in dto.Roles)
+            {
+                item.ID = row++;
+                item.RoleLabel = RoleValues.First(v => v.Value.Equals(item.Role))?.Label;
+            }
+
             return dto;
+        }
+
+        private void SaveRoles(ApplicationUser user, ApplicationUserDTO dto)
+        {
+            foreach (var item in dto.Roles.Where(r => r.Modifier == "Deleted"))
+            {
+                var claim = context.UserClaims.FirstOrDefault(c => c.UserId == user.Id && c.ClaimType == item.Role);
+
+                context.UserClaims.Remove(claim);
+            }
+            foreach (var item in dto.Roles.Where(r => r.Modifier == "Added" ||r.Modifier == "Modified"))
+            {
+                var oldClaim = context.UserClaims.FirstOrDefault(c => c.UserId == user.Id && c.ClaimType == item.Role);
+                var claim = new IdentityUserClaim<string>
+                {
+                    ClaimType = item.Role,
+                    UserId = user.Id,
+                    ClaimValue = "true"
+                };
+
+                if (oldClaim != null)
+                {
+                    oldClaim.ClaimValue = "true";
+                }
+                else
+                {
+                    context.UserClaims.Add(claim);
+                }
+            }
         }
 
         public ApplicationUserDTO GetDTO(string id)
@@ -124,7 +187,7 @@ namespace uPromis.Microservice.Identityserver.Models
             var rec = Get(id);
             if (rec != null)
             {
-                return Transform(rec);
+                return Transform(context, rec);
             }
             else
             {
@@ -146,6 +209,8 @@ namespace uPromis.Microservice.Identityserver.Models
             {
                 context.Add(new IdentityUserClaim<string>() { UserId = toPost.Id, ClaimType = "given_name", ClaimValue = rec.FirstName });
                 context.Add(new IdentityUserClaim<string>() { UserId = toPost.Id, ClaimType = "family_name", ClaimValue = rec.LastName });
+
+                SaveRoles(toPost, rec);
 
                 context.SaveChanges();
 
@@ -174,6 +239,8 @@ namespace uPromis.Microservice.Identityserver.Models
 
                 firstName.ClaimValue = rec.FirstName;
                 lastName.ClaimValue = rec.LastName;
+
+                SaveRoles(toPut, rec);
 
                 context.SaveChanges();
 

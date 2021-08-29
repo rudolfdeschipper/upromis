@@ -100,6 +100,22 @@ namespace uPromis.Microservice.ContractAPI
                            || context.User.HasClaim("IsContractReader", "true")
                            );
                     });
+                options.AddPolicy("CanEditAccounts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsContractOwner", "true")
+                           );
+                    });
+                options.AddPolicy("CanAccessAccounts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsContractOwner", "true")
+                           );
+                    });
             });
             services.AddCors(options =>
             {

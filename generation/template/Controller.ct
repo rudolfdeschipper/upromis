@@ -27,7 +27,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+%If:AccessControl?
+    [Authorize(policy:"=<AccessControl.AccessPolicy>")]
+%Else
     [Authorize]
+%EndIf
     public class =<$>Controller : ControllerBase
     {
         private readonly I=<Model.Name>Repository Repository;
@@ -59,6 +63,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             return Ok(new APIResult<=<Model.Name>DTO, int>() { ID = id, DataSubject = record, Message = "Get was performed" });
         }
 
+%If:AccessControl?
+        [Authorize(policy:"=<AccessControl.EditPolicy>")]
+%EndIf
         [HttpPost()]
         public async Task<ActionResult> Post([FromBody] SaveMessage<=<Model.Name>DTO, int> rec)
         {
@@ -94,6 +101,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             return Ok(new APIResult<=<Model.Name>DTO, int>() { ID = res.ID, DataSubject = res, Message = "New =<$> was created.", AdditionalInfo = BusinessRules.Result.ToArray() });
         }
 
+%If:AccessControl?
+        [Authorize(policy:"=<AccessControl.EditPolicy>")]
+%EndIf
         [HttpPut()]
         public async Task<ActionResult> Put([FromBody] SaveMessage<=<Model.Name>DTO, int> rec)
         {
@@ -138,6 +148,9 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             return Ok(new APIResult<=<Model.Name>DTO, int>() { ID = res.ID, DataSubject = res, Message = "=<$> was saved.", AdditionalInfo = BusinessRules.Result.ToArray() });
         }
 
+%If:AccessControl?
+        [Authorize(policy:"=<AccessControl.EditPolicy>")]
+%EndIf
         [HttpDelete()]
         public async Task<ActionResult> Delete([FromBody] SaveMessage<=<Model.Name>DTO, int> rec)
         {

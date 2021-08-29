@@ -8,6 +8,34 @@ import { UserManager } from './UserManager';
 export class NavMenu extends React.Component<{ User: any }> {
     static displayName = NavMenu.name;
 
+    private ContractMenu  = () =>
+    {
+        const clientPart =  (!!this.props.User && this.props.User.profile.IsContractOwner) ? 
+        (<React.Fragment>
+        <NavDropdown.Divider />
+        <NavDropdown.Item className="text-dark" href='/client' >
+        Clients
+        </NavDropdown.Item> </React.Fragment>) : null;
+
+        return (!!this.props.User &&
+        (this.props.User.profile.IsContractOwner
+            || this.props.User.profile.IsContractParticipant
+            || this.props.User.profile.IsContractReader)) ?
+        <NavDropdown title="Contract" id="collapsable-contract-dropdown" disabled={!this.props.User} >
+            <NavDropdown.Item className="text-dark" href='/contract' >
+                Contracts
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item className="text-dark" href='/request' >
+                Requests
+            </NavDropdown.Item>
+            <NavDropdown.Item className="text-dark" href='/proposal' >
+                Proposals
+            </NavDropdown.Item>
+            {clientPart}
+        </NavDropdown> : null;
+    }
+
     render() {
         return (
             <header>
@@ -19,28 +47,7 @@ export class NavMenu extends React.Component<{ User: any }> {
                             <Nav.Item>
                                 <Nav.Link className="text-dark" href="/counter">Counter</Nav.Link>
                             </Nav.Item>
-                            {
-                                !!this.props.User &&
-                                (this.props.User.profile.IsContractOwner
-                                    || this.props.User.profile.IsContractParticipant
-                                    || this.props.User.profile.IsContractReader) &&
-                                <NavDropdown title="Contract" id="collapsable-contract-dropdown" disabled={!this.props.User} >
-                                    <NavDropdown.Item className="text-dark" href='/contract' >
-                                        Contracts
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item className="text-dark" href='/request' >
-                                        Requests
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item className="text-dark" href='/proposal' >
-                                        Proposals
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item className="text-dark" href='/client' >
-                                        Clients
-                                    </NavDropdown.Item>
-                                </NavDropdown>
-                            }
+                            <this.ContractMenu />
                             {
                                 !!this.props.User &&
                                 (this.props.User.profile.IsProjectOwner

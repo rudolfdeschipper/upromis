@@ -45,6 +45,13 @@ class App extends React.Component<IProps, IState> {
         || this.state._user.profile.IsContractReader);
     }
 
+    canManageContract() : boolean
+    {
+        return !!this.state._user
+        && (this.state._user.profile.IsContractOwner
+        );
+    }
+
     canAccessProject() : boolean
     {
         return !!this.state._user
@@ -82,9 +89,9 @@ class App extends React.Component<IProps, IState> {
                             {this.canAccessContract() && <Route path='/request' component={request} /> }
                             {this.canAccessContract() && <Route path='/requestdetails/:id' component={requestdetails} /> }
                             {this.canAccessContract() && <Route path='/requeqstdetails/add' component={requestdetails} /> }
-                            {this.canAccessContract() && <Route path='/client' component={client} /> }
-                            {this.canAccessContract() && <Route path='/clientdetails/:id' component={clientdetails} /> }
-                            {this.canAccessContract() && <Route path='/clientdetails/add' component={clientdetails} /> }
+                            {this.canManageContract() && <Route path='/client' component={client} /> }
+                            {this.canManageContract() && <Route path='/clientdetails/:id' component={clientdetails} /> }
+                            {this.canManageContract() && <Route path='/clientdetails/add' component={clientdetails} /> }
                             {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanager' component={!!this.state._user ? userManager : nfp} /> }
                             {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanagerdetails/:id' component={!!this.state._user ? userManagerdetails : nfp} /> }
                             {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanagerdetails/add' component={!!this.state._user ? userManagerdetails : nfp} /> }

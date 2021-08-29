@@ -185,7 +185,11 @@ Contract : {
 			DTO <- Microservice.Contract.DTO.AccountInfo,
 			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.AccountInfo,
-			ReportQueue: "ACCOUNTINFO"
+			ReportQueue: "ACCOUNTINFO",
+			AccessControl : {
+				AccessPolicy : "CanAccessAccounts",
+				EditPolicy : "CanEditAccounts"
+			}
 		},
 		Contract: {
 			Namespace: "Contract",
@@ -193,7 +197,11 @@ Contract : {
 			DTO <- Microservice.Contract.DTO.Contract,
 			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Contract,
-			ReportQueue: "CONTRACT"
+			ReportQueue: "CONTRACT",
+			AccessControl : {
+				AccessPolicy : "CanAccessContracts",
+				EditPolicy : "CanEditContracts"
+			}
 		},
 		Request: {
 			Namespace: "Request",
@@ -201,7 +209,11 @@ Contract : {
 			DTO <- Microservice.Contract.DTO.Request,
 			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Request,
-			ReportQueue: "REQUEST"
+			ReportQueue: "REQUEST",
+			AccessControl : {
+				AccessPolicy : "CanAccessContracts",
+				EditPolicy : "CanEditContracts"
+			}
 		},
 		Proposal: {
 			Namespace: "Proposal",
@@ -209,7 +221,11 @@ Contract : {
 			DTO <- Microservice.Contract.DTO.Proposal,
 			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Proposal,
-			ReportQueue: "PROPOSAL"
+			ReportQueue: "PROPOSAL",
+			AccessControl : {
+				AccessPolicy : "CanAccessContracts",
+				EditPolicy : "CanEditContracts"
+			}
 		},
 		Client: {
 			Namespace: "Client",
@@ -217,7 +233,11 @@ Contract : {
 			DTO <- Microservice.Contract.DTO.Client,
 			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Client,
-			ReportQueue: "CLIENT"
+			ReportQueue: "CLIENT",
+			AccessControl : {
+				AccessPolicy : "CanAccessAccounts",
+				EditPolicy : "CanEditAccounts"
+			}
 		}
 	},
 	Models: {

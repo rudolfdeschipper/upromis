@@ -233,7 +233,7 @@ class =<App.$>=<Tabs.$> extends React.Component<IProps, IState> {
 %/Loop:Model.Properties
         ];
 
-        const tabledata = (this.props.currentData.=<Tabs.Model.SetName> as I=<Tabs.Model.SetName>[])?.filter(r => r.modifier != "Deleted");
+        const tabledata = (this.props.currentData.=<Tabs.Model.SetName> as I=<Tabs.Model.SetName>[])?.filter(r => r.modifier !== "Deleted");
         // : this.props.currentData.=<Tabs.Model.SetName> as I=<Tabs.Model.SetName>[];
 
         return (

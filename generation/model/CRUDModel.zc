@@ -130,6 +130,107 @@ Client <- Definitions.AppBase :
 	APIUrl: "http://localhost:5001/api"
 }
 
+Program <- Definitions.AppBase : 
+{
+	List <- Microservice.Project.DTO.Program,
+	Edit <- Microservice.Project.DTO.Program,
+	EditScreen <- App.Program.Edit.Properties,
+	EditTitle: "title",
+	Tabs : {
+		Project <- Definitions.AppBase : {
+			Title : "Projects", 
+			JSONName : "project", 
+			Model <- Microservice.Project.DTO.Program.Children.Project 
+		}
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: true,
+	AppUrl: "program",
+	APIUrl: "http://localhost:5005/api"
+}
+
+Project <- Definitions.AppBase : 
+{
+	List <- Microservice.Project.DTO.Project,
+	Edit <- Microservice.Project.DTO.Project,
+	EditScreen <- App.Project.Edit.Properties,
+	EditTitle: "title",
+	Tabs : {
+		Workpackage <- Definitions.AppBase : {
+			Title : "Workpackages", 
+			JSONName : "workpackage", 
+			Model <- Microservice.Project.DTO.Project.Children.Workpackage 
+		}
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: true,
+	AppUrl: "project",
+	APIUrl: "http://localhost:5005/api"
+}
+
+Workpackage <- Definitions.AppBase : 
+{
+	List <- Microservice.Project.DTO.Workpackage,
+	Edit <- Microservice.Project.DTO.Workpackage,
+	EditScreen <- App.Project.Edit.Properties,
+	EditTitle: "title",
+	Tabs : {
+		Activity <- Definitions.AppBase : {
+			Title : "Activities", 
+			JSONName : "activity", 
+			Model <- Microservice.Project.DTO.Workpackage.Children.Activity 
+		}
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: true,
+	AppUrl: "workpackage",
+	APIUrl: "http://localhost:5005/api"
+}
+
+Activity <- Definitions.AppBase : 
+{
+	List <- Microservice.Project.DTO.Activity,
+	Edit <- Microservice.Project.DTO.Activity,
+	EditScreen <- App.Activity.Edit.Properties,
+	EditTitle: "title",
+	Tabs : {
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: true,
+	AppUrl: "activity",
+	APIUrl: "http://localhost:5005/api"
+}
+
+PlanType <- Definitions.AppBase : 
+{
+	List <- Microservice.Project.DTO.PlanType,
+	Edit <- Microservice.Project.DTO.PlanType,
+	EditScreen <- App.PlanType.Edit.Properties,
+	EditTitle: "title",
+	Tabs : {
+	},
+	Actions : {
+		Action1 : { Name: "copy", Title: "Copy"},
+		Action2 : { Name: "close", Title: "Close"}
+	},
+	Attachments: true,
+	AppUrl: "planType",
+	APIUrl: "http://localhost:5005/api"
+}
+
+
 Notification <- Definitions.AppBase : 
 {
 	List <- Microservice.Notification.DTO.NotificationEntry,
@@ -975,6 +1076,129 @@ UserRole : {
 			IsProjectReader: "Project Reader",
 			IsInAdminRole: "uPromis Administrator"
 		}
+	}
+}
+
+Program <- Definitions.DefaultMainObject : {
+	+ProgramType <- DataDictionary.StatusField : {
+		Name: "Type",
+		JSONName: "ProgramType",
+		Title: "Program Type",
+		+Values : {
+			Program : "Program",
+			Portfolio : "Portfolio"
+		}
+	},
+	+Status <- DataDictionary.StatusField : {
+		+Values : {
+			Planned : "Planned",
+			Active : "Active",
+			Closed : "Closed",
+			Cancelled : "Cancelled"
+		}
+	}
+}
+
+Project <- Definitions.DefaultTimeboundObject : {
+	+Status <- DataDictionary.StatusField : {
+		+Values : {
+			StartUp : "Starting up",
+			Initiation : "Initiation",
+			Elaboration : "Elaboration",
+			Construction : "Construction",
+			Closure : "Closure",
+			Abandoned : "Abandoned",
+			Paused : "Paused",
+			Cancelled : "Cancelled"
+		}
+	}
+}
+
+Workpackage <- Definitions.DefaultMainObject : {
+	+Status <- DataDictionary.StatusField : {
+		+Values : {
+			Planned : "Planned",
+			Active : "Active",
+			Finished : "Finished",
+			Closed : "Closed",
+			Cancelled : "Cancelled"
+		}
+	},
+	Stage <- DataDictionary.CodeField : {
+		Name : "Stage",
+		JSONName : "stage",
+		Title : "Stage"
+	}
+}
+
+Activity <- Definitions.DefaultMainObject : {
+	+ActivityType <- DataDictionary.StatusField : {
+		Name: "Type",
+		JSONName: "ActivityType",
+		Title: "Type",
+		+Values : {
+			Activity : "Activity",
+			Event : "Event"
+		}
+	},
+	+ActivityPlanId <- DataDictionary.ReferenceField : {
+		ReferenceType : "PlanType",
+		ReferenceSet : "PlanTypes",
+		ReferenceObjectName: "PlanType",
+		-ReferenceDBContext,
+		Title : "Plan type",
+		Type : "int",
+		JSONName : "planType",
+		Nullable: false,
+		Show: true
+	},
+	+StartdatePlanned <- Definitions.DateTimeField : {
+		Name: "StartdatePlanned",
+		JSONName : "startdatePlanned",
+		Title : "Planned start"
+	},
+	+EnddatePlanned <- Definitions.DateTimeField : {
+		Name: "EnddatePlanned",
+		JSONName : "enddatePlanned",
+		Title : "Planned end"
+	},
+	+StartdateActual <- Definitions.DateTimeField : {
+		Name: "StartdateActual",
+		JSONName : "startdateActual",
+		Title : "Actual start"
+	},
+	+EnddateActual <- Definitions.DateTimeField : {
+		Name: "EnddateActual",
+		JSONName : "enddateActual",
+		Title : "Actual end"
+	},
+	+Status <- DataDictionary.StatusField : {
+		+Values : {
+			Planned : "Planned",
+			Active : "Active",
+			Closed : "Closed",
+			Delivered : "Delivered";
+			Accepted : "Accepted",
+			Rejected : "Rejected",
+			Cancelled : "Cancelled"
+		}
+	}
+}
+
+PlanType <- Definitions.DefaultMainObject : {
+	+DefaultPeriod : {
+		Type:"int", 
+		JSONType: "number",
+		YupType: "number",
+		JSONDefault: "0",
+		Name:"DefaultPeriod",
+		JSONName: "defaultPeriod", 
+		Title:"Default period",
+		UIControl: "Input name='[JSONName]' label='[Title]'",
+		UIROControl: "Input name='[JSONName]' label='[Title]' disabled",
+		Nullable:false,
+		Show:true,
+		Key: false
 	}
 }
 

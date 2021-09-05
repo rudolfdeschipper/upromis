@@ -306,6 +306,148 @@ Contract : {
 	}
 }
 
+Project : {
+	Namespace: "ProjectAPI",
+	Controllers: {
+		Program : {
+			Namespace: "Program",
+			Export <- Microservice.Project.DTO.Program,
+			DTO <- Microservice.Project.DTO.Program,
+			Model <- Microservice.Project.Models.Program,
+			ReportQueue: "PROGRAM",
+			AccessControl : {
+				AccessPolicy : "CanAccessPrograms",
+				EditPolicy : "CanEditPrograms"
+			}
+		},
+		Project: {
+			Namespace: "Project",
+			Export <- Microservice.Project.DTO.Project,
+			DTO <- Microservice.Project.DTO.Project,
+			Model <- Microservice.Project.Models.Project,
+			ReportQueue: "PROJECT",
+			AccessControl : {
+				AccessPolicy : "CanAccessProjects",
+				EditPolicy : "CanEditProjects"
+			}
+		},
+		Workpackage: {
+			Namespace: "Workpackage",
+			Export <- Microservice.Project.DTO.Workpackage,
+			DTO <- Microservice.Project.DTO.Workpackage,
+			Model <- Microservice.Project.Models.Workpackage,
+			ReportQueue: "WORKPACKAGE",
+			AccessControl : {
+				AccessPolicy : "CanAccessWorkpackages",
+				EditPolicy : "CanEditWorkpackages"
+			}
+		},
+		Activity: {
+			Namespace: "Activity",
+			Export <- Microservice.Project.DTO.Activity,
+			DTO <- Microservice.Project.DTO.Activity,
+			Model <- Microservice.Project.Models.Activity,
+			ReportQueue: "ACTIVITY",
+			AccessControl : {
+				AccessPolicy : "CanAccessActivities",
+				EditPolicy : "CanEditActivities"
+			}
+		},
+		PlanType: {
+			Namespace: "PlanType",
+			Export <- Microservice.Project.DTO.PlanType,
+			DTO <- Microservice.Project.DTO.PlanType,
+			Model <- Microservice.Project.Models.PlanType,
+			ReportQueue: "PLANTYPE",
+			AccessControl : {
+				AccessPolicy : "CanAccessPlanTypes",
+				EditPolicy : "CanEditPlanTypes"
+			}
+		}
+	},
+	Models: {
+		Program : {
+			Name: "Program",
+			SetName : "Programss",
+			Properties <- Entities.Program,
+			Children : {
+				Project : { 
+					Properties <-Entities.Project, 
+					SetName: "Projects", 
+					Lazy: true 
+				}
+			}
+		},
+		Project : {
+			Name: "Project",
+			SetName : "Projects",
+			Properties <- Entities.Project,
+			Children : {
+				Workpackage : { 
+					Properties <- Entities.Workpackage, 
+					SetName: "Workpackages", 
+					Lazy: false
+				}
+			}
+		},
+		Workpackage : {
+			Name: "Workpackage",
+			SetName : "Workpackages",
+			Properties <- Entities.Workpackage,
+			Children : {
+				Activity : { 
+					Properties <- Entities.Activity, 
+					SetName: "Activities", 
+					Lazy: false 
+				}
+			}
+		},
+		Activity : {
+			Name: "Activity",
+			SetName : "Activitiess",
+			Properties <- Entities.Activity,
+			Children : {
+			}
+		},
+		PlanType : {
+			Name: "PlanType",
+			SetName : "PlanTypes",
+			Properties <- Entities.planType,
+			Children : {
+				
+			}
+		}
+	},
+	DTO: {
+		Program <- Microservice.Project.Models.Program : {
+			Properties : {
+				-ExternalID
+			}
+		},
+		Project <- Microservice.Project.Models.Project : {
+			Properties : {
+				-ExternalID
+			}
+		},
+		Workpackage <- Microservice.Project.Models.Workpackage : {
+			Properties : {
+				-ExternalID
+			}
+		},
+		Activity <- Microservice.Project.Models.Activity : {
+			Properties : {
+				-ExternalID
+			}
+		},
+		PlanType <- Microservice.Project.Models.PlanType : {
+			Properties : {
+				-ExternalID
+			}
+		}
+	}
+}
+
+
 Notification : {
 	Namespace: "Notification",
 	Controllers: {

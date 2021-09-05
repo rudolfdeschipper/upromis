@@ -37,6 +37,29 @@ class App extends React.Component<IProps, IState> {
 
     }
 
+    canAccessContract() : boolean
+    {
+        return !!this.state._user
+        && (this.state._user.profile.IsContractOwner
+        || this.state._user.profile.IsContractParticipant
+        || this.state._user.profile.IsContractReader);
+    }
+
+    canManageContract() : boolean
+    {
+        return !!this.state._user
+        && (this.state._user.profile.IsContractOwner
+        );
+    }
+
+    canAccessProject() : boolean
+    {
+        return !!this.state._user
+        && (this.state._user.profile.IsProjectOwner
+        || this.state._user.profile.IsProjectParticipant
+        || this.state._user.profile.IsProjectReader);
+    }
+
     render() {
         const contract = React.lazy(() => import("./components/Contract/generated/Contract"));
         const contractdetails = React.lazy(() => import("./components/Contract/generated/ContractDetails"));
@@ -46,6 +69,8 @@ class App extends React.Component<IProps, IState> {
         const proposaldetails = React.lazy(() => import("./components/Proposal/generated/ProposalDetails"));
         const client = React.lazy(() => import("./components/Client/generated/Client"));
         const clientdetails = React.lazy(() => import("./components/Client/generated/ClientDetails"));
+        const userManager = React.lazy(() => import("./components/UserManager/generated/UserManager"));
+        const userManagerdetails = React.lazy(() => import("./components/UserManager/generated/UserManagerDetails"));
 
         return (
             <Layout User={this.state._user}>
@@ -55,18 +80,21 @@ class App extends React.Component<IProps, IState> {
                             <Route exact path='/' component={Home} />
                             <Route path='/home' component={Home} />
                             <Route path='/counter' component={Counter} />
-                            <Route path='/contract' component={!!this.state._user ? contract : nfp} />
-                            <Route path='/contractdetails/:id' component={!!this.state._user ? contractdetails : nfp} />
-                            <Route path='/contractdetails/add' component={!!this.state._user ? contractdetails : nfp} />
-                            <Route path='/proposal' component={!!this.state._user ? proposal : nfp} />
-                            <Route path='/proposaldetails/:id' component={!!this.state._user ? proposaldetails : nfp} />
-                            <Route path='/proposaldetails/add' component={!!this.state._user ? proposaldetails : nfp} />
-                            <Route path='/request' component={!!this.state._user ? request : nfp} />
-                            <Route path='/requestdetails/:id' component={!!this.state._user ? requestdetails : nfp} />
-                            <Route path='/requeqstdetails/add' component={!!this.state._user ? requestdetails : nfp} />
-                            <Route path='/client' component={!!this.state._user ? client : nfp} />
-                            <Route path='/clientdetails/:id' component={!!this.state._user ? clientdetails : nfp} />
-                            <Route path='/clientdetails/add' component={!!this.state._user ? clientdetails : nfp} />
+                            {this.canAccessContract() && <Route path='/contract' component={contract} /> }
+                            {this.canAccessContract() && <Route path='/contractdetails/:id' component={contractdetails} /> }
+                            {this.canAccessContract() && <Route path='/contractdetails/add' component={contractdetails} /> }
+                            {this.canAccessContract() && <Route path='/proposal' component={proposal} /> }
+                            {this.canAccessContract() && <Route path='/proposaldetails/:id' component={proposaldetails} /> }
+                            {this.canAccessContract() && <Route path='/proposaldetails/add' component={proposaldetails} /> }
+                            {this.canAccessContract() && <Route path='/request' component={request} /> }
+                            {this.canAccessContract() && <Route path='/requestdetails/:id' component={requestdetails} /> }
+                            {this.canAccessContract() && <Route path='/requeqstdetails/add' component={requestdetails} /> }
+                            {this.canManageContract() && <Route path='/client' component={client} /> }
+                            {this.canManageContract() && <Route path='/clientdetails/:id' component={clientdetails} /> }
+                            {this.canManageContract() && <Route path='/clientdetails/add' component={clientdetails} /> }
+                            {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanager' component={!!this.state._user ? userManager : nfp} /> }
+                            {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanagerdetails/:id' component={!!this.state._user ? userManagerdetails : nfp} /> }
+                            {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanagerdetails/add' component={!!this.state._user ? userManagerdetails : nfp} /> }
                             <Route path="*" component={nfp} />
                         </Switch>
                     </Suspense>

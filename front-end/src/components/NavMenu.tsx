@@ -8,6 +8,34 @@ import { UserManager } from './UserManager';
 export class NavMenu extends React.Component<{ User: any }> {
     static displayName = NavMenu.name;
 
+    private ContractMenu  = () =>
+    {
+        const clientPart =  (!!this.props.User && this.props.User.profile.IsContractOwner) ? 
+        (<React.Fragment>
+        <NavDropdown.Divider />
+        <NavDropdown.Item className="text-dark" href='/client' >
+        Clients
+        </NavDropdown.Item> </React.Fragment>) : null;
+
+        return (!!this.props.User &&
+        (this.props.User.profile.IsContractOwner
+            || this.props.User.profile.IsContractParticipant
+            || this.props.User.profile.IsContractReader)) ?
+        <NavDropdown title="Contract" id="collapsable-contract-dropdown" disabled={!this.props.User} >
+            <NavDropdown.Item className="text-dark" href='/contract' >
+                Contracts
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item className="text-dark" href='/request' >
+                Requests
+            </NavDropdown.Item>
+            <NavDropdown.Item className="text-dark" href='/proposal' >
+                Proposals
+            </NavDropdown.Item>
+            {clientPart}
+        </NavDropdown> : null;
+    }
+
     render() {
         return (
             <header>
@@ -19,61 +47,59 @@ export class NavMenu extends React.Component<{ User: any }> {
                             <Nav.Item>
                                 <Nav.Link className="text-dark" href="/counter">Counter</Nav.Link>
                             </Nav.Item>
-                            <NavDropdown title="Contract" id="collapsable-contract-dropdown" disabled={!this.props.User} >
-                                <NavDropdown.Item className="text-dark" href='/contract' >
-                                    Contracts
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item className="text-dark" href='/request' >
-                                    Requests
-                                </NavDropdown.Item>
-                                <NavDropdown.Item className="text-dark" href='/proposal' >
-                                    Proposals
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item className="text-dark" href='/client' >
-                                    Clients
-                                </NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Project" id="collapsable-contract-dropdown"  disabled={!this.props.User}>
-                                <NavDropdown.Item className="text-dark" href='/project' >
-                                    Projects
-                                </NavDropdown.Item>
-                                <NavDropdown.Item className="text-dark" href='/workpackage' >
-                                    Workpackages
-                                </NavDropdown.Item>
-                                <NavDropdown.Item className="text-dark" href='/activity' >
-                                    Activities
-                                </NavDropdown.Item>
-                                <NavDropdown.Item className="text-dark" href='/event' >
-                                    Events
-                                </NavDropdown.Item>
-                                <NavDropdown.Item className="text-dark" href='/mission' >
-                                    Missions
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                            </NavDropdown>
-                            <NavDropdown title="Config" id="collapsable-contract-dropdown"  disabled={!this.props.User}>
-                                <NavDropdown.Divider />
-                            </NavDropdown>
+                            <this.ContractMenu />
+                            {
+                                !!this.props.User &&
+                                (this.props.User.profile.IsProjectOwner
+                                    || this.props.User.profile.IsProjectParticipant
+                                    || this.props.User.profile.IsProjectReader) &&
+                                <NavDropdown title="Project" id="collapsable-contract-dropdown" disabled={!this.props.User}>
+                                    <NavDropdown.Item className="text-dark" href='/project' >
+                                        Projects
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item className="text-dark" href='/workpackage' >
+                                        Workpackages
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item className="text-dark" href='/activity' >
+                                        Activities
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item className="text-dark" href='/event' >
+                                        Events
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item className="text-dark" href='/mission' >
+                                        Missions
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                </NavDropdown>
+                            }
+                            {!!this.props.User && this.props.User.profile.IsInAdminRole &&
+                                <NavDropdown title="Config" id="collapsable-contract-dropdown" disabled={!this.props.User}>
+                                    <NavDropdown.Item className="text-dark" href='/usermanager' >
+                                        User manager
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                </NavDropdown>}
                         </Nav>
                         <Nav className="mr-auto justify-content-center">
-                            <Nav.Item>
-                                {
-                                    !!this.props.User ?
+                            {
+                                !!this.props.User ?
+                                    <NavDropdown title={"Logged in as: " + this.props.User.profile.name} id="collapsable-contract-dropdown" >
+                                        <NavDropdown.Item className="text-dark" title="Change your password" href='/changepassword' >Change Password</NavDropdown.Item>
+                                        <NavDropdown.Item
+                                            className="text-dark" onClick={() => {
+                                                let mgr = new UserManager();
+                                                mgr.Logout();
+                                            }} title="Logout" >Logout
+                                        </NavDropdown.Item>
+                                    </NavDropdown>
+                                    :
+                                    <Nav.Item>
                                         <Nav.Link className="text-dark" onClick={() => {
                                             let mgr = new UserManager();
-                                            mgr.Logout();
-                                        }} title="Log out" >Logged in as: {this.props.User.profile.name}</Nav.Link>
-                                        :
-                                        <Nav.Link className="text-dark" onClick={() => { 
-                                            let mgr = new UserManager();
                                             mgr.Login();
-                                         }} >Log In</Nav.Link>
-                                }
-
-
-                            </Nav.Item>
+                                        }} >Log In</Nav.Link>
+                                    </Nav.Item>
+                            }
                             <NavDropdown title="Help" id="collapsable-contract-dropdown">
                                 <NavDropdown.Item className="text-dark" href='/help' >
                                     Help

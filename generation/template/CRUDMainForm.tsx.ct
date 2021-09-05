@@ -76,9 +76,19 @@ class =<App.$>Form extends React.Component<IProps, IState> {
                 }}
             >
                 <Form styling="theme">
-%Loop:App.Edit.Properties
+%Loop:App.EditScreen
+%If:Type?=Row
+                <div className="w3-row-padding">
+%Loop:Columnns
+                    <div className="w3-col =<ColumnnWidth>">
+                        <=<UIControl> />
+                    </div>
+%/Loop:Columnns
+                </div>
+%Else
                 <=<UIControl> />
-%/Loop:App.Edit.Properties
+%EndIf
+%/Loop:App.EditScreen
                     <hr />
                     <SubmitBtn className="w3-button w3-light-grey w3-round" title={this.props.buttonText + "s this record"} disabled={this.state.isSubmitting}>
                         <i className="fa fa-save" ></i>&nbsp;{this.props.buttonText}

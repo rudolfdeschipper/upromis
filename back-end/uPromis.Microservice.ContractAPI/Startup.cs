@@ -82,17 +82,40 @@ namespace uPromis.Microservice.ContractAPI
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", "api1");
                 });
-                //options.AddPolicy("CanSeeContracts",
-                //    p =>
-                //    {
-                //        p.RequireAuthenticatedUser();
-                //    });
-                //options.AddPolicy("CanManageContracts",
-                //    p =>
-                //    {
-                //        p.RequireAuthenticatedUser()
-                //        .RequireClaim("PMO");
-                //    });
+                options.AddPolicy("CanEditContracts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion( context => 
+                            context.User.HasClaim("IsContractOwner", "true")
+                            || context.User.HasClaim("IsContractParticipant", "true") );
+                    });
+                options.AddPolicy("CanAccessContracts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsContractOwner", "true")
+                           || context.User.HasClaim("IsContractParticipant", "true")
+                           || context.User.HasClaim("IsContractReader", "true")
+                           );
+                    });
+                options.AddPolicy("CanEditAccounts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsContractOwner", "true")
+                           );
+                    });
+                options.AddPolicy("CanAccessAccounts",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsContractOwner", "true")
+                           );
+                    });
             });
             services.AddCors(options =>
             {

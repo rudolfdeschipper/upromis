@@ -44,7 +44,34 @@
                             <div>
                                 <p>The default users are alice/bob, password: Pass123$</p>
                             </div>
+                            @if (Model.DefaultUserWasCreated)
+                            {
+                                <div>
+                                    <p>
+                                        A Default User was created because it did not exist and no users with Admin role were found.
+                                        <br />
+                                        Name of this user is DefaultUser.
+                                        <br />
+                                        Password for this user is Admin123$
+                                        <br />
+                                        You cannot remove this user.
+                                    </p>
+                                </div>
 
+                            }
+                            @if (Model.OnlyDefaultUserIsAdmin)
+                            {
+                                <div>
+                                    <p>
+                                        The Default User is currently the only one with the Admin role. Log in as this user to
+                                        create other users with this role, to properly manage the application.<br />
+                                        Once you do this, the Admin role of hte Default User will be removed by the sytem. <br />
+                                        Conversely, if you remove the Admin role of all your users, the Default User will regain the Admin role.
+                                    </p>
+                                </div>
+
+                            }
+                            @Model.Error
                             <button class="btn btn-primary" name="button" value="login">Login</button>
                             <button class="btn btn-secondary" name="button" value="cancel">Cancel</button>
                         </form>

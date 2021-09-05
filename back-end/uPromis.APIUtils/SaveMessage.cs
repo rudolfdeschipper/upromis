@@ -2,9 +2,9 @@
 
 namespace uPromis.APIUtils.APIMessaging
 {
-    public class SaveMessage<T>
+    public class SaveMessage<T, Tid>
     {
-        public int ID { get; set; }
+        public Tid ID { get; set; }
         public T DataSubject { get; set; }
         public string Action { get; set; }
         public string SubAction { get; set; }

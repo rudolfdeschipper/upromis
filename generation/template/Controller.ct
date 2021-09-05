@@ -27,7 +27,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+%If:AccessControl?
+    [Authorize(policy:"=<AccessControl.AccessPolicy>")]
+%Else
     [Authorize]
+%EndIf
     public class =<$>Controller : ControllerBase
     {
         private readonly I=<Model.Name>Repository Repository;
@@ -51,16 +55,19 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
             if (res == null)
             {
-                return NotFound(new APIResult<=<Model.Name>DTO>() { ID = id, DataSubject = null, Message = "Get failed" });
+                return NotFound(new APIResult<=<Model.Name>DTO, int>() { ID = id, DataSubject = null, Message = "Get failed" });
             }
 
             var record = Transformers.Transform(res, new =<Model.Name>DTO() { Modifier = "Unchanged" });
 
-            return Ok(new APIResult<=<Model.Name>DTO>() { ID = id, DataSubject = record, Message = "Get was performed" });
+            return Ok(new APIResult<=<Model.Name>DTO, int>() { ID = id, DataSubject = record, Message = "Get was performed" });
         }
 
+%If:AccessControl?
+        [Authorize(policy:"=<AccessControl.EditPolicy>")]
+%EndIf
         [HttpPost()]
-        public async Task<ActionResult> Post([FromBody] SaveMessage<=<Model.Name>DTO> rec)
+        public async Task<ActionResult> Post([FromBody] SaveMessage<=<Model.Name>DTO, int> rec)
         {
             =<Model.Name>DTO res;
 
@@ -74,7 +81,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 if (BusinessRules.HasErrors())
                 {
-                    return UnprocessableEntity(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
+                    return UnprocessableEntity(new APIResult<=<Model.Name>DTO, int>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
                 }
                 record = await Repository.Post(record);
                 res = Transformers.Transform(record, new =<Model.Name>DTO());
@@ -87,15 +94,18 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<=<Model.Name>DTO, int>() { ID = 0, DataSubject = null, Message = ex.Message });
             }
 
             // return posted values
-            return Ok(new APIResult<=<Model.Name>DTO>() { ID = res.ID, DataSubject = res, Message = "New =<$> was created.", AdditionalInfo = BusinessRules.Result.ToArray() });
+            return Ok(new APIResult<=<Model.Name>DTO, int>() { ID = res.ID, DataSubject = res, Message = "New =<$> was created.", AdditionalInfo = BusinessRules.Result.ToArray() });
         }
 
+%If:AccessControl?
+        [Authorize(policy:"=<AccessControl.EditPolicy>")]
+%EndIf
         [HttpPut()]
-        public async Task<ActionResult> Put([FromBody] SaveMessage<=<Model.Name>DTO> rec)
+        public async Task<ActionResult> Put([FromBody] SaveMessage<=<Model.Name>DTO, int> rec)
         {
             =<Model.Name>DTO res;
 
@@ -107,7 +117,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 if (originalRecord == null)
                 {
-                    return NotFound(new APIResult<=<Model.Name>DTO>() { ID = rec.ID, DataSubject = null, Message = "Put failed - record is not found" });
+                    return NotFound(new APIResult<=<Model.Name>DTO, int>() { ID = rec.ID, DataSubject = null, Message = "Put failed - record is not found" });
                 }
 
                 =<Model.Name> record = Transformers.Transform(rec.DataSubject, originalRecord) as =<Model.Name>;
@@ -116,7 +126,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 if (BusinessRules.HasErrors())
                 {
-                    return UnprocessableEntity(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
+                    return UnprocessableEntity(new APIResult<=<Model.Name>DTO, int>() { ID = 0, DataSubject = null, Message = "Validation failed", AdditionalInfo = BusinessRules.Result.ToArray() });
                 }
 
                 record = await Repository.Put(record);
@@ -131,15 +141,18 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<=<Model.Name>DTO, int>() { ID = 0, DataSubject = null, Message = ex.Message });
             }
 
             // return posted values
-            return Ok(new APIResult<=<Model.Name>DTO>() { ID = res.ID, DataSubject = res, Message = "=<$> was saved.", AdditionalInfo = BusinessRules.Result.ToArray() });
+            return Ok(new APIResult<=<Model.Name>DTO, int>() { ID = res.ID, DataSubject = res, Message = "=<$> was saved.", AdditionalInfo = BusinessRules.Result.ToArray() });
         }
 
+%If:AccessControl?
+        [Authorize(policy:"=<AccessControl.EditPolicy>")]
+%EndIf
         [HttpDelete()]
-        public async Task<ActionResult> Delete([FromBody] SaveMessage<=<Model.Name>DTO> rec)
+        public async Task<ActionResult> Delete([FromBody] SaveMessage<=<Model.Name>DTO, int> rec)
         {
             bool res;
 
@@ -153,7 +166,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 
                 if (res == false)
                 {
-                    return NotFound(new APIResult<=<Model.Name>DTO>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
+                    return NotFound(new APIResult<=<Model.Name>DTO, int>() { ID = rec.ID, DataSubject = null, Message = "Delete failed - record not found" });
                 }
 
 %If:ReportQueue?
@@ -164,11 +177,11 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             }
             catch (Exception ex)
             {
-                return this.BadRequest(new APIResult<=<Model.Name>DTO>() { ID = 0, DataSubject = null, Message = ex.Message });
+                return this.BadRequest(new APIResult<=<Model.Name>DTO, int>() { ID = 0, DataSubject = null, Message = ex.Message });
             }
 
             // return 
-            return Ok(new APIResult<=<Model.Name>DTO>() { ID = rec.ID, DataSubject = null, Message = "=<$> was deleted." });
+            return Ok(new APIResult<=<Model.Name>DTO, int>() { ID = rec.ID, DataSubject = null, Message = "=<$> was deleted." });
         }
 
         // TODO: transform into a get with a body (this is possible)

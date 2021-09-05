@@ -30,6 +30,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly UserBootstrapper _userBootstrapper;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -37,7 +38,8 @@ namespace IdentityServerHost.Quickstart.UI
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events)
+            IEventService events,
+            UserBootstrapper bootstrapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,6 +47,7 @@ namespace IdentityServerHost.Quickstart.UI
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+            _userBootstrapper = bootstrapper;
         }
 
         /// <summary>
@@ -53,8 +56,23 @@ namespace IdentityServerHost.Quickstart.UI
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
+            var defaultUserCreated = await _userBootstrapper.EnsureAdminRoleExists(_userManager);
+
             // build a model so we know what to show on the login page
             var vm = await BuildLoginViewModelAsync(returnUrl);
+
+            if (await _userBootstrapper.AdminRoleExistForNonDefaultUser(_userManager) == false)
+            {
+                // inform the user that the admin role is only with the default user
+                vm.OnlyDefaultUserIsAdmin = true;
+                // inform user of this too
+                vm.DefaultUserWasCreated = defaultUserCreated.Created;
+
+                if (defaultUserCreated.Errors != null)
+                {
+                    vm.Error = defaultUserCreated.Errors.Aggregate("", (s, e) => s + e.Description + "<p>");
+                }
+            }
 
             if (vm.IsExternalLoginOnly)
             {

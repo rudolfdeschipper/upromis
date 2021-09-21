@@ -130,6 +130,12 @@ class =<App.$>Details extends React.Component<RouteComponentProps<{ id?: string 
             =<App.$>API.loadOneRecord(this.state.=<Key.Name>, this.context!.access_token)
                 .then((res) => {
                     // Update form values
+%Loop:Edit.Properties
+%If:Type=DateTime
+                    // ensure JSON date is a real date
+                    res.dataSubject!.=<JSONName> = !!res.dataSubject!.=<JSONName> ? new Date(res.dataSubject!.=<JSONName>) : res.dataSubject!.=<JSONName>
+%EndIf
+%/Loop
                     this.setState({
                         currentData: { ...res.dataSubject!, modifier: "Modified" }
                     });

@@ -130,17 +130,17 @@ Client <- Definitions.AppBase :
 	APIUrl: "http://localhost:5001/api"
 }
 
-Program <- Definitions.AppBase : 
+Programme <- Definitions.AppBase : 
 {
-	List <- Microservice.Project.DTO.Program,
-	Edit <- Microservice.Project.DTO.Program,
-	EditScreen <- App.Program.Edit.Properties,
+	List <- Microservice.Project.DTO.Programme,
+	Edit <- Microservice.Project.DTO.Programme,
+	EditScreen <- App.Programme.Edit.Properties,
 	EditTitle: "title",
 	Tabs : {
 		Project <- Definitions.AppBase : {
 			Title : "Projects", 
 			JSONName : "project", 
-			Model <- Microservice.Project.DTO.Program.Children.Project 
+			Model <- Microservice.Project.DTO.Programme.Children.Project 
 		}
 	},
 	Actions : {
@@ -148,7 +148,7 @@ Program <- Definitions.AppBase :
 		Action2 : { Name: "close", Title: "Close"}
 	},
 	Attachments: true,
-	AppUrl: "program",
+	AppUrl: "programme",
 	APIUrl: "http://localhost:5005/api"
 }
 
@@ -490,15 +490,15 @@ Contract : {
 Project : {
 	Namespace: "ProjectAPI",
 	Controllers: {
-		Program : {
-			Namespace: "Program",
-			Export <- Microservice.Project.DTO.Program,
-			DTO <- Microservice.Project.DTO.Program,
-			Model <- Microservice.Project.Models.Program,
-			ReportQueue: "PROGRAM",
+		Programme : {
+			Namespace: "Programme",
+			Export <- Microservice.Project.DTO.Programme,
+			DTO <- Microservice.Project.DTO.Programme,
+			Model <- Microservice.Project.Models.Programme,
+			ReportQueue: "PROGRAMME",
 			AccessControl : {
-				AccessPolicy : "CanAccessPrograms",
-				EditPolicy : "CanEditPrograms"
+				AccessPolicy : "CanAccessProgrammes",
+				EditPolicy : "CanEditProgrammes"
 			}
 		},
 		Project: {
@@ -547,10 +547,10 @@ Project : {
 		}
 	},
 	Models: {
-		Program : {
-			Name: "Program",
-			SetName : "Programss",
-			Properties <- Entities.Program,
+		Programme : {
+			Name: "Programme",
+			SetName : "Programmes",
+			Properties <- Entities.Programme,
 			Children : {
 				Project : { 
 					Properties <-Entities.Project, 
@@ -567,7 +567,7 @@ Project : {
 				Workpackage : { 
 					Properties <- Entities.Workpackage, 
 					SetName: "Workpackages", 
-					Lazy: false
+					Lazy: true
 				}
 			}
 		},
@@ -579,7 +579,7 @@ Project : {
 				Activity : { 
 					Properties <- Entities.Activity, 
 					SetName: "Activities", 
-					Lazy: false 
+					Lazy: true 
 				}
 			}
 		},
@@ -593,26 +593,47 @@ Project : {
 		PlanType : {
 			Name: "PlanType",
 			SetName : "PlanTypes",
-			Properties <- Entities.planType,
+			Properties <- Entities.PlanType,
 			Children : {
 				
 			}
 		}
 	},
 	DTO: {
-		Program <- Microservice.Project.Models.Program : {
+		Programme <- Microservice.Project.Models.Programme : {
 			Properties : {
 				-ExternalID
+			},
+			Children : {
+				Project : {
+					Properties : {
+						-ExternalID
+					}
+				}
 			}
 		},
 		Project <- Microservice.Project.Models.Project : {
 			Properties : {
 				-ExternalID
+			},
+			Children : {
+				Workpackage : {
+					Properties : {
+						-ExternalID
+					}
+				}
 			}
 		},
 		Workpackage <- Microservice.Project.Models.Workpackage : {
 			Properties : {
 				-ExternalID
+			},
+			Children : {
+				Activity : {
+					Properties : {
+						-ExternalID
+					}
+				}
 			}
 		},
 		Activity <- Microservice.Project.Models.Activity : {
@@ -1079,13 +1100,13 @@ UserRole : {
 	}
 }
 
-Program <- Definitions.DefaultMainObject : {
-	+ProgramType <- DataDictionary.StatusField : {
+Programme <- Definitions.DefaultMainObject : {
+	+ProgrammeType <- DataDictionary.StatusField : {
 		Name: "Type",
-		JSONName: "ProgramType",
-		Title: "Program Type",
+		JSONName: "programmeType",
+		Title: "Programme Type",
 		+Values : {
-			Program : "Program",
+			Programme : "Programme",
 			Portfolio : "Portfolio"
 		}
 	},
@@ -1152,22 +1173,22 @@ Activity <- Definitions.DefaultMainObject : {
 		Nullable: false,
 		Show: true
 	},
-	+StartdatePlanned <- Definitions.DateTimeField : {
+	+StartdatePlanned <- DataDictionary.DateTimeField : {
 		Name: "StartdatePlanned",
 		JSONName : "startdatePlanned",
 		Title : "Planned start"
 	},
-	+EnddatePlanned <- Definitions.DateTimeField : {
+	+EnddatePlanned <- DataDictionary.DateTimeField : {
 		Name: "EnddatePlanned",
 		JSONName : "enddatePlanned",
 		Title : "Planned end"
 	},
-	+StartdateActual <- Definitions.DateTimeField : {
+	+StartdateActual <- DataDictionary.DateTimeField : {
 		Name: "StartdateActual",
 		JSONName : "startdateActual",
 		Title : "Actual start"
 	},
-	+EnddateActual <- Definitions.DateTimeField : {
+	+EnddateActual <- DataDictionary.DateTimeField : {
 		Name: "EnddateActual",
 		JSONName : "enddateActual",
 		Title : "Actual end"
@@ -1177,7 +1198,7 @@ Activity <- Definitions.DefaultMainObject : {
 			Planned : "Planned",
 			Active : "Active",
 			Closed : "Closed",
-			Delivered : "Delivered";
+			Delivered : "Delivered",
 			Accepted : "Accepted",
 			Rejected : "Rejected",
 			Cancelled : "Cancelled"
@@ -1308,7 +1329,7 @@ DateField : {
 }
 
 DateTimeField : {
-	Type:"datetime", 
+	Type:"DateTime", 
 	JSONType: "Date",
 	YupType: "date",
 	JSONDefault: "new Date()",

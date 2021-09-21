@@ -13,6 +13,7 @@ import { Form, DatePicker, SubmitBtn, Input, Textarea, Select } from 'react-form
 import { ISelectValue } from '../../GeneralTypes';
 
 import { I=<App.$>Data } from './=<App.$>Types';
+import { =<App.$>Validator } from '../=<App.$>Validator';
 
 interface IProps {
     currentData: I=<App.$>Data,
@@ -40,6 +41,7 @@ class =<App.$>Form extends React.Component<IProps, IState> {
         return (
             <Formik
                 initialValues={this.props.currentData as any}
+                validate={=<App.$>Validator.Validate}
                 enableReinitialize={true}
                 validationSchema={Yup.object({
 %Loop:App.Edit.Properties

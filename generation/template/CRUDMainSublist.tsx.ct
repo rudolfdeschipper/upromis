@@ -61,14 +61,14 @@ class =<App.$>=<Tabs.$> extends React.Component<IProps, IState> {
 %Loop:Model.Properties
 %If:Lookup?=true
 %If:Reference?=true
-        =<App.$>API.loadDropdownValues("=<$>Reference", this.context!.access_token)
+        =<App.$>API.loadDropdownValues("=<Tabs.Model.SetName>.=<$>Reference", this.context!.access_token)
             .then(res => {
                 this.setState({ =<JSONName>values: res.data });
             }
             );
 
 %Else
-        =<App.$>API.loadDropdownValues("=<$>", this.context!.access_token)
+        =<App.$>API.loadDropdownValues("=<Tabs.Model.SetName>.=<$>", this.context!.access_token)
             .then(res => {
                 this.setState({ =<JSONName>values: res.data });
             }

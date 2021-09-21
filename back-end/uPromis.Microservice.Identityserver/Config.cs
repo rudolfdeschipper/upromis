@@ -26,10 +26,12 @@ namespace uPromis.Microservice.Identityserver
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("api1", "My API"), // {  UserClaims = { "lastproject"} },
+                new ApiScope("api1", "Contract API"), // {  UserClaims = { "lastproject"} },
                 new ApiScope("api2", "Attachment API") {},
                 new ApiScope("api3", "Notification API") {},
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName) {},
+                new ApiScope("api4", "Identity API") {},
+                new ApiScope("api5", "Project API") {},
             };
 
         public static IEnumerable<Client> Clients =>
@@ -123,7 +125,9 @@ namespace uPromis.Microservice.Identityserver
                         "api2",
                         "api1",
                         "api3",
-                        IdentityServerConstants.LocalApi.ScopeName
+                        IdentityServerConstants.LocalApi.ScopeName,
+                        "api4",
+                        "api5",
                     }
                 }
 

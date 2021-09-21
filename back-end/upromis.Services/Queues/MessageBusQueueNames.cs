@@ -23,6 +23,21 @@ namespace uPromis.Services.Queues
         public const string REPORTSERVERSAVECLIENT = "ReportServer.Client.Save.Queue";
         public const string REPORTSERVERDELETECLIENT = "ReportServer.Client.Delete.Queue";
 
+        public const string REPORTSERVERSAVEPROGRAMME = "ReportServer.Programme.Save.Queue";
+        public const string REPORTSERVERDELETEPROGRAMME = "ReportServer.Programme.Delete.Queue";
+
+        public const string REPORTSERVERSAVEPROJECT = "ReportServer.Project.Save.Queue";
+        public const string REPORTSERVERDELETEPROJECT = "ReportServer.Project.Delete.Queue";
+
+        public const string REPORTSERVERSAVEWORKPACKAGE = "ReportServer.Workpackage.Save.Queue";
+        public const string REPORTSERVERDELETEWORKPACKAGE = "ReportServer.Workpackage.Delete.Queue";
+
+        public const string REPORTSERVERSAVEACTIVITY = "ReportServer.Activity.Save.Queue";
+        public const string REPORTSERVERDELETEACTIVITY = "ReportServer.Activity.Delete.Queue";
+
+        public const string REPORTSERVERSAVEPLANTYPE = "ReportServer.PlanType.Save.Queue";
+        public const string REPORTSERVERDELETEPLANTYPE = "ReportServer.PlanType.Delete.Queue";
+
         public const string ADDNOTIFYITEM = "Notification.AddNotifyItem.Queue";
         public const string REMOVENOTIFYITEM = "Notification.RemoveNotifyItem.Queue";
     }

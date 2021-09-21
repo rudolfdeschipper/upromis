@@ -265,14 +265,14 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
 %Loop:Properties
 %If:Lookup?=true
 %If:Reference?=true
-                case "=<$>Reference" :
+                case "=<Model.Children.SetName>.=<$>Reference" :
                     // provide empty value in the dropdown:
                     list.Add(new ListValue() { Value = 0, Label = "" });
 
                     list.AddRange(await this.Repository.Get=<$>Reference());
                     break;
 %Else
-                case "=<$>" :
+                case "=<Model.Children.SetName>.=<$>" :
                     // provide empty value in the dropdown:
                     list.Add(new ListValue() { Value = string.Empty, Label = "" });
 

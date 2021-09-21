@@ -251,6 +251,30 @@ export default withRouter(=<App.$>);
 
 %/File
 
+%FileCreate:components\=<App.$>\=<App.$>Validator.ts
+/*
+** Implementation of client side Validation for =<App.$>
+** This file is only generated once; you may change it as needed.
+** In case you want to re-generate it, simply delete it an re-run the code generator.
+** Do not change the method's name or signature as this wil break the calling code.
+*/
+import { FormikErrors } from 'formik';
+import { I=<App.$>Data } from './generated/=<App.$>Types';
+
+export class =<App.$>Validator
+{
+    static Validate = async (values: I=<App.$>Data) : Promise<FormikErrors<I=<App.$>Data>> => {
+        var errors: FormikErrors<I=<App.$>Data> = {};
+
+        // add validations here
+        // add any error messages on the error object:
+        // errors.PropertyName = "error message"
+
+        return errors;
+    };
+}
+%/File
+
 %Loop:App.Actions
 %FileCreate:components\=<App.$>\=<App.$>Action=<Name>.ts
 /*

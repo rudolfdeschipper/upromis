@@ -315,7 +315,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 
 
 %Loop:Properties
-%If:Key?
+%If:Key?=true
         [Key]
 %EndIf
 %If:Nullable=false
@@ -404,7 +404,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 
 %Loop:Properties
 %If:Type?
-%If:Key?
+%If:Key?=true
         [Key]
 %EndIf
 %If:Nullable=false
@@ -667,7 +667,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %If:!Lazy
             TransformList<=<$>DTO, =<$>>(from.=<SetName>, to.=<SetName>,
                 (list, from) => list.Find(pt => pt.ID == from.ID),
-                Transform);
+                TransformChild);
 
 %EndIf
 %/Loop:Children
@@ -693,7 +693,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 
 %Loop:Children
 %If:!Lazy
-            to.=<SetName>.AddRange(from.=<SetName>.Select(p => Transform(p, new =<$>DTO() { Modifier = "Unchanged" })));
+            to.=<SetName>.AddRange(from.=<SetName>.Select(p => TransformChild(p, new =<$>DTO() { Modifier = "Unchanged" })));
 %EndIf
 %/Loop:Children
 
@@ -703,7 +703,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
 %Loop:Children
 %If:!Lazy
 
-        public static =<$> Transform(=<$>DTO from, =<$> to)
+        public static =<$> TransformChild(=<$>DTO from, =<$> to)
         {
 %Loop:Properties
 %If:Reference?=true
@@ -725,7 +725,7 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Models
             return to;
         }
 
-        public static =<$>DTO Transform(=<$> from, =<$>DTO to)
+        public static =<$>DTO TransformChild(=<$> from, =<$>DTO to)
         {
 %Loop:Properties
             to.=<$> = from.=<$>;

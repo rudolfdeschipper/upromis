@@ -40,7 +40,7 @@ class =<App.$>Form extends React.Component<IProps, IState> {
     render() {
         return (
             <Formik
-                initialValues={this.props.currentData as any}
+                initialValues={this.props.currentData}
                 validate={=<App.$>Validator.Validate}
                 enableReinitialize={true}
                 validationSchema={Yup.object({

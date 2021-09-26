@@ -294,4 +294,28 @@ export default =<App.$>=<Tabs.$>;
 
 %/File
 
+%FileCreate:components\=<App.$>\=<Tabs.$>Validator.ts
+/*
+** Implementation of client side Validation for =<Tabs.$>
+** This file is only generated once; you may change it as needed.
+** In case you want to re-generate it, simply delete it an re-run the code generator.
+** Do not change the method's name or signature as this wil break the calling code.
+*/
+import { FormikErrors } from 'formik';
+import { I=<Tabs.Model.SetName> } from './generated/=<App.$>Types';
+
+export class =<Tabs.$>Validator
+{
+    static Validate = async (values: I=<Tabs.Model.SetName>) : Promise<FormikErrors<I=<Tabs.Model.SetName>>> => {
+        var errors: FormikErrors<I=<Tabs.Model.SetName>> = {};
+
+        // add validations here
+        // add any error messages on the error object:
+        // errors.PropertyName = "error message"
+
+        return errors;
+    };
+}
+%/File
+
 %/Loop:Tabs

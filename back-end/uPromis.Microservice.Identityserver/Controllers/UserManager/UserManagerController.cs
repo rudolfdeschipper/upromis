@@ -219,7 +219,7 @@ namespace uPromis.Microservice.Identityserver.Controllers.UserManager
 
             switch (info.ValueType)
             {
-                case "Role":
+                case "Roles.Role":
                     list.Add(new ListValue() { Value = string.Empty, Label = "" });
 
                     list.AddRange(UserManagerRepository.RoleValues);

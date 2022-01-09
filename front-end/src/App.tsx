@@ -60,6 +60,12 @@ class App extends React.Component<IProps, IState> {
         || this.state._user.profile.IsProjectReader);
     }
 
+    canManageProject() : boolean
+    {
+        return !!this.state._user
+        && (this.state._user.profile.IsProjectOwner);
+    }
+
     render() {
         const contract = React.lazy(() => import("./components/Contract/generated/Contract"));
         const contractdetails = React.lazy(() => import("./components/Contract/generated/ContractDetails"));
@@ -71,6 +77,12 @@ class App extends React.Component<IProps, IState> {
         const clientdetails = React.lazy(() => import("./components/Client/generated/ClientDetails"));
         const userManager = React.lazy(() => import("./components/UserManager/generated/UserManager"));
         const userManagerdetails = React.lazy(() => import("./components/UserManager/generated/UserManagerDetails"));
+        const project = React.lazy(() => import("./components/Project/generated/Project"));
+        const projectdetails = React.lazy(() => import("./components/Project/generated/ProjectDetails"));
+        const workpackage = React.lazy(() => import("./components/Workpackage/generated/Workpackage"));
+        const workpackagedetails = React.lazy(() => import("./components/Workpackage/generated/WorkpackageDetails"));
+        const activity = React.lazy(() => import("./components/Activity/generated/Activity"));
+        const activitydetails = React.lazy(() => import("./components/Activity/generated/ActivityDetails"));
 
         return (
             <Layout User={this.state._user}>
@@ -83,15 +95,31 @@ class App extends React.Component<IProps, IState> {
                             {this.canAccessContract() && <Route path='/contract' component={contract} /> }
                             {this.canAccessContract() && <Route path='/contractdetails/:id' component={contractdetails} /> }
                             {this.canAccessContract() && <Route path='/contractdetails/add' component={contractdetails} /> }
+
                             {this.canAccessContract() && <Route path='/proposal' component={proposal} /> }
                             {this.canAccessContract() && <Route path='/proposaldetails/:id' component={proposaldetails} /> }
                             {this.canAccessContract() && <Route path='/proposaldetails/add' component={proposaldetails} /> }
+
                             {this.canAccessContract() && <Route path='/request' component={request} /> }
                             {this.canAccessContract() && <Route path='/requestdetails/:id' component={requestdetails} /> }
                             {this.canAccessContract() && <Route path='/requeqstdetails/add' component={requestdetails} /> }
+
                             {this.canManageContract() && <Route path='/client' component={client} /> }
                             {this.canManageContract() && <Route path='/clientdetails/:id' component={clientdetails} /> }
                             {this.canManageContract() && <Route path='/clientdetails/add' component={clientdetails} /> }
+
+                            {this.canAccessProject() && <Route path='/workpackage' component={workpackage} /> }
+                            {this.canAccessProject() && <Route path='/workpackagedetails/:id' component={workpackagedetails} /> }
+                            {this.canAccessProject() && <Route path='/workpackagedetails/add' component={workpackagedetails} /> }
+
+                            {this.canAccessProject() && <Route path='/activity' component={activity} /> }
+                            {this.canAccessProject() && <Route path='/activitydetails/:id' component={activitydetails} /> }
+                            {this.canAccessProject() && <Route path='/activitydetails/add' component={activitydetails} /> }
+
+                            {this.canManageProject() && <Route path='/project' component={project} /> }
+                            {this.canManageProject() && <Route path='/projectetails/:id' component={projectdetails} /> }
+                            {this.canManageProject() && <Route path='/projectdetails/add' component={projectdetails} /> }
+
                             {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanager' component={!!this.state._user ? userManager : nfp} /> }
                             {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanagerdetails/:id' component={!!this.state._user ? userManagerdetails : nfp} /> }
                             {!!this.state._user && this.state._user.profile.IsInAdminRole && <Route path='/usermanagerdetails/add' component={!!this.state._user ? userManagerdetails : nfp} /> }

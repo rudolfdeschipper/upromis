@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "uPromis.Microservice.ContractAPI": {
+    "uPromis.Microservice.ProjectAPI": {
       "commandName": "Project",
       "launchUrl": "api/home",
       "environmentVariables": {

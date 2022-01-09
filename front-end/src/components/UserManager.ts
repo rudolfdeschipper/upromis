@@ -7,7 +7,7 @@ export class UserManager {
         client_id: "uProMISspa",
         redirect_uri: "http://localhost:3000/callback.html",
         response_type: "code",
-        scope: "openid profile api1 api2 IdentityServerApi",
+        scope: "openid profile api1 api2 IdentityServerApi api5",
         post_logout_redirect_uri: "http://localhost:3000/home",
     };
 

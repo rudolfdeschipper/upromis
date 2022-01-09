@@ -11,6 +11,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Form, DatePicker, SubmitBtn, Input, Textarea, Select } from 'react-formik-ui'
 import { ISelectValue } from '../../GeneralTypes';
+import { RTEditor } from '../../RTEditor';
 
 import { I=<App.$>Data } from './=<App.$>Types';
 import { =<App.$>Validator } from '../=<App.$>Validator';

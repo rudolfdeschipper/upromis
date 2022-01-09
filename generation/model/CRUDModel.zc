@@ -284,7 +284,6 @@ Contract : {
 			Namespace: "Accountinfo",
 			Export <- Microservice.Contract.DTO.AccountInfo,
 			DTO <- Microservice.Contract.DTO.AccountInfo,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.AccountInfo,
 			ReportQueue: "ACCOUNTINFO",
 			AccessControl : {
@@ -296,7 +295,6 @@ Contract : {
 			Namespace: "Contract",
 			Export <- Microservice.Contract.DTO.Contract,
 			DTO <- Microservice.Contract.DTO.Contract,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Contract,
 			ReportQueue: "CONTRACT",
 			AccessControl : {
@@ -308,7 +306,6 @@ Contract : {
 			Namespace: "Request",
 			Export <- Microservice.Contract.DTO.Request,
 			DTO <- Microservice.Contract.DTO.Request,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Request,
 			ReportQueue: "REQUEST",
 			AccessControl : {
@@ -320,7 +317,6 @@ Contract : {
 			Namespace: "Proposal",
 			Export <- Microservice.Contract.DTO.Proposal,
 			DTO <- Microservice.Contract.DTO.Proposal,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Proposal,
 			ReportQueue: "PROPOSAL",
 			AccessControl : {
@@ -332,7 +328,6 @@ Contract : {
 			Namespace: "Client",
 			Export <- Microservice.Contract.DTO.Client,
 			DTO <- Microservice.Contract.DTO.Client,
-			ClaimInfo: { ClaimList : "Teammembers", ClaimField : "AccountInfoMemberType" },
 			Model <- Microservice.Contract.Models.Client,
 			ReportQueue: "CLIENT",
 			AccessControl : {
@@ -720,8 +715,8 @@ AccountInfo <- Definitions.DefaultMainObject : {
 }
 
 AccountField <- Definitions.DefaultObject : {
-	+Name <- DataDictionary.DescriptionField,
-	+Value <- DataDictionary.DescriptionField : { Length: 100 }
+	+Name <- DataDictionary.TitleField,
+	+Value <- DataDictionary.TitleField : { Length: 100 }
 }
 
 AccountTeamComposition <- Definitions.DefaultObject : {
@@ -791,7 +786,7 @@ Contract <- Definitions.DefaultTimeboundObject : {
 		Nullable: true,
 		Show: false
 	},
-	+MainContact <- DataDictionary.DescriptionField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
+	+MainContact <- DataDictionary.TitleField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
 	+Phone <- DataDictionary.PhoneField : { Nullable: false, Show: true },
 	+ContactMail <- DataDictionary.EmailField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail", Nullable: false, Show: false }
 	/ ID, Code, Title, Description, ContractType, ContractStatus, Startdate, Enddate, Value, Budget, ExpenseBudget 
@@ -902,16 +897,16 @@ RequestTeamComposition <- Definitions.DefaultObject : {
 }
 
 Client <- Definitions.DefaultMainObject : {
-	+Address <- DataDictionary.DescriptionField : { Name: "Address", Title: "Address", JSONName: "address",Nullable: true, Show: false },
-	+MainContact <- DataDictionary.DescriptionField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
-	+Phone <- DataDictionary.DescriptionField : { Name: "Phone", Title: "Phone", JSONName: "phone",Nullable: false, Length: 15, Show: true },
-	+ContactMail <- DataDictionary.DescriptionField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail",Nullable: false, Length: 100, Show: false }
+	+Address <- DataDictionary.TitleField : { Name: "Address", Title: "Address", JSONName: "address",Nullable: true, Show: false },
+	+MainContact <- DataDictionary.TitleField : { Name: "MainContact", Title: "Main Contact", JSONName: "mainContact",Nullable: false, Length: 100, Show: true },
+	+Phone <- DataDictionary.TitleField : { Name: "Phone", Title: "Phone", JSONName: "phone",Nullable: false, Length: 15, Show: true },
+	+ContactMail <- DataDictionary.TitleField : { Name: "ContactMail", Title: "Contact Email", JSONName: "contactMail",Nullable: false, Length: 100, Show: false }
 }
 
 NotificationEntry : {
 	ID <- DataDictionary.IDField,
 	ExternalID <- DataDictionary.GuidField,
-	URL <- DataDictionary.DescriptionField :
+	URL <- DataDictionary.TitleField :
 	{
 		Name: "URL",
 		JSONName: "url",
@@ -941,7 +936,7 @@ NotificationEntry : {
 		JSONName: "notificationSubtype",
 		Show: true
 	}, 
-	ExpectedAction <- DataDictionary.DescriptionField : 
+	ExpectedAction <- DataDictionary.TitleField : 
 	{ 
 			Name: "ExpectedAction", 
 			Title: "Expected action", 
@@ -958,7 +953,7 @@ NotificationEntry : {
 		JSONName: "subscriptionGroup",
 		Show: true
 	}, 
-	SubscriptionID <- DataDictionary.DescriptionField : 
+	SubscriptionID <- DataDictionary.TitleField : 
 	{ 
 		Name: "SubscriptionID", 
 		Title: "Subscription ID", 
@@ -1019,7 +1014,7 @@ NotificationGroup : {
 			ReminderNotification: "Reminder"
 		}
 	},
-	SubscriptionID <- DataDictionary.DescriptionField : 
+	SubscriptionID <- DataDictionary.TitleField : 
 	{ 
 		Name: "SubscriptionID", 
 		Title: "Subscription ID", 
@@ -1113,6 +1108,7 @@ Programme <- Definitions.DefaultMainObject : {
 	+Status <- DataDictionary.StatusField : {
 		+Values : {
 			Planned : "Planned",
+			Approved : "Approved",
 			Active : "Active",
 			Closed : "Closed",
 			Cancelled : "Cancelled"
@@ -1123,6 +1119,8 @@ Programme <- Definitions.DefaultMainObject : {
 Project <- Definitions.DefaultTimeboundObject : {
 	+Status <- DataDictionary.StatusField : {
 		+Values : {
+			Planned : "Planned",
+			Approved : "Approved",
 			StartUp : "Starting up",
 			Initiation : "Initiation",
 			Elaboration : "Elaboration",
@@ -1132,10 +1130,56 @@ Project <- Definitions.DefaultTimeboundObject : {
 			Paused : "Paused",
 			Cancelled : "Cancelled"
 		}
+	},
+	+Organisation <- DataDictionary.CodeField : {
+		Name : "Organisation",
+		JSONName : "organisation",
+		Title : "Organisation commissioning the project",
+		Length : 100,
+		Nullable : true
+	},
+	+Budget <- DataDictionary.AmountField : {
+		Name : "Budget",
+		JSONName : "budget",
+		Title : "Budget",
+		Nullable : true
+	}
+}
+
+ProjectLogbook <- Definitions.DefaultObject : {
+	+Description <- DataDictionary.DescriptionField : {
+		Nullable : false
+	},
+	+LogDate <- DataDictionary.DateTimeField : {
+		Name : "LogDate",
+		JSONName : "logDate",
+		Title : "Date of the log entry",
+		Nullable : false
+	},
+	+Status <- DataDictionary.StatusField : {
+		Name : "Status",
+		JSONName : "status",
+		Title : "Status",
+		+Values : {
+			Open : "Open",
+			Closed : "Closed"
+		}
+	},
+	Internal <- DataDictionary.CheckField : {
+		Name : "Internal",
+		JSONName : "internal",
+		Title : "Do not report this log entry"
 	}
 }
 
 Workpackage <- Definitions.DefaultMainObject : {
+	+ActPrefix <- DataDictionary.CodeField : {
+		Name: "ActPrefix",
+		JSONName: "actPrefix",
+		Title: "Activity Prefix",
+		Nullable: false,
+		Length: 40
+	},
 	+Status <- DataDictionary.StatusField : {
 		+Values : {
 			Planned : "Planned",
@@ -1149,6 +1193,35 @@ Workpackage <- Definitions.DefaultMainObject : {
 		Name : "Stage",
 		JSONName : "stage",
 		Title : "Stage"
+	},
+	+EvaluationStatus <- DataDictionary.StatusField : {
+		Name: "EvaluationStatus",
+		JSONName: "evaluationStatus",
+		Title: "Evaluation Status",
+		+Values : {
+			Green : "Green",
+			Yellow : "Yellow",
+			Red : "Red"
+		},
+		+EVMMethod <- DataDictionary.StatusField :{
+			Name: "EVMMethod",
+			JSONName: "evmMethod",
+			Title: "Earned Value Method",
+			+Values : {
+				None: "0. None",
+				StartEnd: "1. 0/100",
+				MidEnd: "2. 50/100",
+				MileStones: "3. Milestones",
+				ETC: "4. Estimate to Complete",
+				EffortSpent: "5. Effort spent/Linear"
+			}
+		},
+		+EVMValue <- DataDictionary.AmountField : {
+			Name: "EVMValue",
+			JSONName: "evmValue",
+			Title: "EVM Value",
+			Nullable: true
+		}
 	}
 }
 
@@ -1172,6 +1245,20 @@ Activity <- Definitions.DefaultMainObject : {
 		JSONName : "planType",
 		Nullable: false,
 		Show: true
+	},
+	+ActivityID <- DataDictionary.CodeField : {
+		Name: "ActivityID",
+		JSONName: "activityID",
+		Title: "Activity Identifier",
+		Length: 70,
+		Nullable: false
+	},
+	+Version <- DataDictionary.CodeField : {
+		Name: "Version",
+		JSONName: "version",
+		Title: "Version",
+		Length: 20,
+		Nullable: true
 	},
 	+StartdatePlanned <- DataDictionary.DateTimeField : {
 		Name: "StartdatePlanned",
@@ -1199,8 +1286,10 @@ Activity <- Definitions.DefaultMainObject : {
 			Active : "Active",
 			Closed : "Closed",
 			Delivered : "Delivered",
+			Acknowledged: "Acknowledged",
 			Accepted : "Accepted",
 			Rejected : "Rejected",
+			Deprecated: "Deprecated",
 			Cancelled : "Cancelled"
 		}
 	}
@@ -1240,7 +1329,7 @@ DefaultObject :{
 
 DefaultMainObject <- Definitions.DefaultObject: {
 	+Code <- DataDictionary.CodeField,
-	+Title <- DataDictionary.DescriptionField : { Name: "Title", Title: "Title", JSONName: "title", Length: 100, Nullable: false, Show: true },
+	+Title <- DataDictionary.TitleField : { Name: "Title", Title: "Title", JSONName: "title", Length: 100, Nullable: false, Show: true },
 	+Description <- DataDictionary.DescriptionField
 }
 
@@ -1265,6 +1354,21 @@ IDField : {
 	Nullable:false,
 	Show:false,
 	Key: true
+}
+
+CheckField : {
+	Type:"bool", 
+	JSONType: "bool",
+	YupType: "bool",
+	JSONDefault: "false",
+	Name:"Check",
+	JSONName: "check", 
+	Title:"Check",
+	UIControl: "CheckBox name='[JSONName]' text='[Title]' ",
+	UIROControl: "CheckBox name='[JSONName]' text='[Title]' disabled",
+	Nullable:false,
+	Show:true,
+	Key: false
 }
 
 CodeField : {
@@ -1297,6 +1401,21 @@ PhoneField <- DataDictionary.CodeField : {
 	+Validation : "Phone"
 }
 
+TitleField : {
+	Type:"string", 
+	JSONType: "string",
+	YupType: "string",
+	JSONDefault: "''",
+	Name:"Title", 
+	Title:"Title", 
+	JSONName: "title", 
+	UIControl: "Textarea name='[JSONName]' label='[Title]' ",
+	UIROControl: "Textarea name='[JSONName]' label='[Title]' disabled ",
+	Length : "unlimited", 
+	Nullable:true,
+	Show:false
+}
+
 DescriptionField : {
 	Type:"string", 
 	JSONType: "string",
@@ -1305,8 +1424,8 @@ DescriptionField : {
 	Name:"Description", 
 	Title:"Description", 
 	JSONName: "description", 
-	UIControl: "Textarea name='[JSONName]' label='[Title]' ",
-	UIROControl: "Textarea name='[JSONName]' label='[Title]' disbabled ",
+	UIControl: "RTEditor name='[JSONName]' label='[Title]' initialValue={this.props.currentData.[JSONName]} ",
+	UIROControl: "RTEditor name='[JSONName]' label='[Title]' disabled ",
 	Length : "unlimited", 
 	Nullable:true,
 	Show:false

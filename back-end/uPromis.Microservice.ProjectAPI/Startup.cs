@@ -102,6 +102,64 @@ namespace uPromis.Microservice.ProjectAPI
                            || context.User.HasClaim("IsProjectReader", "true")
                            );
                     });
+
+                options.AddPolicy("CanEditPlanTypes",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsProjectOwner", "true")
+                           || context.User.HasClaim("IsProjectParticipant", "true"));
+                    });
+                options.AddPolicy("CanAccessPlanTypes",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsProjectOwner", "true")
+                           || context.User.HasClaim("IsProjectParticipant", "true")
+                           || context.User.HasClaim("IsProjectReader", "true")
+                           );
+                    });
+
+                options.AddPolicy("CanEditActivities",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsProjectOwner", "true")
+                           || context.User.HasClaim("IsProjectParticipant", "true"));
+                    });
+                options.AddPolicy("CanAccessActivities",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsProjectOwner", "true")
+                           || context.User.HasClaim("IsProjectParticipant", "true")
+                           || context.User.HasClaim("IsProjectReader", "true")
+                           );
+                    });
+
+                options.AddPolicy("CanEditWorkpackages",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsProjectOwner", "true")
+                           || context.User.HasClaim("IsProjectParticipant", "true"));
+                    });
+                options.AddPolicy("CanAccessWorkpackages",
+                    p =>
+                    {
+                        p.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                           context.User.HasClaim("IsProjectOwner", "true")
+                           || context.User.HasClaim("IsProjectParticipant", "true")
+                           || context.User.HasClaim("IsProjectReader", "true")
+                           );
+                    });
+
                 options.AddPolicy("CanEditProgrammes",
                     p =>
                     {

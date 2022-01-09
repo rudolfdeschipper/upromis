@@ -288,23 +288,6 @@ namespace =<#Parameters.msNameSpace>=<Microservice.Namespace>.Controllers
             }
             return Ok(new ListValues() { ValueType = info.ValueType, data = list });
         }
-%If:ClaimInfo?
-/*
-        [HttpGet("getclaims/{UserID}")]
-        [Authorize()]
-        public async Task<IActionResult> GetClaims(string UserID)
-        {
-            var claims = Repository.List.Select(c => Transformers.Transform(c, new =<Model.Name>DTO() { Modifier = "Unchanged" }))
-                .Where(c => c.=<ClaimInfo.ClaimList>.Any(t => t.TeamMember.ToString().Equals(UserID)))
-                .Select(c => new { 
-                    Key = "=<$>|" + c.ID, 
-                    Value = c.=<ClaimInfo.ClaimList>
-                        .First(t => t.TeamMember.ToString().Equals(UserID)).=<ClaimInfo.ClaimField>.ToString() 
-                });
-            return new JsonResult(await claims.ToArrayAsync());
-        }
-*/
-%EndIf
     }
 }
 %/File
